@@ -1,0 +1,82 @@
+{
+  "protocol": "CLAUDE-SONNET5-MEDIUM-B03-V1-screenshots",
+  "origin": "validated dist/",
+  "viewports": {
+    "desktop": {
+      "width": 1440,
+      "height": 900
+    },
+    "mobile": {
+      "width": 390,
+      "height": 844
+    }
+  },
+  "deviceScaleFactor": 1,
+  "files": {
+    "desktop-full.png": {
+      "fullPage": true
+    },
+    "desktop-hero.png": {
+      "target": "hero"
+    },
+    "day-cycle-state-1.png": {
+      "fullPage": false
+    },
+    "day-cycle-state-2.png": {
+      "fullPage": false
+    },
+    "faq-open.png": {
+      "target": "faq",
+      "question_index": 0
+    },
+    "mobile-full.png": {
+      "fullPage": true
+    },
+    "mobile-hero.png": {
+      "target": "hero",
+      "viewport": "mobile"
+    }
+  },
+  "day_cycle_state_1": {
+    "option_index": 0,
+    "option": {
+      "index": 0,
+      "text": "06:30\nManhã",
+      "ariaPressed": "true",
+      "ariaCurrent": null,
+      "ariaChecked": null,
+      "name": null,
+      "value": null
+    },
+    "observed": {
+      "optionIndex": 0,
+      "selectedText": "06:30\nManhã",
+      "stageHtmlLength": 1228,
+      "sectionTextLength": 472
+    }
+  },
+  "day_cycle_state_2": {
+    "option_index": 1,
+    "option": {
+      "index": 1,
+      "text": "10:00\nFoco",
+      "ariaPressed": "false",
+      "ariaCurrent": null,
+      "ariaChecked": null,
+      "name": null,
+      "value": null
+    },
+    "observed": {
+      "optionIndex": 1,
+      "selectedText": "10:00\nFoco",
+      "stageHtmlLength": 1222,
+      "sectionTextLength": 464
+    }
+  },
+  "faq_open": {
+    "question_index": 0,
+    "question_text": "A LUMA funciona sem o aplicativo?",
+    "aria_expanded_before": "false",
+    "aria_expanded_after": "true"
+  }
+}

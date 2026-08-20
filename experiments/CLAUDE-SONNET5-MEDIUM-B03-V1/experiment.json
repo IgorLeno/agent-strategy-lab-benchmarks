@@ -1,0 +1,107 @@
+{
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B03-V1",
+  "benchmark_id": "B03-luma",
+  "status": "COMPLETE",
+  "quality_status": "AWAITING_BLIND_EVALUATION",
+  "agent_lab_baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "model": "claude-sonnet-5",
+  "reasoning_effort": "medium",
+  "billing_mode": "subscription_only",
+  "direct_profile": null,
+  "agentlab_profile": "claude-build-worker-subscription-sonnet5-medium-v3",
+  "seed_sha": "ccaa84f46741f188f8bd053accbd9308659641f5",
+  "task_sha256": "54b1681097e943f8f9a4626937d6320097c2a61fcb12541cff830300b8ea0cef",
+  "rubric_sha256": "72224ac65770bf5bae5eb72828f017d42985e3e25917fe49f3975dc9258d8abe",
+  "arm_order": [
+    "AGENTLAB",
+    "DIRECT"
+  ],
+  "validity": "VALID_WITH_MODEL_PURITY_WARNING",
+  "warning": "Both arms' modelUsage included a small claude-haiku-4-5 helper invocation; the implementer remained claude-sonnet-5 medium in both arms.",
+  "winner": "NONE",
+  "deterministic_functionality": "TIE",
+  "efficiency_winner": "DIRECT",
+  "sample_size": {
+    "benchmarks": 1,
+    "note": "n = 1 benchmark. Do not generalise this result to Agent Strategy Lab as a whole."
+  },
+  "integrity": {
+    "same_seed": true,
+    "same_task": true,
+    "same_implementer_model": true,
+    "same_effort": true,
+    "same_validation": true,
+    "a24_used": false,
+    "api_billing": false,
+    "cross_arm_leak": false,
+    "metrics_verified_against_local_evidence": true,
+    "metrics_divergence": null,
+    "patch_verified": {
+      "direct": {
+        "changed_files": 15,
+        "insertions": 1901,
+        "deletions": 4
+      },
+      "agentlab": {
+        "changed_files": 14,
+        "insertions": 1784,
+        "deletions": 4
+      }
+    }
+  },
+  "evaluation": {
+    "blind": true,
+    "status": "AWAITING_BLIND_EVALUATION",
+    "labels_during_scoring": {
+      "Candidate X": "unassigned",
+      "Candidate Y": "unassigned"
+    },
+    "functionality": {
+      "direct": "PASS",
+      "agentlab": "PASS",
+      "source": "deterministic validator"
+    },
+    "visual": "AWAITING_BLIND_EVALUATION",
+    "code_quality": "NOT_EVALUATED"
+  },
+  "overhead_agentlab_vs_direct": {
+    "wall_clock": "+37%",
+    "worker_runtime": "+38%",
+    "tokens": "+71%",
+    "api_equivalent": "+37%"
+  },
+  "screenshots": {
+    "required": true,
+    "files": [
+      "desktop-full.png",
+      "mobile-full.png",
+      "desktop-hero.png",
+      "mobile-hero.png",
+      "day-cycle-state-1.png",
+      "day-cycle-state-2.png",
+      "faq-open.png"
+    ],
+    "interaction_evidence": {
+      "direct": "direct/screenshots/capture.json",
+      "agentlab": "agentlab/screenshots/capture.json"
+    }
+  },
+  "experimental_backlog": [
+    "npm CLI invocations were denied by the versioned Claude settings allow-list; both workers fell back to node binaries. Same observation as B02. Not implemented.",
+    "Authorization envelope listed changed_files.maximum=12; the Agent Lab accepted patch changed 14 files and still PASS. Policy was not expanded.",
+    "Adaptive Agent Lab worker timeout was 1733s (M78) versus Direct 1800s; both within profile timeout_seconds=1800."
+  ],
+  "unpublished_on_purpose": [
+    "raw run/ directories",
+    "auth-status.json",
+    "dev-runtime/",
+    "dev-inbox/",
+    "worker stdout/stderr logs",
+    "subscription quota probes",
+    "absolute operator paths",
+    "node_modules/",
+    "dist/"
+  ]
+}

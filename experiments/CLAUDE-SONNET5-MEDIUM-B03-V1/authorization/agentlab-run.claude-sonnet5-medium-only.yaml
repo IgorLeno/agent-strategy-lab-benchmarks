@@ -1,0 +1,56 @@
+# Policy de BENCHMARK CLAUDE-SONNET5-MEDIUM-B03-V1: somente
+# `claude-build-worker-subscription-sonnet5-medium-v3` é elegível.
+# Se o diagnóstico exigir escalation, o resultado é HUMAN_REQUIRED: a policy
+# nunca é ampliada em silêncio.
+schema_version: 1
+
+requested_scope:
+  summary: implementar as tarefas declaradas no PlanFile do projeto
+
+constraints: []
+exclusions:
+  - deploy
+
+autonomous_execution_boundary:
+  - DISPOSABLE_LOCAL_WORKSPACE
+  - CONFIGURED_SUBSCRIPTION_WORKER
+  - DETERMINISTIC_VALIDATION
+  - BOUNDED_REPAIR
+
+human_gated_capabilities:
+  - UNAUTHORIZED_API_BILLING
+  - BILLING_MODE_CHANGE
+  - DESTRUCTIVE_ACTION
+  - DEPLOYMENT_OR_PRODUCTION
+  - EXTERNAL_SIDE_EFFECT
+  - SCOPE_EXPANSION
+  - NEW_CREDENTIAL_BOUNDARY
+  - CRITICAL_OR_SECURITY_SENSITIVE_ACTION
+  - PROFILE_OR_PROVIDER_OUTSIDE_POLICY
+
+billing:
+  allowed_billing_modes:
+    - subscription_only
+
+profile_policy:
+  id: claude-sonnet5-medium-only
+  allowed_providers:
+    - claude
+  profiles:
+    - id: claude-build-worker-subscription-sonnet5-medium-v3
+      capability_rank: 0
+      rationale: profile único fixado pela metodologia do experimento A/B Claude Sonnet 5 medium
+
+work_units:
+  default:
+    task_class: feature
+    difficulty_declared: medium
+    risk: low
+    complexity: local
+    ambiguity: low
+    verification: deterministic
+    resource_envelope:
+      duration_ms: { expected: 900000, maximum: 1800000 }
+      tokens: { expected: 80000, maximum: 200000 }
+      changed_files: { expected: 4, maximum: 12 }
+  overrides: {}

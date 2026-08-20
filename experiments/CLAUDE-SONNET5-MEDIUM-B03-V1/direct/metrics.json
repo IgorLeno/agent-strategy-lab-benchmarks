@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "B03-luma",
+  "arm": "direct",
+  "seed_sha": "ccaa84f46741f188f8bd053accbd9308659641f5",
+  "task_sha256": "54b1681097e943f8f9a4626937d6320097c2a61fcb12541cff830300b8ea0cef",
+  "agent": "claude",
+  "model": "claude-sonnet-5",
+  "reasoning_effort": "medium",
+  "profile_id": null,
+  "started_at": "2026-08-20T23:31:57.488Z",
+  "finished_at": "2026-08-20T23:36:46.260Z",
+  "wall_clock_ms": 288772,
+  "worker_runtime_ms": {
+    "value": 259196,
+    "provenance": "claude JSON duration_ms (initial.stdout.json)"
+  },
+  "launch_count": 1,
+  "first_pass": true,
+  "repair_used": false,
+  "final_status": "PASS",
+  "tokens": {
+    "input": 58,
+    "cached_input": 1492436,
+    "output": 29090,
+    "reasoning": 3459,
+    "total": 1576112,
+    "provenance": "claude JSON usage: input_tokens=58, cache_creation_input_tokens=54528, cache_read_input_tokens=1492436, output_tokens=29090, thinking_tokens=3459 (subset of output). total = input + cache_creation + cache_read + output."
+  },
+  "quota": {
+    "value": null,
+    "unit": null,
+    "provenance": "UNKNOWN: no remaining-quota probe on the Direct arm; the run completed, so quota was sufficient for the INITIAL Direct launch"
+  },
+  "api_equivalent_usd": {
+    "value": 1.2139938,
+    "provenance": "claude JSON total_cost_usd — API-equivalent estimate, not charged (subscription). Includes helper Haiku 0.002571 + Sonnet 1.2114228"
+  },
+  "human_interventions": [],
+  "changed_files": {
+    "count": 15,
+    "paths": [
+      "src/App.test.tsx",
+      "src/App.tsx",
+      "src/components/DayCycle.tsx",
+      "src/components/FAQ.tsx",
+      "src/components/Features.tsx",
+      "src/components/Footer.tsx",
+      "src/components/Header.tsx",
+      "src/components/Hero.tsx",
+      "src/components/Icons.tsx",
+      "src/components/Lamp.tsx",
+      "src/components/Pricing.tsx",
+      "src/components/SocialProof.tsx",
+      "src/components/Specs.tsx",
+      "src/data/content.ts",
+      "src/styles.css"
+    ],
+    "insertions": 1901,
+    "deletions": 4
+  },
+  "final_commit_sha": null,
+  "modelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 2506,
+      "outputTokens": 13,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.002571,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty"
+    },
+    "claude-sonnet-5": {
+      "inputTokens": 58,
+      "outputTokens": 29090,
+      "cacheReadInputTokens": 1492436,
+      "cacheCreationInputTokens": 54528,
+      "webSearchRequests": 0,
+      "costUSD": 1.2114228,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "canonicalModel": "claude-sonnet-5",
+      "provider": "firstParty"
+    }
+  }
+}

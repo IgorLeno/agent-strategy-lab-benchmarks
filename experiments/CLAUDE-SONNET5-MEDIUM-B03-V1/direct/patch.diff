@@ -1,0 +1,2004 @@
+diff --git a/src/App.test.tsx b/src/App.test.tsx
+new file mode 100644
+index 0000000..bd48f57
+--- /dev/null
++++ b/src/App.test.tsx
+@@ -0,0 +1,82 @@
++import { describe, expect, it } from 'vitest';
++import { render, screen, within } from '@testing-library/react';
++import userEvent from '@testing-library/user-event';
++import App from './App';
++
++describe('App', () => {
++  it('renders exactly one h1 and all eight required sections', () => {
++    render(<App />);
++    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
++
++    const ids = [
++      'hero',
++      'day-cycle',
++      'features',
++      'specs',
++      'social-proof',
++      'pricing',
++      'faq',
++      'footer',
++    ];
++    for (const id of ids) {
++      const byId = document.getElementById(id);
++      const byTestId = screen.getByTestId(id);
++      expect(byId).toBe(byTestId);
++    }
++  });
++
++  it('has header, main and footer landmarks with nav inside header', () => {
++    render(<App />);
++    expect(document.querySelector('header')).toBeTruthy();
++    expect(document.querySelector('main')).toBeTruthy();
++    expect(document.querySelector('footer')).toBeTruthy();
++    expect(document.querySelector('header nav')).toBeTruthy();
++  });
++
++  it('changes the day-cycle stage and copy when a different moment is selected', async () => {
++    const user = userEvent.setup();
++    render(<App />);
++
++    const options = screen.getAllByTestId('day-cycle-option');
++    expect(options.length).toBeGreaterThanOrEqual(3);
++
++    const stage = screen.getByTestId('day-cycle-stage');
++    const before = stage.getAttribute('data-moment');
++
++    await user.click(options[options.length - 1]);
++
++    const after = stage.getAttribute('data-moment');
++    expect(after).not.toBe(before);
++    expect(options[options.length - 1]).toHaveAttribute('aria-pressed', 'true');
++  });
++
++  it('opens and closes an FAQ item, toggling aria-expanded', async () => {
++    const user = userEvent.setup();
++    render(<App />);
++
++    const questions = screen.getAllByTestId('faq-question');
++    expect(questions.length).toBeGreaterThanOrEqual(6);
++
++    const first = questions[0];
++    expect(first).toHaveAttribute('aria-expanded', 'false');
++
++    await user.click(first);
++    expect(first).toHaveAttribute('aria-expanded', 'true');
++
++    await user.click(first);
++    expect(first).toHaveAttribute('aria-expanded', 'false');
++  });
++
++  it('renders at least two pricing plans and six FAQ items', () => {
++    render(<App />);
++    expect(screen.getAllByTestId('pricing-plan').length).toBeGreaterThanOrEqual(2);
++    expect(screen.getAllByTestId('faq-item').length).toBeGreaterThanOrEqual(6);
++  });
++
++  it('renders nav links pointing at in-page anchors', () => {
++    render(<App />);
++    const nav = document.querySelector('header nav') as HTMLElement;
++    const link = within(nav).getByRole('link', { name: /day cycle/i });
++    expect(link.getAttribute('href')).toBe('#day-cycle');
++  });
++});
+diff --git a/src/App.tsx b/src/App.tsx
+index 7d41e61..a74eb64 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,5 +1,27 @@
+-// Scaffold inicial. Substitua por sua implementação da landing page da LUMA
+-// descrita em TASK.md.
++import Header from './components/Header';
++import Hero from './components/Hero';
++import DayCycle from './components/DayCycle';
++import Features from './components/Features';
++import Specs from './components/Specs';
++import SocialProof from './components/SocialProof';
++import Pricing from './components/Pricing';
++import FAQ from './components/FAQ';
++import Footer from './components/Footer';
++
+ export default function App() {
+-  return <div />;
++  return (
++    <>
++      <Header />
++      <main>
++        <Hero />
++        <DayCycle />
++        <Features />
++        <Specs />
++        <SocialProof />
++        <Pricing />
++        <FAQ />
++      </main>
++      <Footer />
++    </>
++  );
+ }
+diff --git a/src/components/DayCycle.tsx b/src/components/DayCycle.tsx
+new file mode 100644
+index 0000000..44c2e09
+--- /dev/null
++++ b/src/components/DayCycle.tsx
+@@ -0,0 +1,73 @@
++import { useState, type CSSProperties } from 'react';
++import { dayMoments } from '../data/content';
++import Lamp from './Lamp';
++
++export default function DayCycle() {
++  const [activeId, setActiveId] = useState(dayMoments[0].id);
++  const active = dayMoments.find((moment) => moment.id === activeId) ?? dayMoments[0];
++
++  return (
++    <section id="day-cycle" data-testid="day-cycle" className="day-cycle">
++      <div className="section-heading">
++        <p className="eyebrow">Day cycle</p>
++        <h2>One lamp, four moods, zero effort.</h2>
++        <p className="section-lead">
++          LUMA reads the clock so you don’t have to. Pick a moment below to preview how
++          color temperature, brightness and ambient glow shift across a typical day.
++        </p>
++      </div>
++
++      <div
++        className="day-cycle__options"
++        role="group"
++        aria-label="Select a moment of the day"
++      >
++        {dayMoments.map((moment) => {
++          const isActive = moment.id === activeId;
++          return (
++            <button
++              key={moment.id}
++              type="button"
++              data-testid="day-cycle-option"
++              className="day-cycle__option"
++              aria-pressed={isActive}
++              data-active={isActive}
++              onClick={() => setActiveId(moment.id)}
++            >
++              <span className="day-cycle__option-label">{moment.label}</span>
++              <span className="day-cycle__option-time">{moment.time}</span>
++            </button>
++          );
++        })}
++      </div>
++
++      <div className="day-cycle__display">
++        <div
++          className="day-cycle__stage"
++          data-testid="day-cycle-stage"
++          data-moment={active.id}
++          style={
++            {
++              '--stage-from': active.colorFrom,
++              '--stage-to': active.colorTo,
++              '--stage-glow': active.glow,
++            } as CSSProperties
++          }
++        >
++          <Lamp
++            gradientId={`day-cycle-${active.id}`}
++            colorFrom={active.colorFrom}
++            colorTo={active.colorTo}
++            glow={active.glow}
++            className="day-cycle__lamp"
++          />
++          <span className="day-cycle__kelvin">{active.kelvin}</span>
++        </div>
++        <div className="day-cycle__text">
++          <h3>{active.headline}</h3>
++          <p>{active.description}</p>
++        </div>
++      </div>
++    </section>
++  );
++}
+diff --git a/src/components/FAQ.tsx b/src/components/FAQ.tsx
+new file mode 100644
+index 0000000..9665568
+--- /dev/null
++++ b/src/components/FAQ.tsx
+@@ -0,0 +1,52 @@
++import { useState } from 'react';
++import { faqItems } from '../data/content';
++
++export default function FAQ() {
++  const [openIndex, setOpenIndex] = useState<number | null>(null);
++
++  return (
++    <section id="faq" data-testid="faq" className="faq">
++      <div className="section-heading">
++        <p className="eyebrow">FAQ</p>
++        <h2>Questions, answered.</h2>
++      </div>
++      <ul className="faq__list">
++        {faqItems.map((item, index) => {
++          const isOpen = openIndex === index;
++          const panelId = `faq-panel-${index}`;
++          const buttonId = `faq-question-${index}`;
++          return (
++            <li key={item.question} data-testid="faq-item" className="faq-item">
++              <h3 className="faq-item__heading">
++                <button
++                  type="button"
++                  id={buttonId}
++                  data-testid="faq-question"
++                  className="faq-item__question"
++                  aria-expanded={isOpen}
++                  aria-controls={panelId}
++                  onClick={() => setOpenIndex(isOpen ? null : index)}
++                >
++                  <span>{item.question}</span>
++                  <span className="faq-item__icon" aria-hidden="true">
++                    {isOpen ? '−' : '+'}
++                  </span>
++                </button>
++              </h3>
++              <div
++                id={panelId}
++                role="region"
++                aria-labelledby={buttonId}
++                className="faq-item__answer"
++                data-open={isOpen}
++                hidden={!isOpen}
++              >
++                <p>{item.answer}</p>
++              </div>
++            </li>
++          );
++        })}
++      </ul>
++    </section>
++  );
++}
+diff --git a/src/components/Features.tsx b/src/components/Features.tsx
+new file mode 100644
+index 0000000..74879cc
+--- /dev/null
++++ b/src/components/Features.tsx
+@@ -0,0 +1,31 @@
++import { features } from '../data/content';
++import { featureIcons } from './Icons';
++
++export default function Features() {
++  return (
++    <section id="features" data-testid="features" className="features">
++      <div className="section-heading">
++        <p className="eyebrow">Features</p>
++        <h2>Everything a desk light was missing.</h2>
++        <p className="section-lead">
++          LUMA bundles the kind of engineering usually reserved for studio lighting
++          rigs into a single object that fits next to your keyboard.
++        </p>
++      </div>
++      <ul className="features__grid">
++        {features.map((feature) => {
++          const Icon = featureIcons[feature.icon];
++          return (
++            <li key={feature.id} className="feature-card">
++              <span className="feature-card__icon">
++                <Icon />
++              </span>
++              <h3>{feature.title}</h3>
++              <p>{feature.description}</p>
++            </li>
++          );
++        })}
++      </ul>
++    </section>
++  );
++}
+diff --git a/src/components/Footer.tsx b/src/components/Footer.tsx
+new file mode 100644
+index 0000000..e10db87
+--- /dev/null
++++ b/src/components/Footer.tsx
+@@ -0,0 +1,63 @@
++const FOOTER_GROUPS = [
++  {
++    title: 'Product',
++    links: [
++      { label: 'Day cycle', href: '#day-cycle' },
++      { label: 'Features', href: '#features' },
++      { label: 'Specs', href: '#specs' },
++      { label: 'Pricing', href: '#pricing' },
++    ],
++  },
++  {
++    title: 'Company',
++    links: [
++      { label: 'About', href: '#hero' },
++      { label: 'Press', href: '#social-proof' },
++      { label: 'Careers', href: '#hero' },
++    ],
++  },
++  {
++    title: 'Support',
++    links: [
++      { label: 'FAQ', href: '#faq' },
++      { label: 'Warranty', href: '#specs' },
++      { label: 'Contact', href: '#faq' },
++    ],
++  },
++];
++
++export default function Footer() {
++  return (
++    <footer id="footer" data-testid="footer" className="site-footer">
++      <div className="site-footer__inner">
++        <div className="site-footer__brand">
++          <a href="#hero" className="brand">
++            <span className="brand__mark" aria-hidden="true" />
++            LUMA
++          </a>
++          <p>
++            A desktop light tuned to the shape of your day. Designed in-house, built
++            for desks that see real work.
++          </p>
++        </div>
++        <nav className="site-footer__nav" aria-label="Footer">
++          {FOOTER_GROUPS.map((group) => (
++            <div className="site-footer__group" key={group.title}>
++              <h3>{group.title}</h3>
++              <ul>
++                {group.links.map((link) => (
++                  <li key={link.label}>
++                    <a href={link.href}>{link.label}</a>
++                  </li>
++                ))}
++              </ul>
++            </div>
++          ))}
++        </nav>
++      </div>
++      <div className="site-footer__legal">
++        <p>© 2026 LUMA Home Goods, Inc. All rights reserved.</p>
++      </div>
++    </footer>
++  );
++}
+diff --git a/src/components/Header.tsx b/src/components/Header.tsx
+new file mode 100644
+index 0000000..a809661
+--- /dev/null
++++ b/src/components/Header.tsx
+@@ -0,0 +1,32 @@
++const NAV_LINKS = [
++  { href: '#day-cycle', label: 'Day cycle' },
++  { href: '#features', label: 'Features' },
++  { href: '#specs', label: 'Specs' },
++  { href: '#pricing', label: 'Pricing' },
++  { href: '#faq', label: 'FAQ' },
++];
++
++export default function Header() {
++  return (
++    <header className="site-header">
++      <div className="site-header__inner">
++        <a href="#hero" className="brand">
++          <span className="brand__mark" aria-hidden="true" />
++          LUMA
++        </a>
++        <nav className="site-nav" aria-label="Primary">
++          <ul>
++            {NAV_LINKS.map((link) => (
++              <li key={link.href}>
++                <a href={link.href}>{link.label}</a>
++              </li>
++            ))}
++          </ul>
++        </nav>
++        <a className="button button--ghost site-header__cta" href="#pricing">
++          Order LUMA
++        </a>
++      </div>
++    </header>
++  );
++}
+diff --git a/src/components/Hero.tsx b/src/components/Hero.tsx
+new file mode 100644
+index 0000000..a041aee
+--- /dev/null
++++ b/src/components/Hero.tsx
+@@ -0,0 +1,50 @@
++import Lamp from './Lamp';
++
++export default function Hero() {
++  return (
++    <section id="hero" data-testid="hero" className="hero">
++      <div className="hero__inner">
++        <div className="hero__copy">
++          <p className="eyebrow">Introducing LUMA</p>
++          <h1>Light that keeps pace with your day.</h1>
++          <p className="hero__lead">
++            LUMA is a desktop light that shifts from a crisp, focus-ready white in the
++            afternoon to an ember-warm glow at night — automatically, without a single
++            tap. One lamp, tuned to every hour you spend at your desk.
++          </p>
++          <div className="hero__actions">
++            <a href="#pricing" className="button button--primary">
++              Order LUMA — from $179
++            </a>
++            <a href="#day-cycle" className="button button--secondary">
++              See it change through the day
++            </a>
++          </div>
++          <dl className="hero__stats">
++            <div>
++              <dt>Color range</dt>
++              <dd>1800K – 6500K</dd>
++            </div>
++            <div>
++              <dt>Color accuracy</dt>
++              <dd>97 CRI</dd>
++            </div>
++            <div>
++              <dt>Warranty</dt>
++              <dd>3 years</dd>
++            </div>
++          </dl>
++        </div>
++        <div className="hero__visual">
++          <Lamp
++            gradientId="hero-lamp"
++            colorFrom="#ffb168"
++            colorTo="#fff6e6"
++            glow="#ffcf8a"
++            className="hero__lamp"
++          />
++        </div>
++      </div>
++    </section>
++  );
++}
+diff --git a/src/components/Icons.tsx b/src/components/Icons.tsx
+new file mode 100644
+index 0000000..d13164b
+--- /dev/null
++++ b/src/components/Icons.tsx
+@@ -0,0 +1,83 @@
++import type { JSX } from 'react';
++
++interface IconProps {
++  className?: string;
++}
++
++const shared = {
++  viewBox: '0 0 24 24',
++  fill: 'none' as const,
++  stroke: 'currentColor',
++  strokeWidth: 1.6,
++  strokeLinecap: 'round' as const,
++  strokeLinejoin: 'round' as const,
++  'aria-hidden': true as const,
++  focusable: false as const,
++};
++
++export function SunIcon({ className }: IconProps) {
++  return (
++    <svg className={className} {...shared}>
++      <circle cx="12" cy="12" r="4.2" />
++      <path d="M12 2.5v2.4M12 19.1v2.4M4.6 4.6l1.7 1.7M17.7 17.7l1.7 1.7M2.5 12h2.4M19.1 12h2.4M4.6 19.4l1.7-1.7M17.7 6.3l1.7-1.7" />
++    </svg>
++  );
++}
++
++export function PaletteIcon({ className }: IconProps) {
++  return (
++    <svg className={className} {...shared}>
++      <path d="M12 3a9 9 0 1 0 0 18h1.2a1.8 1.8 0 0 0 1.3-3.1 1.8 1.8 0 0 1 1.3-3.1H17a3 3 0 0 0 3-3c0-4.9-3.8-8.8-8-8.8Z" />
++      <circle cx="7.5" cy="12" r="1" fill="currentColor" stroke="none" />
++      <circle cx="9.5" cy="8" r="1" fill="currentColor" stroke="none" />
++      <circle cx="14.5" cy="7.5" r="1" fill="currentColor" stroke="none" />
++    </svg>
++  );
++}
++
++export function RadarIcon({ className }: IconProps) {
++  return (
++    <svg className={className} {...shared}>
++      <circle cx="12" cy="12" r="9" />
++      <circle cx="12" cy="12" r="5" />
++      <circle cx="12" cy="12" r="1.1" fill="currentColor" stroke="none" />
++      <path d="M12 12 L18 7" />
++    </svg>
++  );
++}
++
++export function TargetIcon({ className }: IconProps) {
++  return (
++    <svg className={className} {...shared}>
++      <circle cx="12" cy="12" r="8.5" />
++      <circle cx="12" cy="12" r="4.5" />
++      <circle cx="12" cy="12" r="0.9" fill="currentColor" stroke="none" />
++    </svg>
++  );
++}
++
++export function AppIcon({ className }: IconProps) {
++  return (
++    <svg className={className} {...shared}>
++      <rect x="6" y="2.5" width="12" height="19" rx="2.4" />
++      <path d="M11 18.5h2" />
++    </svg>
++  );
++}
++
++export function WaveIcon({ className }: IconProps) {
++  return (
++    <svg className={className} {...shared}>
++      <path d="M2.5 12c1.6 0 1.6-4 3.2-4s1.6 4 3.2 4 1.6-4 3.2-4 1.6 4 3.2 4 1.6-4 3.2-4 1.6 4 3.2 4" />
++    </svg>
++  );
++}
++
++export const featureIcons: Record<string, (props: IconProps) => JSX.Element> = {
++  sun: SunIcon,
++  palette: PaletteIcon,
++  radar: RadarIcon,
++  target: TargetIcon,
++  app: AppIcon,
++  wave: WaveIcon,
++};
+diff --git a/src/components/Lamp.tsx b/src/components/Lamp.tsx
+new file mode 100644
+index 0000000..01e5ef8
+--- /dev/null
++++ b/src/components/Lamp.tsx
+@@ -0,0 +1,53 @@
++interface LampProps {
++  colorFrom: string;
++  colorTo: string;
++  glow: string;
++  gradientId: string;
++  className?: string;
++}
++
++export default function Lamp({ colorFrom, colorTo, glow, gradientId, className }: LampProps) {
++  const beamId = `${gradientId}-beam`;
++  const glowId = `${gradientId}-glow`;
++
++  return (
++    <svg
++      className={className}
++      viewBox="0 0 320 360"
++      fill="none"
++      xmlns="http://www.w3.org/2000/svg"
++      aria-hidden="true"
++      focusable="false"
++    >
++      <defs>
++        <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
++          <stop offset="0%" stopColor={colorTo} />
++          <stop offset="100%" stopColor={colorFrom} />
++        </linearGradient>
++        <radialGradient id={glowId} cx="50%" cy="35%" r="65%">
++          <stop offset="0%" stopColor={glow} stopOpacity="0.55" />
++          <stop offset="100%" stopColor={glow} stopOpacity="0" />
++        </radialGradient>
++        <linearGradient id={beamId} x1="0" y1="0" x2="0" y2="1">
++          <stop offset="0%" stopColor={glow} stopOpacity="0.35" />
++          <stop offset="100%" stopColor={glow} stopOpacity="0" />
++        </linearGradient>
++      </defs>
++
++      <ellipse cx="160" cy="120" r="150" fill={`url(#${glowId})`} />
++
++      <path d="M120 330 L200 330 L188 350 L132 350 Z" fill="#26242c" />
++      <rect x="150" y="230" width="20" height="102" rx="6" fill="#302d38" />
++
++      <path d="M92 210 C92 150 118 108 160 108 C202 108 228 150 228 210 Z" fill={`url(#${beamId})`} />
++
++      <g>
++        <rect x="70" y="60" width="180" height="96" rx="26" fill={`url(#${gradientId})`} />
++        <rect x="70" y="60" width="180" height="96" rx="26" fill="#0b0b0f" fillOpacity="0.05" />
++        <rect x="92" y="82" width="136" height="52" rx="14" fill="white" fillOpacity="0.18" />
++      </g>
++
++      <circle cx="160" cy="168" r="7" fill={glow} />
++    </svg>
++  );
++}
+diff --git a/src/components/Pricing.tsx b/src/components/Pricing.tsx
+new file mode 100644
+index 0000000..9c9d6cc
+--- /dev/null
++++ b/src/components/Pricing.tsx
+@@ -0,0 +1,46 @@
++import { pricingPlans } from '../data/content';
++
++export default function Pricing() {
++  return (
++    <section id="pricing" data-testid="pricing" className="pricing">
++      <div className="section-heading">
++        <p className="eyebrow">Pricing</p>
++        <h2>Pick your LUMA.</h2>
++        <p className="section-lead">
++          Every plan ships with the full adaptive-light engine. Studio adds ambient
++          color and a heavier base; Care adds peace of mind.
++        </p>
++      </div>
++      <ul className="pricing__grid">
++        {pricingPlans.map((plan) => (
++          <li
++            key={plan.id}
++            data-testid="pricing-plan"
++            className={`pricing-card${plan.recommended ? ' pricing-card--recommended' : ''}`}
++          >
++            {plan.recommended ? (
++              <span className="pricing-card__badge">Most popular</span>
++            ) : null}
++            <h3>{plan.name}</h3>
++            <p className="pricing-card__price">
++              <span className="pricing-card__amount">{plan.price}</span>
++              <span className="pricing-card__billing">{plan.billing}</span>
++            </p>
++            <p className="pricing-card__description">{plan.description}</p>
++            <ul className="pricing-card__features">
++              {plan.features.map((feature) => (
++                <li key={feature}>{feature}</li>
++              ))}
++            </ul>
++            <a
++              href="#hero"
++              className={`button ${plan.recommended ? 'button--primary' : 'button--secondary'} pricing-card__cta`}
++            >
++              {plan.cta}
++            </a>
++          </li>
++        ))}
++      </ul>
++    </section>
++  );
++}
+diff --git a/src/components/SocialProof.tsx b/src/components/SocialProof.tsx
+new file mode 100644
+index 0000000..b4d42e5
+--- /dev/null
++++ b/src/components/SocialProof.tsx
+@@ -0,0 +1,34 @@
++import { pressQuote, quantifiedClaim, testimonials } from '../data/content';
++
++export default function SocialProof() {
++  return (
++    <section id="social-proof" data-testid="social-proof" className="social-proof">
++      <div className="section-heading">
++        <p className="eyebrow">Social proof</p>
++        <h2>Desks that switched, and stayed switched.</h2>
++      </div>
++
++      <div className="social-proof__stat">
++        <span className="social-proof__stat-value">{quantifiedClaim.value}</span>
++        <span className="social-proof__stat-label">{quantifiedClaim.label}</span>
++      </div>
++
++      <ul className="social-proof__grid">
++        {testimonials.map((testimonial) => (
++          <li className="testimonial-card" key={testimonial.name}>
++            <p className="testimonial-card__quote">“{testimonial.quote}”</p>
++            <p className="testimonial-card__attribution">
++              <span className="testimonial-card__name">{testimonial.name}</span>
++              <span className="testimonial-card__role">{testimonial.role}</span>
++            </p>
++          </li>
++        ))}
++      </ul>
++
++      <blockquote className="press-quote">
++        <p>“{pressQuote.quote}”</p>
++        <cite>— {pressQuote.source}</cite>
++      </blockquote>
++    </section>
++  );
++}
+diff --git a/src/components/Specs.tsx b/src/components/Specs.tsx
+new file mode 100644
+index 0000000..a75bda2
+--- /dev/null
++++ b/src/components/Specs.tsx
+@@ -0,0 +1,31 @@
++import { specGroups } from '../data/content';
++
++export default function Specs() {
++  return (
++    <section id="specs" data-testid="specs" className="specs">
++      <div className="section-heading">
++        <p className="eyebrow">Specs</p>
++        <h2>The numbers, if you want them.</h2>
++        <p className="section-lead">
++          Every LUMA ships with the same optical engine and sensor suite — here’s
++          exactly what’s inside.
++        </p>
++      </div>
++      <div className="specs__grid">
++        {specGroups.map((group) => (
++          <div className="specs__group" key={group.title}>
++            <h3>{group.title}</h3>
++            <dl>
++              {group.items.map((item) => (
++                <div className="specs__row" key={item.label}>
++                  <dt>{item.label}</dt>
++                  <dd>{item.value}</dd>
++                </div>
++              ))}
++            </dl>
++          </div>
++        ))}
++      </div>
++    </section>
++  );
++}
+diff --git a/src/data/content.ts b/src/data/content.ts
+new file mode 100644
+index 0000000..c804d13
+--- /dev/null
++++ b/src/data/content.ts
+@@ -0,0 +1,312 @@
++export interface DayMoment {
++  id: string;
++  label: string;
++  time: string;
++  kelvin: string;
++  kelvinValue: number;
++  headline: string;
++  description: string;
++  colorFrom: string;
++  colorTo: string;
++  glow: string;
++}
++
++export const dayMoments: DayMoment[] = [
++  {
++    id: 'morning',
++    label: 'Morning',
++    time: '6:30 – 9:00',
++    kelvin: '4000K',
++    kelvinValue: 4000,
++    headline: 'A sunrise that doesn’t wait for the sun',
++    description:
++      'LUMA ramps from a dim amber ember to a neutral 4000K wake-up light over twenty minutes, timed to your alarm so your body clock gets a head start on the day.',
++    colorFrom: '#ffd9a0',
++    colorTo: '#fff6e6',
++    glow: '#ffcf8a',
++  },
++  {
++    id: 'focus',
++    label: 'Focus',
++    time: '9:00 – 17:00',
++    kelvin: '6500K',
++    kelvinValue: 6500,
++    headline: 'Crisp, high-CRI light built for deep work',
++    description:
++      'A cool 6500K beam with 97 CRI keeps colors true and contrast sharp, so screens, sketches and paperwork all read the way they’re supposed to — no eye strain by hour six.',
++    colorFrom: '#cfe8ff',
++    colorTo: '#f5fbff',
++    glow: '#a9d8ff',
++  },
++  {
++    id: 'evening',
++    label: 'Evening',
++    time: '17:00 – 21:00',
++    kelvin: '2700K',
++    kelvinValue: 2700,
++    headline: 'A slow fade into warmer territory',
++    description:
++      'As afternoon turns to evening, LUMA drifts down to a 2700K amber wash and layers in a soft ambient color behind the panel — a visual cue to start winding the workday down.',
++    colorFrom: '#ffb168',
++    colorTo: '#ffdcb0',
++    glow: '#ff9a4d',
++  },
++  {
++    id: 'night',
++    label: 'Night',
++    time: '21:00 – 23:30',
++    kelvin: '1800K',
++    kelvinValue: 1800,
++    headline: 'Ember-low light that respects your melatonin',
++    description:
++      'A near-candlelight 1800K glow with blue light cut below 2% keeps the room usable without telling your brain it’s still noon. Presence sensing dims it further the moment you step away.',
++    colorFrom: '#ff8a4c',
++    colorTo: '#ffb37a',
++    glow: '#ff7a33',
++  },
++];
++
++export interface Feature {
++  id: string;
++  title: string;
++  description: string;
++  icon: string;
++}
++
++export const features: Feature[] = [
++  {
++    id: 'adaptive-white',
++    title: 'Adaptive white',
++    description:
++      'A continuous 1800K–6500K range retunes itself across the day, following a circadian curve instead of a fixed setting.',
++    icon: 'sun',
++  },
++  {
++    id: 'ambient-color',
++    title: 'Ambient color wash',
++    description:
++      '16 million colors bloom from the panel’s rear diffuser onto your wall — a quiet backdrop glow, not a disco light.',
++    icon: 'palette',
++  },
++  {
++    id: 'presence',
++    title: 'Presence sensing',
++    description:
++      'A radar-grade sensor notices when you sit down or step away and adjusts brightness within half a second — no camera, no wake word.',
++    icon: 'radar',
++  },
++  {
++    id: 'focus-mode',
++    title: 'One-tap focus mode',
++    description:
++      'A single press snaps LUMA to a cool, high-CRI focus profile and lights a thin do-not-disturb ring so roommates know not to knock.',
++    icon: 'target',
++  },
++  {
++    id: 'app',
++    title: 'The LUMA app',
++    description:
++      'Build scenes, schedule sunrise alarms, and sync brightness across every LUMA on your desk from one lightweight app.',
++    icon: 'app',
++  },
++  {
++    id: 'quiet-driver',
++    title: 'Whisper-quiet driver',
++    description:
++      'A flicker-free, fanless driver runs silently at any brightness — no PWM hum, no coil whine, nothing to hear over your keyboard.',
++    icon: 'wave',
++  },
++];
++
++export interface Spec {
++  label: string;
++  value: string;
++}
++
++export interface SpecGroup {
++  title: string;
++  items: Spec[];
++}
++
++export const specGroups: SpecGroup[] = [
++  {
++    title: 'Light output',
++    items: [
++      { label: 'Brightness', value: '1,200 lumens max' },
++      { label: 'Color temperature', value: '1800K – 6500K, continuously adjustable' },
++      { label: 'Color rendering', value: '97 CRI / 95 TM-30' },
++      { label: 'Flicker', value: 'Flicker-free, IEEE PAR1789 compliant' },
++    ],
++  },
++  {
++    title: 'Dimensions & build',
++    items: [
++      { label: 'Footprint', value: '150 × 150 mm base' },
++      { label: 'Height', value: '420 mm, adjustable arm' },
++      { label: 'Weight', value: '890 g' },
++      { label: 'Materials', value: 'Machined aluminum, matte-etched glass diffuser' },
++    ],
++  },
++  {
++    title: 'Power & connectivity',
++    items: [
++      { label: 'Power draw', value: '12W typical / 18W max' },
++      { label: 'Input', value: 'USB-C, 45W GaN adapter included' },
++      { label: 'Wireless', value: 'Wi-Fi 6 (2.4/5GHz), Bluetooth 5.3' },
++      { label: 'Voice', value: 'Works with the LUMA app; open Matter support' },
++    ],
++  },
++  {
++    title: 'Sensing & warranty',
++    items: [
++      { label: 'Presence sensor', value: '60GHz mmWave radar, 1.8m range' },
++      { label: 'Ambient sensor', value: 'Auto-brightness via onboard lux meter' },
++      { label: 'Warranty', value: '3 years, extendable to 5 with LUMA Care' },
++      { label: 'In the box', value: 'LUMA lamp, GaN adapter, USB-C cable, quick guide' },
++    ],
++  },
++];
++
++export interface Testimonial {
++  quote: string;
++  name: string;
++  role: string;
++}
++
++export const testimonials: Testimonial[] = [
++  {
++    quote:
++      'I stopped needing a second coffee at 3pm. The focus profile is the closest thing to a lighting cheat code I’ve found for a home office.',
++    name: 'Priya Anand',
++    role: 'Product designer, freelance',
++  },
++  {
++    quote:
++      'We swapped forty desks in our studio to LUMA during a six-week pilot. Reported eye strain complaints dropped by more than half.',
++    name: 'Marcus Feld',
++    role: 'Facilities lead, Norrby Studio',
++  },
++  {
++    quote:
++      'The evening fade is the feature I didn’t know I needed. It nudges me to log off in a way notifications never managed to.',
++    name: 'Sana Okafor',
++    role: 'Software engineer',
++  },
++];
++
++export const pressQuote = {
++  quote:
++    'LUMA is the rare smart-home object that earns its place on a desk — understated, precise, and genuinely useful across a whole workday.',
++  source: 'Dwell Desk Report',
++};
++
++export const quantifiedClaim = {
++  value: '94%',
++  label: 'of beta testers fell asleep faster on nights they used the Evening and Night profiles',
++};
++
++export interface PricingPlan {
++  id: string;
++  name: string;
++  price: string;
++  billing: string;
++  description: string;
++  features: string[];
++  cta: string;
++  recommended?: boolean;
++}
++
++export const pricingPlans: PricingPlan[] = [
++  {
++    id: 'core',
++    name: 'LUMA Core',
++    price: '$179',
++    billing: 'one-time purchase',
++    description: 'The full adaptive-light experience in LUMA’s standard aluminum finish.',
++    features: [
++      'Adaptive white, 1800K–6500K',
++      'Presence sensing',
++      'LUMA app with scheduling',
++      '3-year warranty',
++    ],
++    cta: 'Order LUMA Core',
++  },
++  {
++    id: 'studio',
++    name: 'LUMA Studio',
++    price: '$249',
++    billing: 'one-time purchase',
++    description: 'Adds the ambient color panel and a heavier weighted base for larger desks.',
++    features: [
++      'Everything in Core',
++      'Ambient color wash, 16M colors',
++      'Weighted brushed-aluminum base',
++      'Second USB-C fast-charge port',
++      '3-year warranty',
++    ],
++    cta: 'Order LUMA Studio',
++    recommended: true,
++  },
++  {
++    id: 'studio-care',
++    name: 'LUMA Studio + Care',
++    price: '$289',
++    billing: 'one-time purchase',
++    description: 'LUMA Studio bundled with extended coverage and priority replacement.',
++    features: [
++      'Everything in Studio',
++      'Warranty extended to 5 years',
++      'Priority next-day replacement',
++      'Free annual sensor recalibration',
++    ],
++    cta: 'Order LUMA Studio + Care',
++  },
++];
++
++export interface FaqItem {
++  question: string;
++  answer: string;
++}
++
++export const faqItems: FaqItem[] = [
++  {
++    question: 'How does LUMA know what time of day it is?',
++    answer:
++      'LUMA syncs to your phone’s timezone the first time you pair it with the app, then runs its adaptive schedule locally on-device — it keeps working even if your Wi-Fi drops.',
++  },
++  {
++    question: 'Can I override the automatic schedule?',
++    answer:
++      'Yes. Tap any moment in the app — or press the ring on the base — to lock LUMA to a specific color temperature and brightness for as long as you like.',
++  },
++  {
++    question: 'Does the presence sensor use a camera?',
++    answer:
++      'No. LUMA uses a 60GHz mmWave radar sensor that detects motion and stillness without capturing or storing any image data.',
++  },
++  {
++    question: 'Will LUMA work without the app?',
++    answer:
++      'Yes. Out of the box LUMA runs its default circadian schedule and responds to the physical dial and button on the base. The app unlocks custom scenes, scheduling and multi-lamp sync.',
++  },
++  {
++    question: 'What’s the difference between LUMA Core and LUMA Studio?',
++    answer:
++      'Studio adds the ambient color wash panel, a heavier weighted base for stability on larger desks, and a second fast-charge USB-C port. Both share the same adaptive-white engine.',
++  },
++  {
++    question: 'How long does shipping take?',
++    answer:
++      'Orders ship within 2 business days from our fulfillment center and typically arrive within 4–7 business days domestically, with tracking sent by email.',
++  },
++  {
++    question: 'What does the warranty cover?',
++    answer:
++      'All LUMA lamps include a 3-year warranty against manufacturing defects in the driver, sensor and housing. LUMA Care extends that to 5 years and adds priority replacement.',
++  },
++  {
++    question: 'Can I return LUMA if it’s not for me?',
++    answer:
++      'Yes — every order includes a 45-night home trial. If LUMA isn’t earning its desk space, contact support for a full refund and a prepaid return label.',
++  },
++];
+diff --git a/src/styles.css b/src/styles.css
+index b3a40d0..9744ef5 100644
+--- a/src/styles.css
++++ b/src/styles.css
+@@ -1,10 +1,943 @@
++/* ---------------------------------------------------------------- reset */
+ *,
+ *::before,
+ *::after {
+   box-sizing: border-box;
+ }
+ 
++html {
++  scroll-behavior: smooth;
++}
++
+ body {
+   margin: 0;
+-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
++}
++
++ul,
++ol {
++  margin: 0;
++  padding: 0;
++  list-style: none;
++}
++
++h1,
++h2,
++h3,
++h4,
++p,
++dl,
++dd,
++blockquote,
++figure {
++  margin: 0;
++}
++
++button {
++  font: inherit;
++  color: inherit;
++  background: none;
++  border: none;
++  cursor: pointer;
++}
++
++a {
++  color: inherit;
++  text-decoration: none;
++}
++
++img,
++svg {
++  display: block;
++  max-width: 100%;
++}
++
++@media (prefers-reduced-motion: reduce) {
++  html {
++    scroll-behavior: auto;
++  }
++  *,
++  *::before,
++  *::after {
++    animation-duration: 0.001ms !important;
++    animation-iteration-count: 1 !important;
++    transition-duration: 0.001ms !important;
++  }
++}
++
++/* --------------------------------------------------------------- tokens */
++:root {
++  --font-display: 'Iowan Old Style', 'Georgia', 'Times New Roman', serif;
++  --font-body: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
++
++  --bg: #0b0a0f;
++  --bg-elevated: #131118;
++  --surface: #1a1720;
++  --surface-alt: #201c28;
++  --border: rgba(255, 255, 255, 0.09);
++  --border-strong: rgba(255, 255, 255, 0.16);
++
++  --text: #f6f3ec;
++  --text-muted: #b3aec0;
++  --text-dim: #786f8c;
++
++  --amber-400: #ffcf8a;
++  --amber-500: #ffb168;
++  --amber-600: #ff9a4d;
++  --amber-glow: rgba(255, 177, 104, 0.35);
++  --cool-400: #a9d8ff;
++
++  --gradient-amber: linear-gradient(135deg, #ffcf8a 0%, #ff9a4d 100%);
++  --gradient-panel: linear-gradient(160deg, rgba(255, 177, 104, 0.14), rgba(142, 203, 255, 0.06));
++
++  --radius-sm: 10px;
++  --radius-md: 16px;
++  --radius-lg: 24px;
++  --radius-pill: 999px;
++
++  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
++  --shadow-md: 0 12px 40px rgba(0, 0, 0, 0.45);
++  --shadow-glow: 0 0 60px var(--amber-glow);
++
++  --space-1: 0.25rem;
++  --space-2: 0.5rem;
++  --space-3: 0.75rem;
++  --space-4: 1rem;
++  --space-5: 1.5rem;
++  --space-6: 2rem;
++  --space-7: 3rem;
++  --space-8: 4.5rem;
++  --space-9: 7rem;
++
++  --container: 1180px;
++}
++
++body {
++  background: var(--bg);
++  color: var(--text);
++  font-family: var(--font-body);
++  line-height: 1.5;
++  -webkit-font-smoothing: antialiased;
++}
++
++body::before {
++  content: '';
++  position: fixed;
++  inset: 0;
++  z-index: -1;
++  background:
++    radial-gradient(60% 40% at 18% 0%, rgba(255, 177, 104, 0.14), transparent 60%),
++    radial-gradient(50% 35% at 85% 15%, rgba(142, 203, 255, 0.08), transparent 60%),
++    var(--bg);
++}
++
++h1,
++h2,
++h3 {
++  font-family: var(--font-display);
++  font-weight: 600;
++  letter-spacing: -0.01em;
++  color: var(--text);
++}
++
++h1 {
++  font-size: clamp(2.6rem, 2rem + 2.6vw, 4.2rem);
++  line-height: 1.05;
++}
++
++h2 {
++  font-size: clamp(1.9rem, 1.6rem + 1.4vw, 2.75rem);
++  line-height: 1.1;
++}
++
++h3 {
++  font-size: clamp(1.15rem, 1.05rem + 0.4vw, 1.4rem);
++  line-height: 1.25;
++}
++
++.eyebrow {
++  font-size: 0.8rem;
++  font-weight: 600;
++  letter-spacing: 0.14em;
++  text-transform: uppercase;
++  color: var(--amber-500);
++  margin: 0 0 var(--space-3);
++}
++
++.section-heading {
++  max-width: 640px;
++  margin: 0 auto var(--space-7);
++  text-align: center;
++}
++
++.section-lead {
++  margin-top: var(--space-4);
++  color: var(--text-muted);
++  font-size: 1.05rem;
++}
++
++section {
++  padding: var(--space-9) var(--space-5);
++}
++
++section > * {
++  max-width: var(--container);
++  margin-left: auto;
++  margin-right: auto;
++}
++
++/* --------------------------------------------------------------- buttons */
++.button {
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  gap: var(--space-2);
++  padding: 0.85rem 1.6rem;
++  border-radius: var(--radius-pill);
++  font-weight: 600;
++  font-size: 0.95rem;
++  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease, border-color 0.15s ease;
++  white-space: nowrap;
++}
++
++.button:focus-visible {
++  outline: 2px solid var(--amber-400);
++  outline-offset: 3px;
++}
++
++.button--primary {
++  background: var(--gradient-amber);
++  color: #201305;
++  box-shadow: var(--shadow-glow);
++}
++
++.button--primary:hover {
++  transform: translateY(-1px);
++  box-shadow: 0 0 70px var(--amber-glow);
++}
++
++.button--primary:active {
++  transform: translateY(0);
++  box-shadow: 0 0 30px var(--amber-glow);
++}
++
++.button--secondary {
++  background: var(--surface);
++  border: 1px solid var(--border-strong);
++  color: var(--text);
++}
++
++.button--secondary:hover {
++  border-color: var(--amber-500);
++  color: var(--amber-400);
++}
++
++.button--secondary:active {
++  background: var(--surface-alt);
++}
++
++.button--ghost {
++  border: 1px solid var(--border);
++  color: var(--text);
++  padding: 0.6rem 1.3rem;
++  font-size: 0.9rem;
++}
++
++.button--ghost:hover {
++  border-color: var(--amber-500);
++  color: var(--amber-400);
++}
++
++/* --------------------------------------------------------------- header */
++.site-header {
++  position: sticky;
++  top: 0;
++  z-index: 50;
++  background: rgba(11, 10, 15, 0.78);
++  backdrop-filter: blur(14px);
++  border-bottom: 1px solid var(--border);
++}
++
++.site-header__inner {
++  max-width: var(--container);
++  margin: 0 auto;
++  padding: var(--space-4) var(--space-5);
++  display: flex;
++  align-items: center;
++  gap: var(--space-6);
++}
++
++.brand {
++  display: inline-flex;
++  align-items: center;
++  gap: var(--space-2);
++  font-family: var(--font-display);
++  font-size: 1.25rem;
++  font-weight: 700;
++  letter-spacing: 0.02em;
++}
++
++.brand__mark {
++  width: 22px;
++  height: 22px;
++  border-radius: 7px;
++  background: var(--gradient-amber);
++  box-shadow: 0 0 16px var(--amber-glow);
++}
++
++.site-nav {
++  flex: 1;
++}
++
++.site-nav ul {
++  display: flex;
++  gap: var(--space-6);
++  justify-content: center;
++}
++
++.site-nav a {
++  font-size: 0.92rem;
++  color: var(--text-muted);
++  transition: color 0.15s ease;
++}
++
++.site-nav a:hover {
++  color: var(--text);
++}
++
++.site-nav a:focus-visible,
++.button--ghost:focus-visible {
++  outline: 2px solid var(--amber-400);
++  outline-offset: 3px;
++  border-radius: var(--radius-sm);
++}
++
++.site-header__cta {
++  flex-shrink: 0;
++}
++
++/* ----------------------------------------------------------------- hero */
++.hero {
++  padding-top: var(--space-8);
++}
++
++.hero__inner {
++  display: grid;
++  grid-template-columns: minmax(0, 1fr) minmax(0, 0.9fr);
++  gap: var(--space-8);
++  align-items: center;
++}
++
++.hero__lead {
++  margin-top: var(--space-5);
++  font-size: 1.15rem;
++  color: var(--text-muted);
++  max-width: 46ch;
++}
++
++.hero__actions {
++  display: flex;
++  flex-wrap: wrap;
++  gap: var(--space-4);
++  margin-top: var(--space-7);
++}
++
++.hero__stats {
++  display: flex;
++  gap: var(--space-7);
++  margin-top: var(--space-8);
++  padding-top: var(--space-6);
++  border-top: 1px solid var(--border);
++}
++
++.hero__stats dt {
++  font-size: 0.78rem;
++  color: var(--text-dim);
++  text-transform: uppercase;
++  letter-spacing: 0.08em;
++  margin-bottom: var(--space-1);
++}
++
++.hero__stats dd {
++  font-weight: 600;
++  font-size: 1.05rem;
++}
++
++.hero__visual {
++  display: flex;
++  justify-content: center;
++}
++
++.hero__lamp {
++  width: min(100%, 360px);
++  filter: drop-shadow(0 30px 50px rgba(0, 0, 0, 0.5));
++}
++
++/* ------------------------------------------------------------- day-cycle */
++.day-cycle__options {
++  display: flex;
++  flex-wrap: wrap;
++  justify-content: center;
++  gap: var(--space-3);
++  margin-bottom: var(--space-7);
++}
++
++.day-cycle__option {
++  padding: var(--space-3) var(--space-5);
++  border-radius: var(--radius-md);
++  border: 1px solid var(--border);
++  background: var(--surface);
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  gap: 0.2rem;
++  min-width: 130px;
++  transition: border-color 0.15s ease, background 0.15s ease, transform 0.15s ease;
++}
++
++.day-cycle__option:hover {
++  border-color: var(--border-strong);
++  transform: translateY(-1px);
++}
++
++.day-cycle__option:focus-visible {
++  outline: 2px solid var(--amber-400);
++  outline-offset: 2px;
++}
++
++.day-cycle__option[data-active='true'] {
++  background: var(--gradient-panel);
++  border-color: var(--amber-500);
++}
++
++.day-cycle__option-label {
++  font-weight: 600;
++}
++
++.day-cycle__option-time {
++  font-size: 0.8rem;
++  color: var(--text-dim);
++}
++
++.day-cycle__display {
++  display: grid;
++  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1fr);
++  gap: var(--space-8);
++  align-items: center;
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: var(--radius-lg);
++  padding: var(--space-7);
++}
++
++.day-cycle__stage {
++  position: relative;
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  justify-content: center;
++  border-radius: var(--radius-md);
++  padding: var(--space-6);
++  background: radial-gradient(70% 70% at 50% 30%, color-mix(in srgb, var(--stage-glow) 22%, transparent), transparent);
++  transition: background 0.4s ease;
++}
++
++.day-cycle__lamp {
++  width: min(100%, 220px);
++  transition: filter 0.4s ease;
++}
++
++.day-cycle__kelvin {
++  margin-top: var(--space-4);
++  font-weight: 700;
++  font-size: 1.05rem;
++  letter-spacing: 0.03em;
++  color: var(--stage-glow);
++}
++
++.day-cycle__text p {
++  margin-top: var(--space-3);
++  color: var(--text-muted);
++}
++
++/* --------------------------------------------------------------- features */
++.features__grid {
++  display: grid;
++  grid-template-columns: repeat(3, minmax(0, 1fr));
++  gap: var(--space-5);
++}
++
++.feature-card {
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: var(--radius-md);
++  padding: var(--space-6);
++  transition: border-color 0.2s ease, transform 0.2s ease;
++}
++
++.feature-card:hover {
++  border-color: var(--border-strong);
++  transform: translateY(-2px);
++}
++
++.feature-card__icon {
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  width: 44px;
++  height: 44px;
++  border-radius: var(--radius-sm);
++  background: var(--gradient-panel);
++  color: var(--amber-400);
++  margin-bottom: var(--space-4);
++}
++
++.feature-card__icon svg {
++  width: 24px;
++  height: 24px;
++}
++
++.feature-card h3 {
++  margin-bottom: var(--space-2);
++}
++
++.feature-card p {
++  color: var(--text-muted);
++  font-size: 0.95rem;
++}
++
++/* ----------------------------------------------------------------- specs */
++.specs__grid {
++  display: grid;
++  grid-template-columns: repeat(2, minmax(0, 1fr));
++  gap: var(--space-6);
++}
++
++.specs__group {
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: var(--radius-md);
++  padding: var(--space-6);
++}
++
++.specs__group h3 {
++  margin-bottom: var(--space-4);
++  color: var(--amber-400);
++  font-family: var(--font-body);
++  font-size: 0.85rem;
++  text-transform: uppercase;
++  letter-spacing: 0.1em;
++  font-weight: 700;
++}
++
++.specs__row {
++  display: flex;
++  justify-content: space-between;
++  gap: var(--space-4);
++  padding: var(--space-3) 0;
++  border-top: 1px solid var(--border);
++}
++
++.specs__row:first-of-type {
++  border-top: none;
++}
++
++.specs__row dt {
++  color: var(--text-muted);
++  font-size: 0.92rem;
++}
++
++.specs__row dd {
++  font-weight: 600;
++  text-align: right;
++}
++
++/* ---------------------------------------------------------- social proof */
++.social-proof__stat {
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  text-align: center;
++  margin-bottom: var(--space-8);
++}
++
++.social-proof__stat-value {
++  font-family: var(--font-display);
++  font-size: clamp(3rem, 2.4rem + 2.6vw, 5rem);
++  background: var(--gradient-amber);
++  -webkit-background-clip: text;
++  background-clip: text;
++  color: transparent;
++  line-height: 1;
++}
++
++.social-proof__stat-label {
++  margin-top: var(--space-3);
++  max-width: 32ch;
++  color: var(--text-muted);
++}
++
++.social-proof__grid {
++  display: grid;
++  grid-template-columns: repeat(3, minmax(0, 1fr));
++  gap: var(--space-5);
++  margin-bottom: var(--space-7);
++}
++
++.testimonial-card {
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: var(--radius-md);
++  padding: var(--space-6);
++  display: flex;
++  flex-direction: column;
++  gap: var(--space-5);
++}
++
++.testimonial-card__quote {
++  font-size: 1.02rem;
++  line-height: 1.55;
++}
++
++.testimonial-card__attribution {
++  display: flex;
++  flex-direction: column;
++  margin-top: auto;
++}
++
++.testimonial-card__name {
++  font-weight: 600;
++}
++
++.testimonial-card__role {
++  font-size: 0.85rem;
++  color: var(--text-dim);
++}
++
++.press-quote {
++  text-align: center;
++  max-width: 700px;
++  margin: 0 auto;
++  padding: var(--space-6) 0 0;
++  border-top: 1px solid var(--border);
++}
++
++.press-quote p {
++  font-family: var(--font-display);
++  font-size: 1.35rem;
++  line-height: 1.4;
++}
++
++.press-quote cite {
++  display: block;
++  margin-top: var(--space-3);
++  font-style: normal;
++  color: var(--text-dim);
++  font-size: 0.9rem;
++}
++
++/* --------------------------------------------------------------- pricing */
++.pricing__grid {
++  display: grid;
++  grid-template-columns: repeat(3, minmax(0, 1fr));
++  gap: var(--space-5);
++  align-items: stretch;
++}
++
++.pricing-card {
++  position: relative;
++  display: flex;
++  flex-direction: column;
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: var(--radius-lg);
++  padding: var(--space-6);
++}
++
++.pricing-card--recommended {
++  border-color: var(--amber-500);
++  background: var(--gradient-panel), var(--surface);
++  box-shadow: var(--shadow-md);
++  transform: translateY(-8px);
++}
++
++.pricing-card__badge {
++  position: absolute;
++  top: -14px;
++  left: var(--space-6);
++  background: var(--gradient-amber);
++  color: #201305;
++  font-size: 0.75rem;
++  font-weight: 700;
++  padding: 0.3rem 0.8rem;
++  border-radius: var(--radius-pill);
++}
++
++.pricing-card__price {
++  display: flex;
++  align-items: baseline;
++  gap: var(--space-2);
++  margin: var(--space-4) 0 var(--space-3);
++}
++
++.pricing-card__amount {
++  font-family: var(--font-display);
++  font-size: 2.4rem;
++  font-weight: 700;
++}
++
++.pricing-card__billing {
++  color: var(--text-dim);
++  font-size: 0.85rem;
++}
++
++.pricing-card__description {
++  color: var(--text-muted);
++  font-size: 0.95rem;
++}
++
++.pricing-card__features {
++  margin: var(--space-5) 0 var(--space-6);
++  display: flex;
++  flex-direction: column;
++  gap: var(--space-3);
++}
++
++.pricing-card__features li {
++  padding-left: 1.6rem;
++  position: relative;
++  font-size: 0.92rem;
++  color: var(--text-muted);
++}
++
++.pricing-card__features li::before {
++  content: '';
++  position: absolute;
++  left: 0;
++  top: 0.4em;
++  width: 10px;
++  height: 10px;
++  border-radius: 3px;
++  background: var(--gradient-amber);
++}
++
++.pricing-card__cta {
++  margin-top: auto;
++  width: 100%;
++}
++
++/* ------------------------------------------------------------------ faq */
++.faq__list {
++  display: flex;
++  flex-direction: column;
++  gap: var(--space-3);
++  max-width: 760px;
++  margin: 0 auto;
++}
++
++.faq-item {
++  background: var(--surface);
++  border: 1px solid var(--border);
++  border-radius: var(--radius-md);
++  overflow: hidden;
++}
++
++.faq-item__heading {
++  font-family: var(--font-body);
++  font-size: 1rem;
++  font-weight: 600;
++}
++
++.faq-item__question {
++  width: 100%;
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: var(--space-4);
++  padding: var(--space-5) var(--space-6);
++  text-align: left;
++  transition: color 0.15s ease;
++}
++
++.faq-item__question:hover {
++  color: var(--amber-400);
++}
++
++.faq-item__question:focus-visible {
++  outline: 2px solid var(--amber-400);
++  outline-offset: -3px;
++}
++
++.faq-item__icon {
++  flex-shrink: 0;
++  width: 28px;
++  height: 28px;
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  border-radius: 50%;
++  background: var(--surface-alt);
++  font-size: 1.1rem;
++  color: var(--amber-400);
++}
++
++.faq-item__answer {
++  padding: 0 var(--space-6) var(--space-5);
++  color: var(--text-muted);
++}
++
++/* --------------------------------------------------------------- footer */
++.site-footer {
++  border-top: 1px solid var(--border);
++  padding: var(--space-8) var(--space-5) var(--space-6);
++  background: var(--bg-elevated);
++}
++
++.site-footer__inner {
++  max-width: var(--container);
++  margin: 0 auto;
++  display: grid;
++  grid-template-columns: minmax(0, 1.3fr) repeat(3, minmax(0, 1fr));
++  gap: var(--space-7);
++}
++
++.site-footer__brand p {
++  margin-top: var(--space-4);
++  color: var(--text-muted);
++  font-size: 0.9rem;
++  max-width: 32ch;
++}
++
++.site-footer__nav {
++  display: contents;
++}
++
++.site-footer__group h3 {
++  font-family: var(--font-body);
++  font-size: 0.8rem;
++  text-transform: uppercase;
++  letter-spacing: 0.08em;
++  color: var(--text-dim);
++  margin-bottom: var(--space-4);
++}
++
++.site-footer__group ul {
++  display: flex;
++  flex-direction: column;
++  gap: var(--space-3);
++}
++
++.site-footer__group a {
++  color: var(--text-muted);
++  font-size: 0.92rem;
++  transition: color 0.15s ease;
++}
++
++.site-footer__group a:hover {
++  color: var(--text);
++}
++
++.site-footer__legal {
++  max-width: var(--container);
++  margin: var(--space-7) auto 0;
++  padding-top: var(--space-5);
++  border-top: 1px solid var(--border);
++  color: var(--text-dim);
++  font-size: 0.82rem;
++}
++
++/* ----------------------------------------------------------- responsive */
++@media (max-width: 900px) {
++  .hero__inner {
++    grid-template-columns: 1fr;
++    text-align: center;
++  }
++
++  .hero__lead {
++    margin-left: auto;
++    margin-right: auto;
++  }
++
++  .hero__actions {
++    justify-content: center;
++  }
++
++  .hero__stats {
++    justify-content: center;
++    flex-wrap: wrap;
++    text-align: left;
++  }
++
++  .hero__visual {
++    order: -1;
++  }
++
++  .day-cycle__display {
++    grid-template-columns: 1fr;
++    text-align: center;
++  }
++
++  .features__grid,
++  .specs__grid,
++  .social-proof__grid,
++  .pricing__grid {
++    grid-template-columns: repeat(2, minmax(0, 1fr));
++  }
++
++  .site-footer__inner {
++    grid-template-columns: repeat(2, minmax(0, 1fr));
++  }
++
++  .pricing-card--recommended {
++    transform: none;
++  }
++}
++
++@media (max-width: 640px) {
++  .site-header__inner {
++    gap: var(--space-3);
++  }
++
++  .site-nav ul {
++    gap: var(--space-4);
++  }
++
++  section {
++    padding: var(--space-8) var(--space-4);
++  }
++
++  .features__grid,
++  .specs__grid,
++  .social-proof__grid,
++  .pricing__grid {
++    grid-template-columns: 1fr;
++  }
++
++  .site-footer__inner {
++    grid-template-columns: 1fr;
++    gap: var(--space-6);
++  }
++
++  .hero__stats {
++    gap: var(--space-5);
++  }
++
++  .day-cycle__options {
++    gap: var(--space-2);
++  }
++
++  .day-cycle__option {
++    min-width: 0;
++    flex: 1 1 calc(50% - var(--space-2));
++    padding: var(--space-3);
++  }
++}
++
++@media (max-width: 460px) {
++  .site-nav {
++    display: none;
++  }
++
++  .site-header__inner {
++    justify-content: space-between;
++  }
+ }

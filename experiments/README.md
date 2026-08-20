@@ -7,5 +7,7 @@ and version:
 <MODEL>-<EFFORT>-<BENCHMARK>-<VERSION>
 ```
 
-Example: [`CLAUDE-SONNET5-MEDIUM-B02-V1`](CLAUDE-SONNET5-MEDIUM-B02-V1/result.md)
-references `benchmark_id = B02-minesweeper` and does not redefine TASK/rubric.
+- [`CLAUDE-SONNET5-MEDIUM-B02-V1`](CLAUDE-SONNET5-MEDIUM-B02-V1/result.md) — B02 Minesweeper
+- [`CLAUDE-SONNET5-MEDIUM-B03-V1`](CLAUDE-SONNET5-MEDIUM-B03-V1/result.md) — B03 LUMA (visual scoring pending)
+
+Each experiment references a `benchmark_id` and does not redefine TASK/rubric.

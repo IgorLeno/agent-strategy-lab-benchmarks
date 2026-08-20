@@ -16,7 +16,7 @@ This repository is the public corpus. It is independent of the Agent Strategy La
 6. **Negative results are preserved.** A slower arm, a visual loss, a purity warning, or a failed validator stays in the record. Nothing is deleted because it is unflattering.
 7. **UNKNOWN is never turned into zero.** A missing measurement is `null` / `UNKNOWN` / `NOT_EVALUATED` with provenance. Substituting `0` would fabricate efficiency.
 8. **Direct and Agent Lab must use comparable conditions.** Same seed, same TASK bytes, same model, same reasoning effort, same validators, sequential execution, no cross-arm leakage.
-9. **No individual result is a universal conclusion.** `n = 1` is `n = 1`. Read `experiments/CLAUDE-SONNET5-MEDIUM-B02-V1/result.md` as one sealed trial, not as a ranking of Agent Strategy Lab.
+9. **No individual result is a universal conclusion.** `n = 1` is `n = 1`. Read any `experiments/*/result.md` as one sealed trial, not as a ranking of Agent Strategy Lab.
 
 ## Benchmark vs experiment
 
@@ -41,6 +41,7 @@ benchmarks/
   B04-atlas/
 experiments/
   CLAUDE-SONNET5-MEDIUM-B02-V1/
+  CLAUDE-SONNET5-MEDIUM-B03-V1/
 docs/
   methodology.md
   terminology.md
@@ -66,9 +67,11 @@ Recompute hashes with:
 ./scripts/verify-frozen-hashes.sh
 ```
 
-## Published experiment
+## Published experiments
 
 [CLAUDE-SONNET5-MEDIUM-B02-V1](experiments/CLAUDE-SONNET5-MEDIUM-B02-V1/result.md) — Claude Sonnet 5, medium effort, B02 Minesweeper. Both arms passed deterministic validation on the first attempt. Direct was more efficient and received the higher blind visual/UX score. **n = 1.**
+
+[CLAUDE-SONNET5-MEDIUM-B03-V1](experiments/CLAUDE-SONNET5-MEDIUM-B03-V1/result.md) — Claude Sonnet 5, medium effort, B03 LUMA. Both arms passed deterministic validation on the first attempt. Direct was more efficient on wall/runtime/tokens/API-equivalent. Visual scoring is pending blind evaluation. **n = 1.**
 
 ## What is not published
 
