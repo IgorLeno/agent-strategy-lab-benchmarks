@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "B02-minesweeper",
+  "short_id": "B2",
+  "title": "Browser Minesweeper (React + TypeScript)",
+  "frozen_at": "2026-08-20",
+  "seed_sha": "6d4ba2039c85cb778bcac0618d0859917ad0ce3a",
+  "seed_sha_note": "Original git commit SHA of the frozen seed repository. Nested .git directories are not stored in this corpus.",
+  "task_file": "TASK.md",
+  "task_sha256": "edcfd47d5b12a14463b32bcee9c2931213a9446d439eb49ba3ce7435a46e4553",
+  "task_sha256_in_seed": "edcfd47d5b12a14463b32bcee9c2931213a9446d439eb49ba3ce7435a46e4553",
+  "rubric_file": "rubric.md",
+  "rubric_sha256": "70d8b4ea6c46cc18ae6587fdd1f17ef344c8129e35739652a74425e9aa6c2eb6",
+  "plan_file": "plan.yaml",
+  "plan_file_sha256": "115c592e604f1178d773a225d0e67e4879b3774b00e84687de1897e31b37676d",
+  "plan_canonical_sha256": {
+    "value": "3a3e180e8d5a25ab3f57f5294cae3eeab61f1ffc036d9f0b4b28f6fd7ee44eb5",
+    "provenance": "copied from the frozen source protocol.json; not independently recomputed in this corpus"
+  },
+  "package_lock_sha256": "7ff155c9f5e570ce2639b1ea0ea135686953c29660b032feb3a25b499a0fb7f2",
+  "package_lock_note": "Identical across B01–B04; the offline toolchain is not published here.",
+  "rubric_weights": {
+    "functionality": 40,
+    "design": 30,
+    "ux": 15,
+    "responsive": 10,
+    "code": 5
+  },
+  "fixtures": [],
+  "validators": [
+    {
+      "path": "validation/check.mjs",
+      "sha256": "4cc12382ed8149416591a4e9b543cbe4ffb4ce80bd2de9668fae92c34d030d45"
+    },
+    {
+      "path": "validation/lib/minesweeper.mjs",
+      "sha256": "a5a8e7b298b8eee4e1e8c73a0a4340b51afa44c67c80b943084e80823f3d70a2"
+    },
+    {
+      "path": "validation/lib/browser.mjs",
+      "sha256": "55f2832845a0191280c4ba6a50ad4fc75bf2cf792b88181edaa99635dd47ae49"
+    },
+    {
+      "path": "validation/lib/dom.mjs",
+      "sha256": "6c191a82de03fad0410894ea257df8facc55bd0de3ebf7a94bde7ab76c38d65f"
+    },
+    {
+      "path": "validation/lib/report.mjs",
+      "sha256": "f42b451241b83f6f706efae4abc844d074072507d5025479c21e7d2d0d84fe8d"
+    },
+    {
+      "path": "validation/lib/serve.mjs",
+      "sha256": "dd02e30fcf20500be7eb825d2203b374d39cae5a12dec014990effd7890f1a1c"
+    }
+  ],
+  "validation": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "timeout_seconds": 240
+    }
+  ],
+  "integrity": {
+    "source_protocol_id": "agentlab-ab-v1",
+    "recomputed_and_matched": [
+      "seed_sha",
+      "task_sha256",
+      "task_sha256_in_seed",
+      "rubric_sha256",
+      "plan_file_sha256",
+      "package_lock_sha256",
+      "fixture hashes"
+    ],
+    "hash_mismatch": false
+  }
+}

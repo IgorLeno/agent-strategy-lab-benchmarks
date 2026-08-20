@@ -1,0 +1,27 @@
+{
+  "arm": "direct",
+  "wall_clock_ms": 283271,
+  "worker_runtime_ms": 246563,
+  "launch_count": 1,
+  "tokens": {
+    "input": 48,
+    "cached": 1319412,
+    "output": 26672,
+    "reasoning": 9466,
+    "total": 1399828,
+    "provenance": "claude JSON usage: input_tokens=48, cache_creation_input_tokens=53696, cache_read_input_tokens=1319412, output_tokens=26672, thinking_tokens=9466 (subset of output). total = input + cache_creation + cache_read + output."
+  },
+  "api_equivalent_usd": 1.1182235999999999,
+  "api_equivalent_usd_display": 1.118,
+  "first_pass": true,
+  "repair_used": false,
+  "final_status": "PASS",
+  "changed_files": 10,
+  "diff": {
+    "insertions": 1076,
+    "deletions": 3
+  },
+  "final_commit_sha": null,
+  "started_at": "2026-08-20T20:19:33.378Z",
+  "finished_at": "2026-08-20T20:24:16.649Z"
+}

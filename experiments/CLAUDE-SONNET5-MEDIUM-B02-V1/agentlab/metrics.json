@@ -1,0 +1,27 @@
+{
+  "arm": "agentlab",
+  "wall_clock_ms": 486939,
+  "worker_runtime_ms": 440747,
+  "launch_count": 1,
+  "tokens": {
+    "input": 76,
+    "cached": 2800711,
+    "output": 43322,
+    "reasoning": 26140,
+    "total": 2918697,
+    "provenance": "claude JSON usage: input_tokens=76, cache_creation_input_tokens=74588, cache_read_input_tokens=2800711, output_tokens=43322, thinking_tokens=26140 (subset of output). total = input + cache_creation + cache_read + output."
+  },
+  "api_equivalent_usd": 1.9421943,
+  "api_equivalent_usd_display": 1.942,
+  "first_pass": true,
+  "repair_used": false,
+  "final_status": "PASS",
+  "changed_files": 10,
+  "diff": {
+    "insertions": 857,
+    "deletions": 12
+  },
+  "final_commit_sha": "e217bba3dd9e0b3363bd254f7292511aad523635",
+  "started_at": "2026-08-20T20:25:14.396Z",
+  "finished_at": "2026-08-20T20:33:21.335Z"
+}

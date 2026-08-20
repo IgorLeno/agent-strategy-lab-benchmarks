@@ -1,0 +1,936 @@
+diff --git a/src/App.tsx b/src/App.tsx
+index 40079d6..87e6a38 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,5 +1,72 @@
+-// Scaffold inicial. Substitua por sua implementação do Minesweeper descrito
+-// em TASK.md.
++import { Board } from './components/Board';
++import { useMinesweeper } from './hooks/useMinesweeper';
++import { DIFFICULTY_ORDER } from './game/types';
++import type { Difficulty, GameStatus } from './game/types';
++
++const DIFFICULTY_LABELS: Record<Difficulty, string> = {
++  beginner: 'Beginner',
++  intermediate: 'Intermediate',
++  expert: 'Expert',
++};
++
++const STATUS_LABELS: Record<GameStatus, string> = {
++  playing: 'Playing',
++  won: 'Won',
++  lost: 'Lost',
++};
++
++const STATUS_EMOJI: Record<GameStatus, string> = {
++  playing: '\u{1F642}',
++  won: '\u{1F60E}',
++  lost: '\u{1F635}',
++};
++
+ export default function App() {
+-  return <div />;
++  const { game, elapsed, reveal, flag, restart } = useMinesweeper('intermediate');
++  const minesRemaining = game.mines - game.flagCount;
++
++  return (
++    <div className="app">
++      <h1>Minesweeper</h1>
++      <div className="controls">
++        <div className="difficulty" data-testid="difficulty" role="group" aria-label="Difficulty">
++          {DIFFICULTY_ORDER.map((key) => (
++            <button
++              key={key}
++              type="button"
++              data-difficulty={key}
++              className={key === game.difficulty ? 'difficulty-btn difficulty-btn--active' : 'difficulty-btn'}
++              aria-pressed={key === game.difficulty}
++              onClick={() => restart(key)}
++            >
++              {DIFFICULTY_LABELS[key]}
++            </button>
++          ))}
++        </div>
++        <div className="status-row">
++          <div className="counter" data-testid="mine-counter">
++            {formatCount(minesRemaining)}
++          </div>
++          <button type="button" className="restart" data-testid="restart" aria-label="Restart game" onClick={() => restart()}>
++            {STATUS_EMOJI[game.status]}
++          </button>
++          <div className="timer" data-testid="timer">
++            {formatCount(elapsed)}
++          </div>
++        </div>
++        <div className={`status status--${game.status}`} data-testid="status">
++          {STATUS_LABELS[game.status]}
++        </div>
++      </div>
++      <div className="board-wrapper">
++        <Board game={game} onReveal={reveal} onFlag={flag} />
++      </div>
++    </div>
++  );
++}
++
++function formatCount(value: number): string {
++  const sign = value < 0 ? '-' : '';
++  const digits = Math.abs(value).toString().padStart(2, '0');
++  return `${sign}${digits}`;
+ }
+diff --git a/src/components/Board.tsx b/src/components/Board.tsx
+new file mode 100644
+index 0000000..8e0e4bc
+--- /dev/null
++++ b/src/components/Board.tsx
+@@ -0,0 +1,24 @@
++import type { CSSProperties } from 'react';
++import { Cell } from './Cell';
++import type { GameState } from '../game/types';
++
++interface BoardProps {
++  game: GameState;
++  onReveal: (row: number, col: number) => void;
++  onFlag: (row: number, col: number) => void;
++}
++
++export function Board({ game, onReveal, onFlag }: BoardProps) {
++  const disabled = game.status !== 'playing';
++  const style = { '--cols': game.cols } as CSSProperties;
++
++  return (
++    <div className="board" data-testid="board" style={style}>
++      {game.cells.map((row, r) =>
++        row.map((cell, c) => (
++          <Cell key={`${r}-${c}`} row={r} col={c} cell={cell} disabled={disabled} onReveal={onReveal} onFlag={onFlag} />
++        )),
++      )}
++    </div>
++  );
++}
+diff --git a/src/components/Cell.tsx b/src/components/Cell.tsx
+new file mode 100644
+index 0000000..2118b9d
+--- /dev/null
++++ b/src/components/Cell.tsx
+@@ -0,0 +1,111 @@
++import { useCallback, useRef } from 'react';
++import type { MouseEvent, TouchEvent } from 'react';
++import type { CellData } from '../game/types';
++
++const LONG_PRESS_MS = 500;
++
++const ADJACENT_COLORS = ['', '#1a56db', '#15803d', '#dc2626', '#6d28d9', '#b45309', '#0e7490', '#111827', '#6b7280'];
++
++interface CellProps {
++  row: number;
++  col: number;
++  cell: CellData;
++  disabled: boolean;
++  onReveal: (row: number, col: number) => void;
++  onFlag: (row: number, col: number) => void;
++}
++
++export function Cell({ row, col, cell, disabled, onReveal, onFlag }: CellProps) {
++  const longPressTimer = useRef<number | null>(null);
++  const longPressFired = useRef(false);
++
++  const clearLongPress = useCallback(() => {
++    if (longPressTimer.current !== null) {
++      window.clearTimeout(longPressTimer.current);
++      longPressTimer.current = null;
++    }
++  }, []);
++
++  const handleClick = useCallback(() => {
++    if (disabled) return;
++    onReveal(row, col);
++  }, [disabled, onReveal, row, col]);
++
++  const handleContextMenu = useCallback(
++    (event: MouseEvent<HTMLButtonElement>) => {
++      event.preventDefault();
++      if (disabled) return;
++      onFlag(row, col);
++    },
++    [disabled, onFlag, row, col],
++  );
++
++  const handleTouchStart = useCallback(() => {
++    if (disabled) return;
++    longPressFired.current = false;
++    longPressTimer.current = window.setTimeout(() => {
++      longPressFired.current = true;
++      onFlag(row, col);
++    }, LONG_PRESS_MS);
++  }, [disabled, onFlag, row, col]);
++
++  const handleTouchEnd = useCallback(
++    (event: TouchEvent<HTMLButtonElement>) => {
++      clearLongPress();
++      event.preventDefault();
++      if (longPressFired.current) {
++        longPressFired.current = false;
++        return;
++      }
++      if (!disabled) onReveal(row, col);
++    },
++    [clearLongPress, disabled, onReveal, row, col],
++  );
++
++  const handleTouchMove = useCallback(() => {
++    clearLongPress();
++  }, [clearLongPress]);
++
++  const showAdjacent = cell.state === 'revealed' && !cell.mine;
++  const dataAttrs = showAdjacent ? { 'data-adjacent': String(cell.adjacent) } : {};
++
++  return (
++    <button
++      type="button"
++      className={`cell cell--${cell.state}`}
++      data-testid="cell"
++      data-row={row}
++      data-col={col}
++      data-state={cell.state}
++      {...dataAttrs}
++      aria-label={describeCell(row, col, cell)}
++      onClick={handleClick}
++      onContextMenu={handleContextMenu}
++      onTouchStart={handleTouchStart}
++      onTouchEnd={handleTouchEnd}
++      onTouchMove={handleTouchMove}
++      style={cell.state === 'revealed' && cell.adjacent > 0 ? { color: ADJACENT_COLORS[cell.adjacent] } : undefined}
++    >
++      {renderContent(cell)}
++    </button>
++  );
++}
++
++function renderContent(cell: CellData): string {
++  if (cell.state === 'flagged') return '\u{1F6A9}';
++  if (cell.state === 'exploded') return '\u{1F4A5}';
++  if (cell.state === 'revealed') {
++    if (cell.mine) return '\u{1F4A3}';
++    return cell.adjacent > 0 ? String(cell.adjacent) : '';
++  }
++  return '';
++}
++
++function describeCell(row: number, col: number, cell: CellData): string {
++  const position = `Row ${row + 1}, column ${col + 1}`;
++  if (cell.state === 'covered') return `${position}, covered`;
++  if (cell.state === 'flagged') return `${position}, flagged`;
++  if (cell.state === 'exploded') return `${position}, exploded mine`;
++  if (cell.mine) return `${position}, revealed mine`;
++  return cell.adjacent > 0 ? `${position}, ${cell.adjacent} adjacent mines` : `${position}, empty`;
++}
+diff --git a/src/game/logic.test.ts b/src/game/logic.test.ts
+new file mode 100644
+index 0000000..71b91e7
+--- /dev/null
++++ b/src/game/logic.test.ts
+@@ -0,0 +1,108 @@
++import { describe, expect, it } from 'vitest';
++import { createCustomGame, createGameFromLayout, revealCell, toggleFlag } from './logic';
++import { mulberry32 } from './rng';
++
++describe('first click safety', () => {
++  it('never places a mine on the first revealed cell, even when the layout is forced', () => {
++    // 3x3 board with 8 mines: every cell except the one revealed must become
++    // a mine, which forces the placement algorithm to react to the click.
++    const game = createCustomGame(3, 3, 8, 'beginner');
++    const rng = mulberry32(42);
++    const next = revealCell(game, 1, 1, rng);
++
++    expect(next.cells[1][1].mine).toBe(false);
++    expect(next.cells[1][1].state).toBe('revealed');
++    expect(next.status).not.toBe('lost');
++
++    const mineCount = next.cells.flat().filter((cell) => cell.mine).length;
++    expect(mineCount).toBe(8);
++  });
++});
++
++describe('flood reveal', () => {
++  it('expands the empty region and stops at numbered cells without crossing a mine wall', () => {
++    // 5x5 board with a full mine column at col=2, splitting the board in two.
++    const mines: Array<[number, number]> = [
++      [0, 2],
++      [1, 2],
++      [2, 2],
++      [3, 2],
++      [4, 2],
++    ];
++    const game = createGameFromLayout(5, 5, mines);
++    const next = revealCell(game, 0, 0);
++
++    expect(next.status).toBe('playing');
++    // left region (cols 0-1) fully revealed, including the numbered boundary
++    expect(next.cells[0][0].state).toBe('revealed');
++    expect(next.cells[0][0].adjacent).toBe(0);
++    expect(next.cells[2][1].state).toBe('revealed');
++    expect(next.cells[2][1].adjacent).toBeGreaterThan(0);
++
++    // right region (cols 3-4) is unreachable and must stay untouched
++    expect(next.cells[0][3].state).toBe('covered');
++    expect(next.cells[4][4].state).toBe('covered');
++
++    // mines themselves are never auto-revealed by the flood
++    expect(next.cells[2][2].state).toBe('covered');
++
++    const revealedCount = next.cells.flat().filter((cell) => cell.state === 'revealed').length;
++    expect(revealedCount).toBe(10);
++  });
++});
++
++describe('mine counter', () => {
++  it('decrements when a flag is placed and restores when it is removed', () => {
++    const game = createGameFromLayout(3, 3, [[2, 2]]);
++    expect(game.mines - game.flagCount).toBe(1);
++
++    const flagged = toggleFlag(game, 0, 0);
++    expect(flagged.flagCount).toBe(1);
++    expect(flagged.mines - flagged.flagCount).toBe(0);
++
++    const unflagged = toggleFlag(flagged, 0, 0);
++    expect(unflagged.flagCount).toBe(0);
++    expect(unflagged.mines - unflagged.flagCount).toBe(1);
++  });
++});
++
++describe('flag protection', () => {
++  it('prevents a flagged cell from being revealed', () => {
++    const game = createGameFromLayout(3, 3, [[2, 2]]);
++    const flagged = toggleFlag(game, 0, 0);
++    const attempted = revealCell(flagged, 0, 0);
++
++    expect(attempted.cells[0][0].state).toBe('flagged');
++    expect(attempted.status).toBe('playing');
++  });
++});
++
++describe('win detection', () => {
++  it('marks the game as won once every non-mine cell is revealed', () => {
++    const game = createGameFromLayout(2, 2, [[1, 1]]);
++    let state = revealCell(game, 0, 0);
++    expect(state.status).toBe('playing');
++    state = revealCell(state, 0, 1);
++    expect(state.status).toBe('playing');
++    state = revealCell(state, 1, 0);
++
++    expect(state.status).toBe('won');
++    // remaining mines are shown as flagged on a win
++    expect(state.cells[1][1].state).toBe('flagged');
++  });
++});
++
++describe('loss detection', () => {
++  it('ends the game and locks the board when a mine is revealed', () => {
++    const game = createGameFromLayout(3, 3, [[1, 1]]);
++    const afterHit = revealCell(game, 1, 1);
++
++    expect(afterHit.status).toBe('lost');
++    expect(afterHit.cells[1][1].state).toBe('exploded');
++    expect(afterHit.explodedCell).toEqual({ row: 1, col: 1 });
++
++    const attemptAfterLoss = revealCell(afterHit, 0, 0);
++    expect(attemptAfterLoss).toBe(afterHit);
++    expect(attemptAfterLoss.cells[0][0].state).toBe('covered');
++  });
++});
+diff --git a/src/game/logic.ts b/src/game/logic.ts
+new file mode 100644
+index 0000000..2bdb39c
+--- /dev/null
++++ b/src/game/logic.ts
+@@ -0,0 +1,225 @@
++import { DIFFICULTIES } from './types';
++import type { CellData, Difficulty, GameState, RandomSource } from './types';
++
++function emptyCell(): CellData {
++  return { mine: false, state: 'covered', adjacent: 0 };
++}
++
++function makeCells(rows: number, cols: number): CellData[][] {
++  return Array.from({ length: rows }, () => Array.from({ length: cols }, emptyCell));
++}
++
++function cloneCells(cells: CellData[][]): CellData[][] {
++  return cells.map((row) => row.map((cell) => ({ ...cell })));
++}
++
++function neighborsOf(rows: number, cols: number, row: number, col: number): Array<[number, number]> {
++  const result: Array<[number, number]> = [];
++  for (let dr = -1; dr <= 1; dr += 1) {
++    for (let dc = -1; dc <= 1; dc += 1) {
++      if (dr === 0 && dc === 0) continue;
++      const nr = row + dr;
++      const nc = col + dc;
++      if (nr >= 0 && nr < rows && nc >= 0 && nc < cols) result.push([nr, nc]);
++    }
++  }
++  return result;
++}
++
++function computeAdjacents(cells: CellData[][], rows: number, cols: number): void {
++  for (let r = 0; r < rows; r += 1) {
++    for (let c = 0; c < cols; c += 1) {
++      if (cells[r][c].mine) continue;
++      let count = 0;
++      for (const [nr, nc] of neighborsOf(rows, cols, r, c)) {
++        if (cells[nr][nc].mine) count += 1;
++      }
++      cells[r][c].adjacent = count;
++    }
++  }
++}
++
++function shuffle<T>(items: T[], rng: RandomSource): void {
++  for (let i = items.length - 1; i > 0; i -= 1) {
++    const j = Math.floor(rng() * (i + 1));
++    const temp = items[i];
++    items[i] = items[j];
++    items[j] = temp;
++  }
++}
++
++function allCellsExcept(rows: number, cols: number, safeRow: number, safeCol: number): Array<[number, number]> {
++  const result: Array<[number, number]> = [];
++  for (let r = 0; r < rows; r += 1) {
++    for (let c = 0; c < cols; c += 1) {
++      if (r === safeRow && c === safeCol) continue;
++      result.push([r, c]);
++    }
++  }
++  return result;
++}
++
++/** Places mines avoiding the first-clicked cell (and, when the board is large
++ * enough, its neighbours too) so the opening click always reveals an area. */
++function placeMines(
++  cells: CellData[][],
++  rows: number,
++  cols: number,
++  mineCount: number,
++  safeRow: number,
++  safeCol: number,
++  rng: RandomSource,
++): void {
++  const safeZone = new Set<string>([`${safeRow},${safeCol}`]);
++  for (const [nr, nc] of neighborsOf(rows, cols, safeRow, safeCol)) safeZone.add(`${nr},${nc}`);
++
++  const candidates: Array<[number, number]> = [];
++  for (let r = 0; r < rows; r += 1) {
++    for (let c = 0; c < cols; c += 1) {
++      if (!safeZone.has(`${r},${c}`)) candidates.push([r, c]);
++    }
++  }
++
++  const pool = candidates.length >= mineCount ? candidates : allCellsExcept(rows, cols, safeRow, safeCol);
++  shuffle(pool, rng);
++  for (let i = 0; i < mineCount; i += 1) {
++    const [r, c] = pool[i];
++    cells[r][c].mine = true;
++  }
++  computeAdjacents(cells, rows, cols);
++}
++
++function floodReveal(cells: CellData[][], rows: number, cols: number, startRow: number, startCol: number): void {
++  const stack: Array<[number, number]> = [[startRow, startCol]];
++  while (stack.length > 0) {
++    const next = stack.pop();
++    if (!next) break;
++    const [r, c] = next;
++    const cell = cells[r][c];
++    if (cell.state === 'revealed' || cell.mine) continue;
++    cell.state = 'revealed';
++    if (cell.adjacent === 0) {
++      for (const [nr, nc] of neighborsOf(rows, cols, r, c)) {
++        if (cells[nr][nc].state === 'covered') stack.push([nr, nc]);
++      }
++    }
++  }
++}
++
++function countFlags(cells: CellData[][]): number {
++  let count = 0;
++  for (const row of cells) for (const cell of row) if (cell.state === 'flagged') count += 1;
++  return count;
++}
++
++function countRevealed(cells: CellData[][]): number {
++  let count = 0;
++  for (const row of cells) for (const cell of row) if (cell.state === 'revealed') count += 1;
++  return count;
++}
++
++export function createCustomGame(rows: number, cols: number, mines: number, difficulty: Difficulty): GameState {
++  return {
++    difficulty,
++    rows,
++    cols,
++    mines,
++    cells: makeCells(rows, cols),
++    status: 'playing',
++    minesPlaced: false,
++    flagCount: 0,
++    revealedCount: 0,
++    explodedCell: null,
++  };
++}
++
++export function createGame(difficulty: Difficulty): GameState {
++  const config = DIFFICULTIES[difficulty];
++  return createCustomGame(config.rows, config.cols, config.mines, difficulty);
++}
++
++/** Test-only helper: builds a board with a fixed, known mine layout so flood
++ * reveal / win / loss behaviour can be asserted without relying on the RNG. */
++export function createGameFromLayout(rows: number, cols: number, minePositions: Array<[number, number]>): GameState {
++  const cells = makeCells(rows, cols);
++  for (const [r, c] of minePositions) cells[r][c].mine = true;
++  computeAdjacents(cells, rows, cols);
++  return {
++    difficulty: 'beginner',
++    rows,
++    cols,
++    mines: minePositions.length,
++    cells,
++    status: 'playing',
++    minesPlaced: true,
++    flagCount: 0,
++    revealedCount: 0,
++    explodedCell: null,
++  };
++}
++
++export function revealCell(state: GameState, row: number, col: number, rng: RandomSource = Math.random): GameState {
++  if (state.status !== 'playing') return state;
++  const target = state.cells[row]?.[col];
++  if (!target || target.state === 'flagged' || target.state === 'revealed') return state;
++
++  const cells = cloneCells(state.cells);
++  let minesPlaced = state.minesPlaced;
++
++  if (!minesPlaced) {
++    placeMines(cells, state.rows, state.cols, state.mines, row, col, rng);
++    minesPlaced = true;
++  }
++
++  const cell = cells[row][col];
++
++  if (cell.mine) {
++    cell.state = 'exploded';
++    for (const r of cells) {
++      for (const c of r) {
++        if (c.mine && c.state === 'covered') c.state = 'revealed';
++      }
++    }
++    return {
++      ...state,
++      cells,
++      minesPlaced,
++      status: 'lost',
++      explodedCell: { row, col },
++      flagCount: countFlags(cells),
++      revealedCount: countRevealed(cells),
++    };
++  }
++
++  floodReveal(cells, state.rows, state.cols, row, col);
++  const revealedCount = countRevealed(cells);
++  const totalSafeCells = state.rows * state.cols - state.mines;
++  const won = revealedCount === totalSafeCells;
++
++  if (won) {
++    for (const r of cells) {
++      for (const c of r) {
++        if (c.mine) c.state = 'flagged';
++      }
++    }
++  }
++
++  return {
++    ...state,
++    cells,
++    minesPlaced,
++    status: won ? 'won' : 'playing',
++    revealedCount,
++    flagCount: countFlags(cells),
++  };
++}
++
++export function toggleFlag(state: GameState, row: number, col: number): GameState {
++  if (state.status !== 'playing') return state;
++  const target = state.cells[row]?.[col];
++  if (!target || (target.state !== 'covered' && target.state !== 'flagged')) return state;
++
++  const cells = cloneCells(state.cells);
++  cells[row][col].state = cells[row][col].state === 'flagged' ? 'covered' : 'flagged';
++  return { ...state, cells, flagCount: countFlags(cells) };
++}
+diff --git a/src/game/rng.ts b/src/game/rng.ts
+new file mode 100644
+index 0000000..c502a48
+--- /dev/null
++++ b/src/game/rng.ts
+@@ -0,0 +1,13 @@
++import type { RandomSource } from './types';
++
++/** Deterministic PRNG so mine placement can be reproduced in tests. */
++export function mulberry32(seed: number): RandomSource {
++  let state = seed >>> 0;
++  return () => {
++    state |= 0;
++    state = (state + 0x6d2b79f5) | 0;
++    let t = Math.imul(state ^ (state >>> 15), 1 | state);
++    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
++    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
++  };
++}
+diff --git a/src/game/types.ts b/src/game/types.ts
+new file mode 100644
+index 0000000..be28633
+--- /dev/null
++++ b/src/game/types.ts
+@@ -0,0 +1,40 @@
++export type Difficulty = 'beginner' | 'intermediate' | 'expert';
++
++export interface DifficultyConfig {
++  rows: number;
++  cols: number;
++  mines: number;
++}
++
++export const DIFFICULTIES: Record<Difficulty, DifficultyConfig> = {
++  beginner: { rows: 9, cols: 9, mines: 10 },
++  intermediate: { rows: 16, cols: 16, mines: 40 },
++  expert: { rows: 16, cols: 30, mines: 99 },
++};
++
++export const DIFFICULTY_ORDER: Difficulty[] = ['beginner', 'intermediate', 'expert'];
++
++export type CellState = 'covered' | 'revealed' | 'flagged' | 'exploded';
++
++export interface CellData {
++  mine: boolean;
++  state: CellState;
++  adjacent: number;
++}
++
++export type GameStatus = 'playing' | 'won' | 'lost';
++
++export interface GameState {
++  difficulty: Difficulty;
++  rows: number;
++  cols: number;
++  mines: number;
++  cells: CellData[][];
++  status: GameStatus;
++  minesPlaced: boolean;
++  flagCount: number;
++  revealedCount: number;
++  explodedCell: { row: number; col: number } | null;
++}
++
++export type RandomSource = () => number;
+diff --git a/src/hooks/useMinesweeper.ts b/src/hooks/useMinesweeper.ts
+new file mode 100644
+index 0000000..3bae080
+--- /dev/null
++++ b/src/hooks/useMinesweeper.ts
+@@ -0,0 +1,37 @@
++import { useCallback, useEffect, useState } from 'react';
++import { createGame, revealCell, toggleFlag } from '../game/logic';
++import type { Difficulty, GameState } from '../game/types';
++
++export interface MinesweeperApi {
++  game: GameState;
++  elapsed: number;
++  reveal: (row: number, col: number) => void;
++  flag: (row: number, col: number) => void;
++  restart: (difficulty?: Difficulty) => void;
++}
++
++export function useMinesweeper(initialDifficulty: Difficulty): MinesweeperApi {
++  const [game, setGame] = useState<GameState>(() => createGame(initialDifficulty));
++  const [elapsed, setElapsed] = useState(0);
++
++  useEffect(() => {
++    if (!game.minesPlaced || game.status !== 'playing') return undefined;
++    const id = window.setInterval(() => setElapsed((value) => value + 1), 1000);
++    return () => window.clearInterval(id);
++  }, [game.minesPlaced, game.status]);
++
++  const reveal = useCallback((row: number, col: number) => {
++    setGame((current) => revealCell(current, row, col));
++  }, []);
++
++  const flag = useCallback((row: number, col: number) => {
++    setGame((current) => toggleFlag(current, row, col));
++  }, []);
++
++  const restart = useCallback((difficulty?: Difficulty) => {
++    setGame((current) => createGame(difficulty ?? current.difficulty));
++    setElapsed(0);
++  }, []);
++
++  return { game, elapsed, reveal, flag, restart };
++}
+diff --git a/src/seed.test.ts b/src/seed.test.ts
+deleted file mode 100644
+index 44068d9..0000000
+--- a/src/seed.test.ts
++++ /dev/null
+@@ -1,9 +0,0 @@
+-// Teste de scaffold: mantém a suíte executável antes de existirem testes reais.
+-// Acrescente os seus próprios arquivos *.test.ts / *.test.tsx em src/.
+-import { describe, expect, it } from 'vitest';
+-
+-describe('environment', () => {
+-  it('runs in a DOM environment', () => {
+-    expect(typeof document).toBe('object');
+-  });
+-});
+diff --git a/src/styles.css b/src/styles.css
+index b3a40d0..ac2dd85 100644
+--- a/src/styles.css
++++ b/src/styles.css
+@@ -4,7 +4,236 @@
+   box-sizing: border-box;
+ }
+ 
++:root {
++  --cell-size: 32px;
++  --bg: #0f172a;
++  --panel: #1e293b;
++  --panel-border: #334155;
++  --covered: #334155;
++  --covered-hover: #3f4f68;
++  --revealed: #e2e8f0;
++  --text: #f1f5f9;
++  --accent: #38bdf8;
++  --danger: #dc2626;
++  --success: #22c55e;
++}
++
++html,
++body {
++  overflow-x: hidden;
++  width: 100%;
++}
++
+ body {
+   margin: 0;
++  min-height: 100vh;
++  background: var(--bg);
++  color: var(--text);
+   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+ }
++
++.app {
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  gap: 12px;
++  padding: 16px 12px 32px;
++  max-width: 100%;
++}
++
++.app h1 {
++  margin: 0;
++  font-size: 1.5rem;
++}
++
++.controls {
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  gap: 10px;
++  width: 100%;
++  max-width: 560px;
++}
++
++.difficulty {
++  display: flex;
++  gap: 8px;
++  flex-wrap: wrap;
++  justify-content: center;
++}
++
++.difficulty-btn {
++  padding: 8px 14px;
++  border-radius: 6px;
++  border: 1px solid var(--panel-border);
++  background: var(--panel);
++  color: var(--text);
++  font-size: 0.9rem;
++  cursor: pointer;
++  min-height: 36px;
++}
++
++.difficulty-btn:hover {
++  border-color: var(--accent);
++}
++
++.difficulty-btn:focus-visible {
++  outline: 2px solid var(--accent);
++  outline-offset: 2px;
++}
++
++.difficulty-btn--active {
++  background: var(--accent);
++  color: #0f172a;
++  border-color: var(--accent);
++  font-weight: 600;
++}
++
++.status-row {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 16px;
++  width: 100%;
++  background: var(--panel);
++  border: 1px solid var(--panel-border);
++  border-radius: 8px;
++  padding: 10px 16px;
++}
++
++.counter,
++.timer {
++  font-variant-numeric: tabular-nums;
++  font-family: 'Courier New', monospace;
++  font-size: 1.4rem;
++  min-width: 3ch;
++  text-align: center;
++  color: var(--danger);
++}
++
++.restart {
++  border: 1px solid var(--panel-border);
++  background: var(--covered);
++  border-radius: 8px;
++  font-size: 1.4rem;
++  line-height: 1;
++  width: 44px;
++  height: 44px;
++  cursor: pointer;
++  flex-shrink: 0;
++}
++
++.restart:hover {
++  border-color: var(--accent);
++}
++
++.restart:focus-visible {
++  outline: 2px solid var(--accent);
++  outline-offset: 2px;
++}
++
++.status {
++  min-height: 1.4em;
++  font-weight: 600;
++  letter-spacing: 0.02em;
++}
++
++.status--won {
++  color: var(--success);
++}
++
++.status--lost {
++  color: var(--danger);
++}
++
++.board-wrapper {
++  width: 100%;
++  max-width: 100%;
++  overflow-x: auto;
++  display: flex;
++  justify-content: center;
++  padding-bottom: 4px;
++}
++
++.board {
++  display: grid;
++  grid-template-columns: repeat(var(--cols), var(--cell-size));
++  grid-auto-rows: var(--cell-size);
++  gap: 1px;
++  background: var(--panel-border);
++  border: 2px solid var(--panel-border);
++  border-radius: 4px;
++  padding: 1px;
++}
++
++.cell {
++  width: var(--cell-size);
++  height: var(--cell-size);
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  border: none;
++  border-radius: 2px;
++  padding: 0;
++  font-size: calc(var(--cell-size) * 0.5);
++  font-weight: 700;
++  line-height: 1;
++  background: var(--covered);
++  color: var(--text);
++  cursor: pointer;
++  touch-action: pan-x;
++  -webkit-touch-callout: none;
++  -webkit-tap-highlight-color: transparent;
++  user-select: none;
++}
++
++.cell--revealed,
++.cell--exploded {
++  background: var(--revealed);
++  color: #0f172a;
++  cursor: default;
++}
++
++.cell--exploded {
++  background: var(--danger);
++}
++
++.cell--flagged {
++  background: var(--covered);
++}
++
++.cell:hover:not(.cell--revealed):not(.cell--exploded) {
++  background: var(--covered-hover);
++}
++
++.cell:active:not(.cell--revealed):not(.cell--exploded) {
++  background: #4b5c78;
++}
++
++.cell:focus-visible {
++  outline: 2px solid var(--accent);
++  outline-offset: -2px;
++}
++
++@media (max-width: 480px) {
++  :root {
++    --cell-size: 22px;
++  }
++
++  .app h1 {
++    font-size: 1.2rem;
++  }
++
++  .status-row {
++    padding: 8px 10px;
++  }
++
++  .counter,
++  .timer {
++    font-size: 1.1rem;
++  }
++
++  .cell {
++    font-size: calc(var(--cell-size) * 0.55);
++  }
++}

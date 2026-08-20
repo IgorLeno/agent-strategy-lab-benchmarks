@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "B01-screenshot",
+  "short_id": "B1",
+  "title": "Screenshot-to-interface (React + TypeScript)",
+  "frozen_at": "2026-08-20",
+  "seed_sha": "6e05bc6c557ff0d6bbddcbb2d92fabb1f01478ee",
+  "seed_sha_note": "Original git commit SHA of the frozen seed repository. Nested .git directories are not stored in this corpus.",
+  "task_file": "TASK.md",
+  "task_sha256": "f7c737526774b34860860a1fa5f654bca4ce7393b0d7469bb599e715fdaae3b0",
+  "task_sha256_in_seed": "f7c737526774b34860860a1fa5f654bca4ce7393b0d7469bb599e715fdaae3b0",
+  "rubric_file": "rubric.md",
+  "rubric_sha256": "c1c6f631bfeec1cd43f3a328add0b6e485ddb2e53c40d4e47b1f7a9ec771db3a",
+  "plan_file": "plan.yaml",
+  "plan_file_sha256": "51f5b63818e529cb17f9942d7cfff67e808f37a9d0ca803193ecf27cd940e49f",
+  "plan_canonical_sha256": {
+    "value": "2284984cdb98936798e829a0d2c3e595cd99f81e671302bc79b513d9ca06a509",
+    "provenance": "copied from the frozen source protocol.json; not independently recomputed in this corpus"
+  },
+  "package_lock_sha256": "7ff155c9f5e570ce2639b1ea0ea135686953c29660b032feb3a25b499a0fb7f2",
+  "package_lock_note": "Identical across B01–B04; the offline toolchain is not published here.",
+  "rubric_weights": {
+    "visual_fidelity": 60,
+    "responsive": 15,
+    "completeness": 10,
+    "build_correctness": 10,
+    "code_quality": 5
+  },
+  "fixtures": [
+    {
+      "path": "reference/reference.png",
+      "sha256": "8295dcde60aaa7fb83cf5c44179f741d30f48d3735d579957d8b105d2ffcb030",
+      "also_at": "seed/reference/reference.png"
+    }
+  ],
+  "validators": [
+    {
+      "path": "validation/check.mjs",
+      "sha256": "86262d2c184f4bbe6c9190f7b4ba511e7dab8b97cc83599e4f3c3ad5d1112a68"
+    },
+    {
+      "path": "validation/lib/browser.mjs",
+      "sha256": "55f2832845a0191280c4ba6a50ad4fc75bf2cf792b88181edaa99635dd47ae49"
+    },
+    {
+      "path": "validation/lib/dom.mjs",
+      "sha256": "6c191a82de03fad0410894ea257df8facc55bd0de3ebf7a94bde7ab76c38d65f"
+    },
+    {
+      "path": "validation/lib/report.mjs",
+      "sha256": "f42b451241b83f6f706efae4abc844d074072507d5025479c21e7d2d0d84fe8d"
+    },
+    {
+      "path": "validation/lib/serve.mjs",
+      "sha256": "dd02e30fcf20500be7eb825d2203b374d39cae5a12dec014990effd7890f1a1c"
+    }
+  ],
+  "validation": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "timeout_seconds": 240
+    }
+  ],
+  "integrity": {
+    "source_protocol_id": "agentlab-ab-v1",
+    "recomputed_and_matched": [
+      "seed_sha",
+      "task_sha256",
+      "task_sha256_in_seed",
+      "rubric_sha256",
+      "plan_file_sha256",
+      "package_lock_sha256",
+      "fixture hashes"
+    ],
+    "hash_mismatch": false
+  }
+}

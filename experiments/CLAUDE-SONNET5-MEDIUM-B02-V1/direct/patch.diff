@@ -1,0 +1,1146 @@
+diff --git a/src/App.tsx b/src/App.tsx
+index 40079d6..f7d5881 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,5 +1,23 @@
+-// Scaffold inicial. Substitua por sua implementação do Minesweeper descrito
+-// em TASK.md.
++import { Board } from './components/Board';
++import { Controls } from './components/Controls';
++import { useMinesweeper } from './game/useMinesweeper';
++
+ export default function App() {
+-  return <div />;
++  const { board, difficulty, status, elapsed, minesRemaining, reveal, toggleFlag, restart } =
++    useMinesweeper('intermediate');
++
++  return (
++    <div className="app">
++      <h1>Minesweeper</h1>
++      <Controls
++        difficulty={difficulty}
++        status={status}
++        minesRemaining={minesRemaining}
++        elapsed={elapsed}
++        onSelectDifficulty={(next) => restart(next)}
++        onRestart={() => restart()}
++      />
++      <Board board={board} interactive={status === 'playing'} onReveal={reveal} onToggleFlag={toggleFlag} />
++    </div>
++  );
+ }
+diff --git a/src/components/Board.tsx b/src/components/Board.tsx
+new file mode 100644
+index 0000000..3f025d0
+--- /dev/null
++++ b/src/components/Board.tsx
+@@ -0,0 +1,37 @@
++import type { Board as BoardModel } from '../game/types';
++import { Cell } from './Cell';
++
++interface BoardProps {
++  board: BoardModel;
++  interactive: boolean;
++  onReveal: (row: number, col: number) => void;
++  onToggleFlag: (row: number, col: number) => void;
++}
++
++export function Board({ board, interactive, onReveal, onToggleFlag }: BoardProps) {
++  const cols = board[0]?.length ?? 0;
++
++  return (
++    <div className="board-scroll">
++      <div
++        className="board"
++        data-testid="board"
++        style={{ gridTemplateColumns: `repeat(${cols}, var(--cell-size))` }}
++      >
++        {board.map((rowCells, row) =>
++          rowCells.map((cell, col) => (
++            <Cell
++              key={`${row}-${col}`}
++              row={row}
++              col={col}
++              cell={cell}
++              interactive={interactive}
++              onReveal={() => onReveal(row, col)}
++              onToggleFlag={() => onToggleFlag(row, col)}
++            />
++          )),
++        )}
++      </div>
++    </div>
++  );
++}
+diff --git a/src/components/Cell.tsx b/src/components/Cell.tsx
+new file mode 100644
+index 0000000..f9b32c0
+--- /dev/null
++++ b/src/components/Cell.tsx
+@@ -0,0 +1,117 @@
++import { useRef } from 'react';
++import type { Cell as CellModel } from '../game/types';
++
++const LONG_PRESS_MS = 500;
++const MOVE_THRESHOLD_PX = 10;
++
++const NUMBER_LABEL: Record<number, string> = {
++  1: 'n1',
++  2: 'n2',
++  3: 'n3',
++  4: 'n4',
++  5: 'n5',
++  6: 'n6',
++  7: 'n7',
++  8: 'n8',
++};
++
++interface CellProps {
++  row: number;
++  col: number;
++  cell: CellModel;
++  interactive: boolean;
++  onReveal: () => void;
++  onToggleFlag: () => void;
++}
++
++export function Cell({ row, col, cell, interactive, onReveal, onToggleFlag }: CellProps) {
++  const longPressTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
++  const touchStart = useRef<{ x: number; y: number } | null>(null);
++  const touchMoved = useRef(false);
++  const longPressFired = useRef(false);
++  const suppressNextClick = useRef(false);
++
++  const clearLongPressTimer = () => {
++    if (longPressTimer.current !== null) {
++      clearTimeout(longPressTimer.current);
++      longPressTimer.current = null;
++    }
++  };
++
++  const handleClick = () => {
++    if (suppressNextClick.current) {
++      suppressNextClick.current = false;
++      return;
++    }
++    if (!interactive) return;
++    onReveal();
++  };
++
++  const handleContextMenu = (event: React.MouseEvent) => {
++    event.preventDefault();
++    if (!interactive) return;
++    onToggleFlag();
++  };
++
++  const handleTouchStart = (event: React.TouchEvent) => {
++    if (!interactive) return;
++    const touch = event.touches[0];
++    touchStart.current = { x: touch.clientX, y: touch.clientY };
++    touchMoved.current = false;
++    longPressFired.current = false;
++    clearLongPressTimer();
++    longPressTimer.current = setTimeout(() => {
++      longPressFired.current = true;
++      onToggleFlag();
++    }, LONG_PRESS_MS);
++  };
++
++  const handleTouchMove = (event: React.TouchEvent) => {
++    if (!touchStart.current) return;
++    const touch = event.touches[0];
++    const dx = touch.clientX - touchStart.current.x;
++    const dy = touch.clientY - touchStart.current.y;
++    if (Math.hypot(dx, dy) > MOVE_THRESHOLD_PX) {
++      touchMoved.current = true;
++      clearLongPressTimer();
++    }
++  };
++
++  const handleTouchEnd = () => {
++    clearLongPressTimer();
++    if (longPressFired.current) {
++      suppressNextClick.current = true;
++      return;
++    }
++    if (!touchMoved.current && interactive) {
++      suppressNextClick.current = true;
++      onReveal();
++    }
++  };
++
++  const state = cell.state;
++  const showAdjacent = state === 'revealed' && !cell.mine;
++  const showsMine = state === 'exploded' || (state === 'revealed' && cell.mine);
++  const showsFlag = state === 'flagged';
++
++  const classNames = ['cell', `cell-${state}`];
++  if (showAdjacent && cell.adjacent > 0) classNames.push(NUMBER_LABEL[cell.adjacent]);
++
++  return (
++    <div
++      data-testid="cell"
++      data-row={row}
++      data-col={col}
++      data-state={state}
++      data-adjacent={showAdjacent ? String(cell.adjacent) : undefined}
++      className={classNames.join(' ')}
++      onClick={handleClick}
++      onContextMenu={handleContextMenu}
++      onTouchStart={handleTouchStart}
++      onTouchMove={handleTouchMove}
++      onTouchEnd={handleTouchEnd}
++    >
++      {showsFlag ? '🚩' : showsMine ? '💣' : showAdjacent && cell.adjacent > 0 ? cell.adjacent : ''}
++    </div>
++  );
++}
+diff --git a/src/components/Controls.tsx b/src/components/Controls.tsx
+new file mode 100644
+index 0000000..205681c
+--- /dev/null
++++ b/src/components/Controls.tsx
+@@ -0,0 +1,82 @@
++import type { Difficulty, GameStatus } from '../game/types';
++
++const DIFFICULTY_OPTIONS: Array<{ key: Difficulty; label: string }> = [
++  { key: 'beginner', label: 'Beginner' },
++  { key: 'intermediate', label: 'Intermediate' },
++  { key: 'expert', label: 'Expert' },
++];
++
++const STATUS_LABEL: Record<GameStatus, string> = {
++  playing: 'Playing',
++  won: 'You Won!',
++  lost: 'You Lost',
++};
++
++const FACE: Record<GameStatus, string> = {
++  playing: '🙂',
++  won: '😎',
++  lost: '😵',
++};
++
++interface ControlsProps {
++  difficulty: Difficulty;
++  status: GameStatus;
++  minesRemaining: number;
++  elapsed: number;
++  onSelectDifficulty: (difficulty: Difficulty) => void;
++  onRestart: () => void;
++}
++
++export function Controls({
++  difficulty,
++  status,
++  minesRemaining,
++  elapsed,
++  onSelectDifficulty,
++  onRestart,
++}: ControlsProps) {
++  return (
++    <div className="controls">
++      <div className="controls-row">
++        <div className="mine-counter" data-testid="mine-counter" aria-label="Mines remaining">
++          {String(minesRemaining).padStart(3, '0')}
++        </div>
++
++        <button
++          type="button"
++          className="restart-button"
++          data-testid="restart"
++          aria-label="Restart game"
++          onClick={onRestart}
++        >
++          {FACE[status]}
++        </button>
++
++        <div className="timer" data-testid="timer" aria-label="Elapsed seconds">
++          {String(elapsed).padStart(3, '0')}
++        </div>
++      </div>
++
++      <div className="controls-row">
++        <div className="difficulty" data-testid="difficulty" role="group" aria-label="Difficulty">
++          {DIFFICULTY_OPTIONS.map((option) => (
++            <button
++              key={option.key}
++              type="button"
++              data-difficulty={option.key}
++              className={option.key === difficulty ? 'active' : ''}
++              aria-pressed={option.key === difficulty}
++              onClick={() => onSelectDifficulty(option.key)}
++            >
++              {option.label}
++            </button>
++          ))}
++        </div>
++
++        <div className="status" data-testid="status">
++          {STATUS_LABEL[status]}
++        </div>
++      </div>
++    </div>
++  );
++}
+diff --git a/src/game/board.test.ts b/src/game/board.test.ts
+new file mode 100644
+index 0000000..935b822
+--- /dev/null
++++ b/src/game/board.test.ts
+@@ -0,0 +1,177 @@
++import { describe, expect, it } from 'vitest';
++import {
++  countFlags,
++  createBoard,
++  flagRemainingMines,
++  isWin,
++  placeMines,
++  revealAllMines,
++  revealCell,
++  revealMineAt,
++  toggleFlag,
++} from './board';
++
++/** Deterministic RNG: always returns values from a fixed sequence, cycling. */
++function seededRng(sequence: number[]): () => number {
++  let i = 0;
++  return () => {
++    const value = sequence[i % sequence.length];
++    i += 1;
++    return value;
++  };
++}
++
++describe('placeMines: first click is safe', () => {
++  it('never places a mine on the clicked cell, across many seeds', () => {
++    const rows = 9;
++    const cols = 9;
++    const mines = 10;
++    for (let seed = 0; seed < 25; seed += 1) {
++      const rng = seededRng([seed / 25, (seed * 7) % 1, 0.999, 0.001]);
++      const board = createBoard(rows, cols);
++      const placed = placeMines(board, rows, cols, mines, 4, 4, rng);
++      expect(placed[4][4].mine).toBe(false);
++    }
++  });
++
++  it('places exactly the requested number of mines', () => {
++    const rows = 16;
++    const cols = 16;
++    const mines = 40;
++    const board = createBoard(rows, cols);
++    const placed = placeMines(board, rows, cols, mines, 0, 0, seededRng([0.1, 0.5, 0.9]));
++    const mineCount = placed.flat().filter((cell) => cell.mine).length;
++    expect(mineCount).toBe(mines);
++  });
++
++  it('keeps the safe cell neighbourhood mine-free', () => {
++    const rows = 9;
++    const cols = 9;
++    const board = createBoard(rows, cols);
++    const placed = placeMines(board, rows, cols, 10, 4, 4, seededRng([0.2, 0.4, 0.6, 0.8]));
++    for (let dr = -1; dr <= 1; dr += 1) {
++      for (let dc = -1; dc <= 1; dc += 1) {
++        expect(placed[4 + dr][4 + dc].mine).toBe(false);
++      }
++    }
++  });
++});
++
++describe('revealCell: flood reveal', () => {
++  it('expands an empty region and stops at numbered cells', () => {
++    // 3x3 board, single mine in the corner (2,2). Clicking (0,0) should
++    // flood-reveal the whole zero region and reveal, but not expand past,
++    // the numbered cells bordering the mine.
++    const rows = 3;
++    const cols = 3;
++    let board = createBoard(rows, cols);
++    board[2][2].mine = true;
++    board[1][2].adjacent = 1;
++    board[2][1].adjacent = 1;
++    board[1][1].adjacent = 1;
++
++    const revealed = revealCell(board, rows, cols, 0, 0);
++
++    expect(revealed[0][0].state).toBe('revealed');
++    expect(revealed[0][1].state).toBe('revealed');
++    expect(revealed[1][0].state).toBe('revealed');
++    expect(revealed[1][1].state).toBe('revealed'); // numbered cell, revealed but not expanded from
++    expect(revealed[1][2].state).toBe('revealed');
++    expect(revealed[2][1].state).toBe('revealed');
++    expect(revealed[2][2].state).toBe('covered'); // the mine itself must stay covered
++  });
++
++  it('does not overflow the call stack on the largest board', () => {
++    const rows = 16;
++    const cols = 30;
++    const board = createBoard(rows, cols); // no mines: entire board is one empty region
++    expect(() => revealCell(board, rows, cols, 0, 0)).not.toThrow();
++    const revealed = revealCell(board, rows, cols, 0, 0);
++    const revealedCount = revealed.flat().filter((cell) => cell.state === 'revealed').length;
++    expect(revealedCount).toBe(rows * cols);
++  });
++});
++
++describe('flags and mine counter', () => {
++  it('toggling a flag is reflected by countFlags', () => {
++    const board = createBoard(9, 9);
++    expect(countFlags(board)).toBe(0);
++
++    const flagged = toggleFlag(board, 0, 0);
++    expect(flagged[0][0].state).toBe('flagged');
++    expect(countFlags(flagged)).toBe(1);
++
++    const unflagged = toggleFlag(flagged, 0, 0);
++    expect(unflagged[0][0].state).toBe('covered');
++    expect(countFlags(unflagged)).toBe(0);
++  });
++
++  it('a flagged cell is not revealed by revealCell', () => {
++    const rows = 3;
++    const cols = 3;
++    const board = createBoard(rows, cols);
++    const flagged = toggleFlag(board, 1, 1);
++    expect(flagged[1][1].state).toBe('flagged');
++
++    // revealCell only acts on covered cells, so a flagged cell must stay put.
++    const afterAttempt = revealCell(flagged, rows, cols, 1, 1);
++    expect(afterAttempt[1][1].state).toBe('flagged');
++  });
++});
++
++describe('win detection', () => {
++  it('is won once every non-mine cell is revealed', () => {
++    const rows = 2;
++    const cols = 2;
++    let board = createBoard(rows, cols);
++    board[0][0].mine = true;
++    expect(isWin(board)).toBe(false);
++
++    board = revealCell(board, rows, cols, 0, 1);
++    board = revealCell(board, rows, cols, 1, 0);
++    board = revealCell(board, rows, cols, 1, 1);
++    expect(isWin(board)).toBe(true);
++  });
++
++  it('flagRemainingMines marks the untouched mines as flagged on a win', () => {
++    const rows = 2;
++    const cols = 2;
++    let board = createBoard(rows, cols);
++    board[0][0].mine = true;
++    board = revealCell(board, rows, cols, 0, 1);
++    board = revealCell(board, rows, cols, 1, 0);
++    board = revealCell(board, rows, cols, 1, 1);
++    const finalBoard = flagRemainingMines(board);
++    expect(finalBoard[0][0].state).toBe('flagged');
++  });
++});
++
++describe('loss detection', () => {
++  it('revealing a mine exposes it as exploded and reveals the rest', () => {
++    const rows = 3;
++    const cols = 3;
++    let board = createBoard(rows, cols);
++    board[1][1].mine = true;
++    board[2][2].mine = true;
++
++    board = revealMineAt(board, 1, 1);
++    board = revealAllMines(board);
++
++    expect(board[1][1].state).toBe('exploded');
++    expect(board[2][2].state).toBe('revealed');
++    expect(board[2][2].mine).toBe(true);
++  });
++
++  it('the board stops accepting reveals once the game is over (enforced by caller state, not board)', () => {
++    // The board module itself is a pure data structure; "locking" is a
++    // status concern owned by the game hook. Here we only verify that an
++    // already-revealed/exploded cell is a no-op for revealCell.
++    const rows = 2;
++    const cols = 2;
++    let board = createBoard(rows, cols);
++    board[0][0].mine = true;
++    board = revealMineAt(board, 0, 0);
++    const attempt = revealCell(board, rows, cols, 0, 0);
++    expect(attempt[0][0].state).toBe('exploded');
++  });
++});
+diff --git a/src/game/board.ts b/src/game/board.ts
+new file mode 100644
+index 0000000..82518e6
+--- /dev/null
++++ b/src/game/board.ts
+@@ -0,0 +1,151 @@
++import type { Board, Cell } from './types';
++
++export type Rng = () => number;
++
++function makeCell(): Cell {
++  return { mine: false, adjacent: 0, state: 'covered' };
++}
++
++export function createBoard(rows: number, cols: number): Board {
++  return Array.from({ length: rows }, () => Array.from({ length: cols }, () => makeCell()));
++}
++
++function cloneBoard(board: Board): Board {
++  return board.map((row) => row.map((cell) => ({ ...cell })));
++}
++
++function neighborsOf(row: number, col: number, rows: number, cols: number): Array<[number, number]> {
++  const result: Array<[number, number]> = [];
++  for (let dr = -1; dr <= 1; dr += 1) {
++    for (let dc = -1; dc <= 1; dc += 1) {
++      if (dr === 0 && dc === 0) continue;
++      const r = row + dr;
++      const c = col + dc;
++      if (r >= 0 && r < rows && c >= 0 && c < cols) result.push([r, c]);
++    }
++  }
++  return result;
++}
++
++/**
++ * Places `mineCount` mines, guaranteeing the safe cell and its immediate
++ * neighbours stay mine-free so the first click reliably opens a region
++ * instead of a single lucky number.
++ */
++export function placeMines(
++  board: Board,
++  rows: number,
++  cols: number,
++  mineCount: number,
++  safeRow: number,
++  safeCol: number,
++  rng: Rng = Math.random,
++): Board {
++  const next = cloneBoard(board);
++  const excluded = new Set<string>([`${safeRow},${safeCol}`]);
++  for (const [r, c] of neighborsOf(safeRow, safeCol, rows, cols)) excluded.add(`${r},${c}`);
++
++  const candidates: Array<[number, number]> = [];
++  for (let r = 0; r < rows; r += 1) {
++    for (let c = 0; c < cols; c += 1) {
++      if (!excluded.has(`${r},${c}`)) candidates.push([r, c]);
++    }
++  }
++
++  const placeable = Math.min(mineCount, candidates.length);
++  for (let i = candidates.length - 1; i > 0 && candidates.length - i <= placeable; i -= 1) {
++    const j = Math.floor(rng() * (i + 1));
++    [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
++  }
++  for (let i = 0; i < placeable; i += 1) {
++    const [r, c] = candidates[candidates.length - 1 - i];
++    next[r][c].mine = true;
++  }
++
++  for (let r = 0; r < rows; r += 1) {
++    for (let c = 0; c < cols; c += 1) {
++      if (next[r][c].mine) continue;
++      let count = 0;
++      for (const [nr, nc] of neighborsOf(r, c, rows, cols)) {
++        if (next[nr][nc].mine) count += 1;
++      }
++      next[r][c].adjacent = count;
++    }
++  }
++
++  return next;
++}
++
++/** Iterative flood reveal (explicit stack) so the largest board never overflows the call stack. */
++export function revealCell(board: Board, rows: number, cols: number, row: number, col: number): Board {
++  const next = cloneBoard(board);
++  const start = next[row][col];
++  if (start.state !== 'covered') return next;
++
++  const stack: Array<[number, number]> = [[row, col]];
++  while (stack.length > 0) {
++    const [r, c] = stack.pop() as [number, number];
++    const cell = next[r][c];
++    if (cell.state !== 'covered') continue;
++    cell.state = 'revealed';
++    if (!cell.mine && cell.adjacent === 0) {
++      for (const [nr, nc] of neighborsOf(r, c, rows, cols)) {
++        if (next[nr][nc].state === 'covered') stack.push([nr, nc]);
++      }
++    }
++  }
++  return next;
++}
++
++export function revealMineAt(board: Board, row: number, col: number): Board {
++  const next = cloneBoard(board);
++  next[row][col].state = 'exploded';
++  return next;
++}
++
++export function revealAllMines(board: Board): Board {
++  const next = cloneBoard(board);
++  for (const row of next) {
++    for (const cell of row) {
++      if (cell.mine && cell.state === 'covered') cell.state = 'revealed';
++    }
++  }
++  return next;
++}
++
++export function flagRemainingMines(board: Board): Board {
++  const next = cloneBoard(board);
++  for (const row of next) {
++    for (const cell of row) {
++      if (cell.mine && cell.state !== 'exploded') cell.state = 'flagged';
++    }
++  }
++  return next;
++}
++
++export function toggleFlag(board: Board, row: number, col: number): Board {
++  const next = cloneBoard(board);
++  const cell = next[row][col];
++  if (cell.state === 'covered') cell.state = 'flagged';
++  else if (cell.state === 'flagged') cell.state = 'covered';
++  return next;
++}
++
++export function countFlags(board: Board): number {
++  let count = 0;
++  for (const row of board) {
++    for (const cell of row) {
++      if (cell.state === 'flagged') count += 1;
++    }
++  }
++  return count;
++}
++
++export function isWin(board: Board): boolean {
++  for (const row of board) {
++    for (const cell of row) {
++      if (!cell.mine && cell.state !== 'revealed') return false;
++    }
++  }
++  return true;
++}
+diff --git a/src/game/types.ts b/src/game/types.ts
+new file mode 100644
+index 0000000..bb23411
+--- /dev/null
++++ b/src/game/types.ts
+@@ -0,0 +1,25 @@
++export type Difficulty = 'beginner' | 'intermediate' | 'expert';
++
++export interface DifficultyConfig {
++  rows: number;
++  cols: number;
++  mines: number;
++}
++
++export const DIFFICULTIES: Record<Difficulty, DifficultyConfig> = {
++  beginner: { rows: 9, cols: 9, mines: 10 },
++  intermediate: { rows: 16, cols: 16, mines: 40 },
++  expert: { rows: 16, cols: 30, mines: 99 },
++};
++
++export type CellState = 'covered' | 'revealed' | 'flagged' | 'exploded';
++
++export interface Cell {
++  mine: boolean;
++  adjacent: number;
++  state: CellState;
++}
++
++export type Board = Cell[][];
++
++export type GameStatus = 'playing' | 'won' | 'lost';
+diff --git a/src/game/useMinesweeper.test.ts b/src/game/useMinesweeper.test.ts
+new file mode 100644
+index 0000000..5ff22bb
+--- /dev/null
++++ b/src/game/useMinesweeper.test.ts
+@@ -0,0 +1,116 @@
++import { act, renderHook } from '@testing-library/react';
++import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
++import { useMinesweeper } from './useMinesweeper';
++
++/** A rng that always sorts candidates in the same, predictable order. */
++function fixedRng(): () => number {
++  let i = 0;
++  return () => {
++    const value = (i * 0.37) % 1;
++    i += 1;
++    return value;
++  };
++}
++
++describe('useMinesweeper', () => {
++  beforeEach(() => {
++    vi.useFakeTimers();
++  });
++
++  afterEach(() => {
++    vi.useRealTimers();
++  });
++
++  it('starts on beginner with a fully covered board and full mine count', () => {
++    const { result } = renderHook(() => useMinesweeper('beginner', fixedRng()));
++    expect(result.current.status).toBe('playing');
++    expect(result.current.minesRemaining).toBe(10);
++    expect(result.current.elapsed).toBe(0);
++    expect(result.current.board).toHaveLength(9);
++    expect(result.current.board[0]).toHaveLength(9);
++    expect(result.current.board.flat().every((cell) => cell.state === 'covered')).toBe(true);
++  });
++
++  it('decrements the mine counter on flag, restores it on unflag', () => {
++    const { result } = renderHook(() => useMinesweeper('beginner', fixedRng()));
++
++    act(() => result.current.toggleFlag(0, 0));
++    expect(result.current.minesRemaining).toBe(9);
++
++    act(() => result.current.toggleFlag(0, 0));
++    expect(result.current.minesRemaining).toBe(10);
++  });
++
++  it('does not reveal a flagged cell', () => {
++    const { result } = renderHook(() => useMinesweeper('beginner', fixedRng()));
++
++    act(() => result.current.toggleFlag(3, 3));
++    act(() => result.current.reveal(3, 3));
++
++    expect(result.current.board[3][3].state).toBe('flagged');
++  });
++
++  it('starts the timer on first reveal and stops it on loss, locking the board', () => {
++    const { result } = renderHook(() => useMinesweeper('beginner', fixedRng()));
++
++    act(() => result.current.reveal(4, 4));
++    act(() => vi.advanceTimersByTime(3000));
++    expect(result.current.elapsed).toBeGreaterThan(0);
++
++    // Force a loss by revealing every remaining covered cell until a mine is hit,
++    // or, if none is a mine (unlikely with 10 mines on 81 cells), assert win instead.
++    let lastStatus = result.current.status;
++    for (let row = 0; row < 9 && lastStatus === 'playing'; row += 1) {
++      for (let col = 0; col < 9 && lastStatus === 'playing'; col += 1) {
++        if (result.current.board[row][col].state !== 'covered') continue;
++        act(() => result.current.reveal(row, col));
++        lastStatus = result.current.status;
++      }
++    }
++
++    expect(lastStatus).not.toBe('playing');
++    const elapsedAtEnd = result.current.elapsed;
++    const timeAtEnd = result.current.status;
++
++    act(() => vi.advanceTimersByTime(5000));
++    expect(result.current.elapsed).toBe(elapsedAtEnd); // timer stopped
++
++    if (timeAtEnd === 'lost') {
++      const exploded = result.current.board.flat().filter((cell) => cell.state === 'exploded');
++      expect(exploded.length).toBeGreaterThanOrEqual(1);
++
++      // Board is locked: revealing another covered cell is a no-op.
++      const covered = result.current.board.flat().find((cell) => cell.state === 'covered');
++      if (covered) {
++        const before = result.current.board;
++        const target = result.current.board.flat().findIndex((cell) => cell === covered);
++        const row = Math.floor(target / 9);
++        const col = target % 9;
++        act(() => result.current.reveal(row, col));
++        expect(result.current.board).toBe(before);
++      }
++    }
++  });
++
++  it('reaches a win state when every non-mine cell is revealed', () => {
++    const { result } = renderHook(() => useMinesweeper('beginner', fixedRng()));
++
++    act(() => result.current.reveal(0, 0));
++
++    let guard = 0;
++    while (result.current.status === 'playing' && guard < 200) {
++      const flat = result.current.board.flat();
++      const target = flat.find((cell) => cell.state === 'covered' && !cell.mine);
++      if (!target) break;
++      const index = flat.indexOf(target);
++      const row = Math.floor(index / 9);
++      const col = index % 9;
++      act(() => result.current.reveal(row, col));
++      guard += 1;
++    }
++
++    expect(result.current.status).toBe('won');
++    const unflaggedMines = result.current.board.flat().filter((cell) => cell.mine && cell.state !== 'flagged');
++    expect(unflaggedMines).toHaveLength(0);
++  });
++});
+diff --git a/src/game/useMinesweeper.ts b/src/game/useMinesweeper.ts
+new file mode 100644
+index 0000000..cc87145
+--- /dev/null
++++ b/src/game/useMinesweeper.ts
+@@ -0,0 +1,122 @@
++import { useCallback, useEffect, useRef, useState } from 'react';
++import {
++  countFlags,
++  createBoard,
++  flagRemainingMines,
++  isWin,
++  placeMines,
++  revealAllMines,
++  revealCell,
++  revealMineAt,
++  toggleFlag as toggleFlagOnBoard,
++} from './board';
++import type { Rng } from './board';
++import type { Board, Difficulty, GameStatus } from './types';
++import { DIFFICULTIES } from './types';
++
++interface GameState {
++  board: Board;
++  difficulty: Difficulty;
++  status: GameStatus;
++  minesPlaced: boolean;
++  elapsed: number;
++}
++
++function freshState(difficulty: Difficulty): GameState {
++  const { rows, cols } = DIFFICULTIES[difficulty];
++  return {
++    board: createBoard(rows, cols),
++    difficulty,
++    status: 'playing',
++    minesPlaced: false,
++    elapsed: 0,
++  };
++}
++
++export function useMinesweeper(initialDifficulty: Difficulty, rng: Rng = Math.random) {
++  const [state, setState] = useState<GameState>(() => freshState(initialDifficulty));
++  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
++
++  const stopTimer = useCallback(() => {
++    if (timerRef.current !== null) {
++      clearInterval(timerRef.current);
++      timerRef.current = null;
++    }
++  }, []);
++
++  const startTimer = useCallback(() => {
++    if (timerRef.current !== null) return;
++    timerRef.current = setInterval(() => {
++      setState((prev) => (prev.status === 'playing' ? { ...prev, elapsed: prev.elapsed + 1 } : prev));
++    }, 1000);
++  }, []);
++
++  useEffect(() => stopTimer, [stopTimer]);
++
++  const restart = useCallback(
++    (difficulty?: Difficulty) => {
++      stopTimer();
++      setState((prev) => freshState(difficulty ?? prev.difficulty));
++    },
++    [stopTimer],
++  );
++
++  const reveal = useCallback(
++    (row: number, col: number) => {
++      setState((prev) => {
++        if (prev.status !== 'playing') return prev;
++        const clickedCell = prev.board[row][col];
++        if (clickedCell.state !== 'covered') return prev;
++
++        const { rows, cols, mines } = DIFFICULTIES[prev.difficulty];
++        let board = prev.board;
++        let minesPlaced = prev.minesPlaced;
++        if (!minesPlaced) {
++          board = placeMines(board, rows, cols, mines, row, col, rng);
++          minesPlaced = true;
++          startTimer();
++        }
++
++        if (board[row][col].mine) {
++          board = revealMineAt(board, row, col);
++          board = revealAllMines(board);
++          stopTimer();
++          return { ...prev, board, minesPlaced, status: 'lost' };
++        }
++
++        board = revealCell(board, rows, cols, row, col);
++        if (isWin(board)) {
++          board = flagRemainingMines(board);
++          stopTimer();
++          return { ...prev, board, minesPlaced, status: 'won' };
++        }
++
++        return { ...prev, board, minesPlaced };
++      });
++    },
++    [startTimer, stopTimer],
++  );
++
++  const toggleFlag = useCallback((row: number, col: number) => {
++    setState((prev) => {
++      if (prev.status !== 'playing') return prev;
++      const cell = prev.board[row][col];
++      if (cell.state !== 'covered' && cell.state !== 'flagged') return prev;
++      return { ...prev, board: toggleFlagOnBoard(prev.board, row, col) };
++    });
++  }, []);
++
++  const { mines } = DIFFICULTIES[state.difficulty];
++  const minesRemaining = mines - countFlags(state.board);
++
++  return {
++    board: state.board,
++    difficulty: state.difficulty,
++    status: state.status,
++    elapsed: state.elapsed,
++    minesRemaining,
++    reveal,
++    toggleFlag,
++    restart,
++  };
++}
+diff --git a/src/styles.css b/src/styles.css
+index b3a40d0..b714b13 100644
+--- a/src/styles.css
++++ b/src/styles.css
+@@ -4,7 +4,235 @@
+   box-sizing: border-box;
+ }
+ 
++:root {
++  --cell-size: 28px;
++  --bg: #1e2530;
++  --panel: #2a3342;
++  --panel-border: #3c485c;
++  --covered: #3f4c63;
++  --covered-hover: #4a5978;
++  --revealed: #1a212c;
++  --text: #e7ecf3;
++  --muted: #9aa7bb;
++  --accent: #ffcf4d;
++  --danger: #e0524f;
++}
++
++html,
++body {
++  overflow-x: hidden;
++}
++
+ body {
+   margin: 0;
++  min-height: 100vh;
++  background: var(--bg);
++  color: var(--text);
+   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+ }
++
++.app {
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  gap: 16px;
++  padding: 20px 12px 40px;
++  max-width: 100%;
++}
++
++h1 {
++  margin: 0;
++  font-size: 1.6rem;
++  letter-spacing: 0.02em;
++}
++
++.controls {
++  width: 100%;
++  max-width: 640px;
++  display: flex;
++  flex-direction: column;
++  gap: 10px;
++  background: var(--panel);
++  border: 1px solid var(--panel-border);
++  border-radius: 12px;
++  padding: 12px 14px;
++}
++
++.controls-row {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  gap: 12px;
++}
++
++.mine-counter,
++.timer {
++  font-variant-numeric: tabular-nums;
++  font-family: 'Courier New', ui-monospace, monospace;
++  font-size: 1.25rem;
++  font-weight: 700;
++  background: #0f141c;
++  color: var(--danger);
++  border-radius: 6px;
++  padding: 6px 10px;
++  min-width: 3.5ch;
++  text-align: center;
++}
++
++.restart-button {
++  font-size: 1.4rem;
++  line-height: 1;
++  background: var(--covered);
++  border: 1px solid var(--panel-border);
++  border-radius: 10px;
++  padding: 8px 14px;
++  cursor: pointer;
++  min-width: 44px;
++  min-height: 44px;
++}
++
++.restart-button:hover {
++  background: var(--covered-hover);
++}
++
++.restart-button:active {
++  transform: translateY(1px);
++}
++
++.restart-button:focus-visible,
++.difficulty button:focus-visible {
++  outline: 2px solid var(--accent);
++  outline-offset: 2px;
++}
++
++.difficulty {
++  display: flex;
++  gap: 6px;
++  flex-wrap: wrap;
++}
++
++.difficulty button {
++  background: var(--covered);
++  color: var(--text);
++  border: 1px solid var(--panel-border);
++  border-radius: 8px;
++  padding: 8px 10px;
++  font-size: 0.85rem;
++  cursor: pointer;
++  min-height: 40px;
++}
++
++.difficulty button:hover {
++  background: var(--covered-hover);
++}
++
++.difficulty button.active {
++  background: var(--accent);
++  color: #24272c;
++  border-color: var(--accent);
++  font-weight: 700;
++}
++
++.status {
++  font-size: 0.9rem;
++  font-weight: 600;
++  color: var(--muted);
++  min-width: 8ch;
++  text-align: right;
++}
++
++.board-scroll {
++  max-width: 100%;
++  overflow-x: auto;
++  overflow-y: hidden;
++  border-radius: 10px;
++  border: 1px solid var(--panel-border);
++  background: #0f141c;
++  padding: 8px;
++  -webkit-overflow-scrolling: touch;
++}
++
++.board {
++  display: grid;
++  grid-auto-rows: var(--cell-size);
++  gap: 1px;
++  background: var(--panel-border);
++  width: max-content;
++}
++
++.cell {
++  width: var(--cell-size);
++  height: var(--cell-size);
++  display: flex;
++  align-items: center;
++  justify-content: center;
++  font-size: calc(var(--cell-size) * 0.5);
++  font-weight: 700;
++  background: var(--covered);
++  cursor: pointer;
++  user-select: none;
++  -webkit-user-select: none;
++  -webkit-touch-callout: none;
++  touch-action: manipulation;
++}
++
++.cell-covered:hover {
++  background: var(--covered-hover);
++}
++
++.cell-covered:active {
++  background: #566281;
++}
++
++.cell-flagged {
++  background: var(--covered);
++}
++
++.cell-revealed {
++  background: var(--revealed);
++  cursor: default;
++}
++
++.cell-exploded {
++  background: var(--danger);
++  cursor: default;
++}
++
++.n1 {
++  color: #5b9dff;
++}
++.n2 {
++  color: #56c271;
++}
++.n3 {
++  color: #e0524f;
++}
++.n4 {
++  color: #9b6ef3;
++}
++.n5 {
++  color: #c96a3a;
++}
++.n6 {
++  color: #3ac6c6;
++}
++.n7 {
++  color: #f2f2f2;
++}
++.n8 {
++  color: #b7c0cf;
++}
++
++@media (max-width: 480px) {
++  :root {
++    --cell-size: 20px;
++  }
++
++  .controls {
++    padding: 10px;
++  }
++
++  .status {
++    text-align: left;
++  }
++}

@@ -1,0 +1,57 @@
+{
+  "passed": true,
+  "repair": null,
+  "protected_paths_unmodified": true,
+  "commands": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 5173,
+      "stdout_sha256": "4a442ac653b0be9b8a9d9777df624e1b9f15078565b13c517dab95a322fd6dfb",
+      "stderr_sha256": "3c1a1c66d72b342f55ef0823c9431c5bd2d76356829adc72eed5e5172d3ad240"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 4124,
+      "stdout_sha256": "1d0741df282f6cc45c6b554a648c71e2492c2f1f8ccb47ce6cb739e41cc323aa",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 6716,
+      "stdout_sha256": "f3a3207480a10c1579d66e32724cdecb93e61a10d829b9d1b68d73b72bd6517f",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 14549,
+      "stdout_sha256": "dbb8f1ef81985b2265ac115a336c41898c664f79718fc4683c5cb6e6533b9990",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "notes": [
+    "The Agent Lab orchestrator also ran `git diff --cached --check` (exit 0). That extra check is not part of the frozen four-command validator."
+  ]
+}

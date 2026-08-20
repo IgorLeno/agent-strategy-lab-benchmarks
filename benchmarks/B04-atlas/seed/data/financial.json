@@ -1,0 +1,667 @@
+{
+  "meta": {
+    "company": "Atlas",
+    "fiscal_year": 2025,
+    "currency": "USD",
+    "amounts_in": "units",
+    "segments": [
+      "Enterprise",
+      "Mid-Market",
+      "SMB"
+    ],
+    "quarters": [
+      "Q1",
+      "Q2",
+      "Q3",
+      "Q4"
+    ],
+    "opex_categories": [
+      "sales_marketing",
+      "research_development",
+      "general_admin"
+    ],
+    "notes": [
+      "EBITDA nao esta armazenado: EBITDA = revenue - cogs - soma(opex).",
+      "Churn rate mensal = churned_customers / customers_start.",
+      "Caixa e uma grandeza da empresa; nao e alocada por segmento."
+    ]
+  },
+  "months": [
+    {
+      "month": "2025-01",
+      "quarter": "Q1",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1402513.08,
+          "budget": 1363000.0,
+          "cogs": 378676.01,
+          "opex": {
+            "sales_marketing": 243739.82,
+            "research_development": 205572.07,
+            "general_admin": 111416.07
+          },
+          "customers_start": 48,
+          "new_customers": 3,
+          "churned_customers": 0,
+          "customers_end": 51
+        },
+        "Mid-Market": {
+          "revenue": 777875.04,
+          "budget": 770800.0,
+          "cogs": 253659.86,
+          "opex": {
+            "sales_marketing": 133348.17,
+            "research_development": 114064.27,
+            "general_admin": 61695.78
+          },
+          "customers_start": 310,
+          "new_customers": 22,
+          "churned_customers": 5,
+          "customers_end": 327
+        },
+        "SMB": {
+          "revenue": 397709.27,
+          "budget": 385400.0,
+          "cogs": 150074.87,
+          "opex": {
+            "sales_marketing": 84319.78,
+            "research_development": 55565.43,
+            "general_admin": 33252.44
+          },
+          "customers_start": 2140,
+          "new_customers": 185,
+          "churned_customers": 70,
+          "customers_end": 2255
+        }
+      },
+      "cash": {
+        "opening_balance": 8400000,
+        "non_operating_outflow": 146511.34,
+        "closing_balance": 9006201.48
+      }
+    },
+    {
+      "month": "2025-02",
+      "quarter": "Q1",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1450404.08,
+          "budget": 1418308.8,
+          "cogs": 393457.68,
+          "opex": {
+            "sales_marketing": 247918.22,
+            "research_development": 201316.32,
+            "general_admin": 117024.67
+          },
+          "customers_start": 51,
+          "new_customers": 3,
+          "churned_customers": 0,
+          "customers_end": 54
+        },
+        "Mid-Market": {
+          "revenue": 810584.83,
+          "budget": 807037.44,
+          "cogs": 255700.41,
+          "opex": {
+            "sales_marketing": 130422.26,
+            "research_development": 108630.33,
+            "general_admin": 66736.81
+          },
+          "customers_start": 327,
+          "new_customers": 23,
+          "churned_customers": 5,
+          "customers_end": 345
+        },
+        "SMB": {
+          "revenue": 409402.25,
+          "budget": 399267.84,
+          "cogs": 153755.01,
+          "opex": {
+            "sales_marketing": 85323.02,
+            "research_development": 55656.05,
+            "general_admin": 32071.59
+          },
+          "customers_start": 2255,
+          "new_customers": 169,
+          "churned_customers": 77,
+          "customers_end": 2347
+        }
+      },
+      "cash": {
+        "opening_balance": 9006201.48,
+        "non_operating_outflow": 134731.72,
+        "closing_balance": 9693848.55
+      }
+    },
+    {
+      "month": "2025-03",
+      "quarter": "Q1",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1555580.12,
+          "budget": 1580594.35,
+          "cogs": 416602.32,
+          "opex": {
+            "sales_marketing": 260940.56,
+            "research_development": 207143.84,
+            "general_admin": 126943.61
+          },
+          "customers_start": 54,
+          "new_customers": 3,
+          "churned_customers": 0,
+          "customers_end": 57
+        },
+        "Mid-Market": {
+          "revenue": 921041.01,
+          "budget": 904941.17,
+          "cogs": 284659.71,
+          "opex": {
+            "sales_marketing": 160739.24,
+            "research_development": 133786.93,
+            "general_admin": 74373.56
+          },
+          "customers_start": 345,
+          "new_customers": 19,
+          "churned_customers": 6,
+          "customers_end": 358
+        },
+        "SMB": {
+          "revenue": 442598.53,
+          "budget": 442987.67,
+          "cogs": 170565.68,
+          "opex": {
+            "sales_marketing": 93511.13,
+            "research_development": 64095.78,
+            "general_admin": 36789.12
+          },
+          "customers_start": 2347,
+          "new_customers": 202,
+          "churned_customers": 79,
+          "customers_end": 2470
+        }
+      },
+      "cash": {
+        "opening_balance": 9693848.55,
+        "non_operating_outflow": 191775.77,
+        "closing_balance": 10391140.96
+      }
+    },
+    {
+      "month": "2025-04",
+      "quarter": "Q2",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1545695.3,
+          "budget": 1533778.65,
+          "cogs": 430852.8,
+          "opex": {
+            "sales_marketing": 258825.83,
+            "research_development": 217443.96,
+            "general_admin": 119282.03
+          },
+          "customers_start": 57,
+          "new_customers": 3,
+          "churned_customers": 0,
+          "customers_end": 60
+        },
+        "Mid-Market": {
+          "revenue": 875920.26,
+          "budget": 883567.32,
+          "cogs": 288675.91,
+          "opex": {
+            "sales_marketing": 149350.31,
+            "research_development": 123596.73,
+            "general_admin": 71418.2
+          },
+          "customers_start": 358,
+          "new_customers": 22,
+          "churned_customers": 4,
+          "customers_end": 376
+        },
+        "SMB": {
+          "revenue": 435269.43,
+          "budget": 427968.28,
+          "cogs": 167435.78,
+          "opex": {
+            "sales_marketing": 89685.5,
+            "research_development": 58066.59,
+            "general_admin": 35674.36
+          },
+          "customers_start": 2470,
+          "new_customers": 189,
+          "churned_customers": 75,
+          "customers_end": 2584
+        }
+      },
+      "cash": {
+        "opening_balance": 10391140.96,
+        "non_operating_outflow": 141659.71,
+        "closing_balance": 11096058.24
+      }
+    },
+    {
+      "month": "2025-05",
+      "quarter": "Q2",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1625309.73,
+          "budget": 1594022.41,
+          "cogs": 442940.77,
+          "opex": {
+            "sales_marketing": 264954.75,
+            "research_development": 220265.67,
+            "general_admin": 133165.3
+          },
+          "customers_start": 60,
+          "new_customers": 3,
+          "churned_customers": 0,
+          "customers_end": 63
+        },
+        "Mid-Market": {
+          "revenue": 929185.57,
+          "budget": 923949.88,
+          "cogs": 304821.03,
+          "opex": {
+            "sales_marketing": 149253.51,
+            "research_development": 125982.98,
+            "general_admin": 71153.24
+          },
+          "customers_start": 376,
+          "new_customers": 25,
+          "churned_customers": 6,
+          "customers_end": 395
+        },
+        "SMB": {
+          "revenue": 440513.65,
+          "budget": 442813.64,
+          "cogs": 172261.0,
+          "opex": {
+            "sales_marketing": 94581.65,
+            "research_development": 58896.24,
+            "general_admin": 35042.05
+          },
+          "customers_start": 2584,
+          "new_customers": 168,
+          "churned_customers": 79,
+          "customers_end": 2673
+        }
+      },
+      "cash": {
+        "opening_balance": 11096058.24,
+        "non_operating_outflow": 134202.17,
+        "closing_balance": 11883546.83
+      }
+    },
+    {
+      "month": "2025-06",
+      "quarter": "Q2",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1729005.79,
+          "budget": 1719687.64,
+          "cogs": 461893.12,
+          "opex": {
+            "sales_marketing": 289627.45,
+            "research_development": 252019.4,
+            "general_admin": 139935.34
+          },
+          "customers_start": 63,
+          "new_customers": 4,
+          "churned_customers": 0,
+          "customers_end": 67
+        },
+        "Mid-Market": {
+          "revenue": 1020212.0,
+          "budget": 1002953.03,
+          "cogs": 319380.01,
+          "opex": {
+            "sales_marketing": 178476.35,
+            "research_development": 145925.1,
+            "general_admin": 79472.02
+          },
+          "customers_start": 395,
+          "new_customers": 28,
+          "churned_customers": 5,
+          "customers_end": 418
+        },
+        "SMB": {
+          "revenue": 487268.5,
+          "budget": 475613.11,
+          "cogs": 188319.64,
+          "opex": {
+            "sales_marketing": 105361.23,
+            "research_development": 67265.7,
+            "general_admin": 37859.44
+          },
+          "customers_start": 2673,
+          "new_customers": 175,
+          "churned_customers": 90,
+          "customers_end": 2758
+        }
+      },
+      "cash": {
+        "opening_balance": 11883546.83,
+        "non_operating_outflow": 149045.38,
+        "closing_balance": 12705452.94
+      }
+    },
+    {
+      "month": "2025-07",
+      "quarter": "Q3",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1577120.61,
+          "budget": 1573725.96,
+          "cogs": 431940.81,
+          "opex": {
+            "sales_marketing": 276041.96,
+            "research_development": 211044.57,
+            "general_admin": 131257.06
+          },
+          "customers_start": 67,
+          "new_customers": 2,
+          "churned_customers": 0,
+          "customers_end": 69
+        },
+        "Mid-Market": {
+          "revenue": 950845.94,
+          "budget": 923500.58,
+          "cogs": 312782.61,
+          "opex": {
+            "sales_marketing": 163063.09,
+            "research_development": 126761.44,
+            "general_admin": 76039.02
+          },
+          "customers_start": 418,
+          "new_customers": 20,
+          "churned_customers": 7,
+          "customers_end": 431
+        },
+        "SMB": {
+          "revenue": 433117.35,
+          "budget": 433322.29,
+          "cogs": 161807.33,
+          "opex": {
+            "sales_marketing": 88819.82,
+            "research_development": 61364.66,
+            "general_admin": 34200.2
+          },
+          "customers_start": 2758,
+          "new_customers": 176,
+          "churned_customers": 90,
+          "customers_end": 2844
+        }
+      },
+      "cash": {
+        "opening_balance": 12705452.94,
+        "non_operating_outflow": 171002.37,
+        "closing_balance": 13420411.9
+      }
+    },
+    {
+      "month": "2025-08",
+      "quarter": "Q3",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1558292.39,
+          "budget": 1570408.16,
+          "cogs": 437323.18,
+          "opex": {
+            "sales_marketing": 279891.21,
+            "research_development": 212815.07,
+            "general_admin": 118642.52
+          },
+          "customers_start": 69,
+          "new_customers": 3,
+          "churned_customers": 0,
+          "customers_end": 72
+        },
+        "Mid-Market": {
+          "revenue": 977285.74,
+          "budget": 927251.7,
+          "cogs": 305045.97,
+          "opex": {
+            "sales_marketing": 163207.82,
+            "research_development": 141026.13,
+            "general_admin": 77590.14
+          },
+          "customers_start": 431,
+          "new_customers": 24,
+          "churned_customers": 5,
+          "customers_end": 450
+        },
+        "SMB": {
+          "revenue": 423081.33,
+          "budget": 430499.0,
+          "cogs": 161002.79,
+          "opex": {
+            "sales_marketing": 87120.43,
+            "research_development": 57248.9,
+            "general_admin": 32943.61
+          },
+          "customers_start": 2844,
+          "new_customers": 180,
+          "churned_customers": 78,
+          "customers_end": 2946
+        }
+      },
+      "cash": {
+        "opening_balance": 13420411.9,
+        "non_operating_outflow": 188892.65,
+        "closing_balance": 14116320.94
+      }
+    },
+    {
+      "month": "2025-09",
+      "quarter": "Q3",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1802001.72,
+          "budget": 1785362.32,
+          "cogs": 488012.35,
+          "opex": {
+            "sales_marketing": 296905.52,
+            "research_development": 251062.71,
+            "general_admin": 146913.28
+          },
+          "customers_start": 72,
+          "new_customers": 3,
+          "churned_customers": 0,
+          "customers_end": 75
+        },
+        "Mid-Market": {
+          "revenue": 1116153.99,
+          "budget": 1060690.06,
+          "cogs": 354401.43,
+          "opex": {
+            "sales_marketing": 184963.29,
+            "research_development": 155485.48,
+            "general_admin": 88803.48
+          },
+          "customers_start": 450,
+          "new_customers": 23,
+          "churned_customers": 8,
+          "customers_end": 465
+        },
+        "SMB": {
+          "revenue": 492169.32,
+          "budget": 487263.24,
+          "cogs": 190028.23,
+          "opex": {
+            "sales_marketing": 104242.21,
+            "research_development": 70791.5,
+            "general_admin": 40589.57
+          },
+          "customers_start": 2946,
+          "new_customers": 218,
+          "churned_customers": 84,
+          "customers_end": 3080
+        }
+      },
+      "cash": {
+        "opening_balance": 14116320.94,
+        "non_operating_outflow": 204460.06,
+        "closing_balance": 14949986.86
+      }
+    },
+    {
+      "month": "2025-10",
+      "quarter": "Q4",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1827471.5,
+          "budget": 1767621.55,
+          "cogs": 492209.91,
+          "opex": {
+            "sales_marketing": 314472.17,
+            "research_development": 245584.46,
+            "general_admin": 141893.09
+          },
+          "customers_start": 75,
+          "new_customers": 3,
+          "churned_customers": 0,
+          "customers_end": 78
+        },
+        "Mid-Market": {
+          "revenue": 1059177.44,
+          "budget": 1056643.42,
+          "cogs": 340994.5,
+          "opex": {
+            "sales_marketing": 174605.92,
+            "research_development": 151671.85,
+            "general_admin": 86871.51
+          },
+          "customers_start": 465,
+          "new_customers": 21,
+          "churned_customers": 6,
+          "customers_end": 480
+        },
+        "SMB": {
+          "revenue": 490760.3,
+          "budget": 480290.78,
+          "cogs": 182932.08,
+          "opex": {
+            "sales_marketing": 98138.6,
+            "research_development": 66095.14,
+            "general_admin": 40488.78
+          },
+          "customers_start": 3080,
+          "new_customers": 196,
+          "churned_customers": 105,
+          "customers_end": 3171
+        }
+      },
+      "cash": {
+        "opening_balance": 14949986.86,
+        "non_operating_outflow": 149363.34,
+        "closing_balance": 15842074.75
+      }
+    },
+    {
+      "month": "2025-11",
+      "quarter": "Q4",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1747013.42,
+          "budget": 1766058.15,
+          "cogs": 457494.52,
+          "opex": {
+            "sales_marketing": 307703.5,
+            "research_development": 241884.52,
+            "general_admin": 139076.27
+          },
+          "customers_start": 78,
+          "new_customers": 3,
+          "churned_customers": 0,
+          "customers_end": 81
+        },
+        "Mid-Market": {
+          "revenue": 1055255.56,
+          "budget": 1062236.45,
+          "cogs": 333684.75,
+          "opex": {
+            "sales_marketing": 180757.56,
+            "research_development": 150831.3,
+            "general_admin": 85284.4
+          },
+          "customers_start": 480,
+          "new_customers": 19,
+          "churned_customers": 8,
+          "customers_end": 491
+        },
+        "SMB": {
+          "revenue": 500158.48,
+          "budget": 477746.63,
+          "cogs": 188156.74,
+          "opex": {
+            "sales_marketing": 106438.46,
+            "research_development": 73452.06,
+            "general_admin": 39897.66
+          },
+          "customers_start": 3171,
+          "new_customers": 189,
+          "churned_customers": 106,
+          "customers_end": 3254
+        }
+      },
+      "cash": {
+        "opening_balance": 15842074.75,
+        "non_operating_outflow": 203579.24,
+        "closing_balance": 16636261.23
+      }
+    },
+    {
+      "month": "2025-12",
+      "quarter": "Q4",
+      "segments": {
+        "Enterprise": {
+          "revenue": 1975971.72,
+          "budget": 1995414.89,
+          "cogs": 538647.91,
+          "opex": {
+            "sales_marketing": 345387.07,
+            "research_development": 281206.79,
+            "general_admin": 163430.03
+          },
+          "customers_start": 81,
+          "new_customers": 3,
+          "churned_customers": 1,
+          "customers_end": 83
+        },
+        "Mid-Market": {
+          "revenue": 1219315.63,
+          "budget": 1207609.3,
+          "cogs": 393847.9,
+          "opex": {
+            "sales_marketing": 197103.88,
+            "research_development": 162584.26,
+            "general_admin": 94138.59
+          },
+          "customers_start": 491,
+          "new_customers": 26,
+          "churned_customers": 7,
+          "customers_end": 510
+        },
+        "SMB": {
+          "revenue": 556576.75,
+          "budget": 537407.26,
+          "cogs": 206255.63,
+          "opex": {
+            "sales_marketing": 119513.12,
+            "research_development": 77427.13,
+            "general_admin": 45751.5
+          },
+          "customers_start": 3254,
+          "new_customers": 235,
+          "churned_customers": 106,
+          "customers_end": 3383
+        }
+      },
+      "cash": {
+        "opening_balance": 16636261.23,
+        "non_operating_outflow": 173624.7,
+        "closing_balance": 17589206.82
+      }
+    }
+  ]
+}

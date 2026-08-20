@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "B04-atlas",
+  "short_id": "B4",
+  "title": "ATLAS financial dashboard (React + TypeScript)",
+  "frozen_at": "2026-08-20",
+  "seed_sha": "7f95c4b294e459ed017fb7e5403aa3ff342fc076",
+  "seed_sha_note": "Original git commit SHA of the frozen seed repository. Nested .git directories are not stored in this corpus.",
+  "task_file": "TASK.md",
+  "task_sha256": "4fcff64ab9aac698a88ef53925762eae7d4d3de4d108f2568fb7108db447fdc2",
+  "task_sha256_in_seed": "4fcff64ab9aac698a88ef53925762eae7d4d3de4d108f2568fb7108db447fdc2",
+  "rubric_file": "rubric.md",
+  "rubric_sha256": "1cc77fbd23cdc11f028b3727b4d13f2c16a68f8e5dc3bc76013ae2c14cd3c9d4",
+  "plan_file": "plan.yaml",
+  "plan_file_sha256": "0864286c721e71866f0d836f05db7fca240ecdbc6ec3425989ea29231805bb0b",
+  "plan_canonical_sha256": {
+    "value": "bead60f4ff880709b50ebbc05dde607bdb27c7df97d97abd6989414da6c69195",
+    "provenance": "copied from the frozen source protocol.json; not independently recomputed in this corpus"
+  },
+  "package_lock_sha256": "7ff155c9f5e570ce2639b1ea0ea135686953c29660b032feb3a25b499a0fb7f2",
+  "package_lock_note": "Identical across B01–B04; the offline toolchain is not published here.",
+  "rubric_weights": {
+    "correctness": 30,
+    "visualization": 25,
+    "filters": 20,
+    "polish": 15,
+    "responsive": 5,
+    "code": 5
+  },
+  "fixtures": [
+    {
+      "path": "data/financial.json",
+      "sha256": "7ac11b8a3dfe8985cdbb7afd64132b1346e67fb7e05cb5270154fff63d38cb4c",
+      "also_at": "seed/data/financial.json"
+    }
+  ],
+  "validators": [
+    {
+      "path": "validation/check.mjs",
+      "sha256": "00822e5a90aba026b4e834ae634cf7aa24c99cdbd377c1badd6f24c72dc156e2"
+    },
+    {
+      "path": "validation/lib/finance.mjs",
+      "sha256": "decee718d3f707549ddc1ae89048582600047252898ddbc7e0e40a9668c0049d"
+    },
+    {
+      "path": "validation/lib/browser.mjs",
+      "sha256": "55f2832845a0191280c4ba6a50ad4fc75bf2cf792b88181edaa99635dd47ae49"
+    },
+    {
+      "path": "validation/lib/dom.mjs",
+      "sha256": "6c191a82de03fad0410894ea257df8facc55bd0de3ebf7a94bde7ab76c38d65f"
+    },
+    {
+      "path": "validation/lib/report.mjs",
+      "sha256": "f42b451241b83f6f706efae4abc844d074072507d5025479c21e7d2d0d84fe8d"
+    },
+    {
+      "path": "validation/lib/serve.mjs",
+      "sha256": "dd02e30fcf20500be7eb825d2203b374d39cae5a12dec014990effd7890f1a1c"
+    }
+  ],
+  "validation": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "timeout_seconds": 240
+    }
+  ],
+  "integrity": {
+    "source_protocol_id": "agentlab-ab-v1",
+    "recomputed_and_matched": [
+      "seed_sha",
+      "task_sha256",
+      "task_sha256_in_seed",
+      "rubric_sha256",
+      "plan_file_sha256",
+      "package_lock_sha256",
+      "fixture hashes"
+    ],
+    "hash_mismatch": false
+  }
+}

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B02-V1",
+  "benchmark_id": "B02-minesweeper",
+  "status": "COMPLETE",
+  "agent_lab_baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "model": "claude-sonnet-5",
+  "reasoning_effort": "medium",
+  "billing_mode": "subscription_only",
+  "direct_profile": null,
+  "agentlab_profile": "claude-build-worker-subscription-sonnet5-medium-v3",
+  "seed_sha": "6d4ba2039c85cb778bcac0618d0859917ad0ce3a",
+  "task_sha256": "edcfd47d5b12a14463b32bcee9c2931213a9446d439eb49ba3ce7435a46e4553",
+  "arm_order": [
+    "DIRECT",
+    "AGENTLAB"
+  ],
+  "validity": "VALID_WITH_MODEL_PURITY_WARNING",
+  "warning": "Agent Lab modelUsage included a small claude-haiku-4-5 helper invocation; the implementer remained claude-sonnet-5 medium.",
+  "winner": "DIRECT",
+  "sample_size": {
+    "benchmarks": 1,
+    "note": "n = 1 benchmark. Do not generalise this result to Agent Strategy Lab as a whole."
+  },
+  "integrity": {
+    "same_seed": true,
+    "same_task": true,
+    "same_implementer_model": true,
+    "same_effort": true,
+    "same_validation": true,
+    "a24_used": false,
+    "api_billing": false,
+    "cross_arm_leak": false,
+    "metrics_verified_against_local_evidence": true,
+    "metrics_divergence": null,
+    "patch_verified": {
+      "direct": {
+        "changed_files": 10,
+        "insertions": 1076,
+        "deletions": 3
+      },
+      "agentlab": {
+        "changed_files": 10,
+        "insertions": 857,
+        "deletions": 12
+      }
+    }
+  },
+  "evaluation": {
+    "blind": true,
+    "labels_during_scoring": {
+      "Candidate A": "left",
+      "Candidate B": "right"
+    },
+    "revealed_after_scoring": {
+      "Candidate A": "DIRECT",
+      "Candidate B": "AGENTLAB"
+    },
+    "functionality": {
+      "direct": "PASS",
+      "agentlab": "PASS",
+      "source": "deterministic validator"
+    },
+    "visual": {
+      "direct": {
+        "design": 25,
+        "ux": 13,
+        "responsive": 6,
+        "total": 44,
+        "out_of": 55
+      },
+      "agentlab": {
+        "design": 21,
+        "ux": 11,
+        "responsive": 5,
+        "total": 37,
+        "out_of": 55
+      }
+    },
+    "code_quality": "NOT_EVALUATED"
+  },
+  "overhead_agentlab_vs_direct": {
+    "wall_clock": "+72%",
+    "worker_runtime": "+79%",
+    "tokens": "+109%",
+    "api_equivalent": "+74%"
+  },
+  "unpublished_on_purpose": [
+    "raw run/ directories",
+    "auth-status.json",
+    "dev-runtime/",
+    "dev-inbox/",
+    "worker stdout/stderr logs",
+    "subscription quota probes",
+    "absolute operator paths",
+    "node_modules/",
+    "dist/"
+  ]
+}
