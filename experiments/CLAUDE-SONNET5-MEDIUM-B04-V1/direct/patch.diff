@@ -1,0 +1,1403 @@
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,5 +1,81 @@
+-// Scaffold inicial. Substitua por sua implementação do dashboard ATLAS
+-// descrito em TASK.md. Todos os números vêm de data/financial.json.
++import { useMemo, useState } from 'react';
++import financial from '../data/financial.json';
++import { Filters } from './components/Filters';
++import { KpiGrid } from './components/KpiGrid';
++import { SegmentTable } from './components/SegmentTable';
++import { RevenueBudgetChart } from './components/charts/RevenueBudgetChart';
++import { CostBreakdownChart } from './components/charts/CostBreakdownChart';
++import { SegmentComparisonChart } from './components/charts/SegmentComparisonChart';
++import { aggregate, monthlySeries, segmentSummaries } from './lib/finance';
++import type { FinancialDocument, PeriodKey, SegmentFilterKey } from './lib/types';
++
++const document = financial as FinancialDocument;
++
++const PERIOD_LABELS: Record<PeriodKey, string> = {
++  'full-year': 'Full Year 2025',
++  q1: 'Q1 2025',
++  q2: 'Q2 2025',
++  q3: 'Q3 2025',
++  q4: 'Q4 2025',
++};
++
++const SEGMENT_LABELS: Record<SegmentFilterKey, string> = {
++  all: 'all segments',
++  enterprise: 'Enterprise',
++  'mid-market': 'Mid-Market',
++  smb: 'SMB',
++};
++
+ export default function App() {
+-  return <div />;
++  const [period, setPeriod] = useState<PeriodKey>('full-year');
++  const [segment, setSegment] = useState<SegmentFilterKey>('all');
++
++  const kpis = useMemo(() => aggregate(document, period, segment), [period, segment]);
++  const series = useMemo(() => monthlySeries(document, period, segment), [period, segment]);
++  const segments = useMemo(() => segmentSummaries(document, period), [period]);
++
++  return (
++    <div className="app">
++      <header className="app-header">
++        <h1>ATLAS Financial Dashboard</h1>
++        <p>
++          {document.meta.company} · Fiscal Year {document.meta.fiscal_year} · Showing{' '}
++          {PERIOD_LABELS[period]}, {SEGMENT_LABELS[segment]}
++        </p>
++      </header>
++
++      <main>
++        <Filters period={period} segment={segment} onPeriodChange={setPeriod} onSegmentChange={setSegment} />
++
++        <KpiGrid aggregate={kpis} />
++        <p className="cash-note">Cash reflects the company-wide closing balance for the period and does not change with the segment filter.</p>
++
++        <section className="panels" aria-label="Charts">
++          <div className="panel" data-testid="chart" data-chart="revenue-vs-budget">
++            <h2>Revenue vs. Budget</h2>
++            <p className="panel-subtitle">Monthly actuals against budget for the selected period</p>
++            <RevenueBudgetChart data={series} />
++          </div>
++
++          <div className="panel" data-testid="chart" data-chart="cost-profitability">
++            <h2>Cost &amp; Profitability</h2>
++            <p className="panel-subtitle">COGS, OpEx and EBITDA by month</p>
++            <CostBreakdownChart data={series} />
++          </div>
++
++          <div className="panel" data-testid="chart" data-chart="segment-comparison">
++            <h2>Revenue by Segment</h2>
++            <p className="panel-subtitle">Segment mix for the selected period</p>
++            <SegmentComparisonChart data={segments} />
++          </div>
++        </section>
++
++        <section className="panel" aria-label="Segment breakdown table">
++          <h2>Segment Breakdown</h2>
++          <p className="panel-subtitle">Revenue, cost and profitability per segment for the selected period</p>
++          <SegmentTable data={segments} />
++        </section>
++      </main>
++    </div>
++  );
+ }
+--- a/src/components/Filters.tsx
++++ b/src/components/Filters.tsx
+@@ -0,0 +1,64 @@
++import type { PeriodKey, SegmentFilterKey } from '../lib/types';
++import { PERIODS, SEGMENT_FILTERS } from '../lib/finance';
++
++const PERIOD_LABELS: Record<PeriodKey, string> = {
++  'full-year': 'Full Year',
++  q1: 'Q1',
++  q2: 'Q2',
++  q3: 'Q3',
++  q4: 'Q4',
++};
++
++const SEGMENT_LABELS: Record<SegmentFilterKey, string> = {
++  all: 'All',
++  enterprise: 'Enterprise',
++  'mid-market': 'Mid-Market',
++  smb: 'SMB',
++};
++
++interface FiltersProps {
++  period: PeriodKey;
++  segment: SegmentFilterKey;
++  onPeriodChange: (period: PeriodKey) => void;
++  onSegmentChange: (segment: SegmentFilterKey) => void;
++}
++
++export function Filters({ period, segment, onPeriodChange, onSegmentChange }: FiltersProps) {
++  return (
++    <form className="filters" aria-label="Dashboard filters">
++      <fieldset className="filter-group" data-testid="filter-period">
++        <legend>Period</legend>
++        <div className="filter-buttons">
++          {PERIODS.map((key) => (
++            <button
++              key={key}
++              type="button"
++              data-period={key}
++              aria-pressed={period === key}
++              onClick={() => onPeriodChange(key)}
++            >
++              {PERIOD_LABELS[key]}
++            </button>
++          ))}
++        </div>
++      </fieldset>
++
++      <fieldset className="filter-group" data-testid="filter-segment">
++        <legend>Segment</legend>
++        <div className="filter-buttons">
++          {SEGMENT_FILTERS.map((key) => (
++            <button
++              key={key}
++              type="button"
++              data-segment={key}
++              aria-pressed={segment === key}
++              onClick={() => onSegmentChange(key)}
++            >
++              {SEGMENT_LABELS[key]}
++            </button>
++          ))}
++        </div>
++      </fieldset>
++    </form>
++  );
++}
+--- a/src/components/KpiGrid.tsx
++++ b/src/components/KpiGrid.tsx
+@@ -0,0 +1,97 @@
++import type { Aggregate } from '../lib/types';
++import { formatMoneyCompact, formatNumber, formatPercent, formatSignedMoneyCompact } from '../lib/format';
++
++interface KpiDefinition {
++  key: keyof Aggregate;
++  label: string;
++  value: (aggregate: Aggregate) => string;
++  sub?: (aggregate: Aggregate) => { text: string; tone: 'positive' | 'negative' | 'neutral' } | null;
++}
++
++const KPI_DEFINITIONS: KpiDefinition[] = [
++  {
++    key: 'revenue',
++    label: 'Revenue',
++    value: (a) => formatMoneyCompact(a.revenue),
++  },
++  {
++    key: 'budget',
++    label: 'Budget',
++    value: (a) => formatMoneyCompact(a.budget),
++    sub: (a) => ({
++      text: `${formatSignedMoneyCompact(a.budget_variance)} vs actual`,
++      tone: a.budget_variance >= 0 ? 'positive' : 'negative',
++    }),
++  },
++  {
++    key: 'budget_variance',
++    label: 'Budget variance',
++    value: (a) => formatSignedMoneyCompact(a.budget_variance),
++    sub: (a) => ({
++      text: a.budget_variance >= 0 ? 'Above budget' : 'Below budget',
++      tone: a.budget_variance >= 0 ? 'positive' : 'negative',
++    }),
++  },
++  {
++    key: 'cogs',
++    label: 'COGS',
++    value: (a) => formatMoneyCompact(a.cogs),
++  },
++  {
++    key: 'opex',
++    label: 'OpEx',
++    value: (a) => formatMoneyCompact(a.opex),
++  },
++  {
++    key: 'ebitda',
++    label: 'EBITDA',
++    value: (a) => formatMoneyCompact(a.ebitda),
++    sub: (a) => ({
++      text: `${formatPercent(a.revenue === 0 ? 0 : a.ebitda / a.revenue)} margin`,
++      tone: a.ebitda >= 0 ? 'positive' : 'negative',
++    }),
++  },
++  {
++    key: 'cash',
++    label: 'Cash',
++    value: (a) => formatMoneyCompact(a.cash),
++    sub: () => ({ text: 'Company-wide, unaffected by segment filter', tone: 'neutral' }),
++  },
++  {
++    key: 'new_customers',
++    label: 'New customers',
++    value: (a) => formatNumber(a.new_customers),
++  },
++  {
++    key: 'churn_rate',
++    label: 'Churn rate',
++    value: (a) => formatPercent(a.churn_rate),
++  },
++];
++
++interface KpiGridProps {
++  aggregate: Aggregate;
++}
++
++export function KpiGrid({ aggregate }: KpiGridProps) {
++  return (
++    <section className="kpi-grid" aria-label="Key performance indicators">
++      {KPI_DEFINITIONS.map((definition) => {
++        const sub = definition.sub?.(aggregate) ?? null;
++        return (
++          <div
++            key={definition.key}
++            className="kpi-card"
++            data-testid="kpi"
++            data-kpi={definition.key}
++            data-value={aggregate[definition.key]}
++          >
++            <span className="kpi-label">{definition.label}</span>
++            <span className="kpi-value">{definition.value(aggregate)}</span>
++            {sub ? <span className={`kpi-sub ${sub.tone}`}>{sub.text}</span> : null}
++          </div>
++        );
++      })}
++    </section>
++  );
++}
+--- a/src/components/SegmentTable.tsx
++++ b/src/components/SegmentTable.tsx
+@@ -0,0 +1,59 @@
++import type { SegmentSummary } from '../lib/types';
++import { formatMoney, formatPercent } from '../lib/format';
++
++interface SegmentTableProps {
++  data: SegmentSummary[];
++}
++
++export function SegmentTable({ data }: SegmentTableProps) {
++  const totals = data.reduce(
++    (acc, item) => ({
++      revenue: acc.revenue + item.revenue,
++      cogs: acc.cogs + item.cogs,
++      opex: acc.opex + item.opex,
++      ebitda: acc.ebitda + item.ebitda,
++      share: acc.share + item.share,
++    }),
++    { revenue: 0, cogs: 0, opex: 0, ebitda: 0, share: 0 },
++  );
++
++  return (
++    <div className="table-wrapper">
++      <table className="segment-table" data-testid="segment-table">
++        <caption>Per-segment revenue, cost and profitability for the selected period</caption>
++        <thead>
++          <tr>
++            <th scope="col">Segment</th>
++            <th scope="col">Revenue</th>
++            <th scope="col">COGS</th>
++            <th scope="col">OpEx</th>
++            <th scope="col">EBITDA</th>
++            <th scope="col">Share</th>
++          </tr>
++        </thead>
++        <tbody>
++          {data.map((segment) => (
++            <tr key={segment.segment} data-testid="segment-row" data-segment={segment.segment}>
++              <th scope="row">{segment.name}</th>
++              <td>{formatMoney(segment.revenue)}</td>
++              <td>{formatMoney(segment.cogs)}</td>
++              <td>{formatMoney(segment.opex)}</td>
++              <td>{formatMoney(segment.ebitda)}</td>
++              <td>{formatPercent(segment.share)}</td>
++            </tr>
++          ))}
++        </tbody>
++        <tfoot>
++          <tr>
++            <td>Total</td>
++            <td>{formatMoney(totals.revenue)}</td>
++            <td>{formatMoney(totals.cogs)}</td>
++            <td>{formatMoney(totals.opex)}</td>
++            <td>{formatMoney(totals.ebitda)}</td>
++            <td>{formatPercent(totals.share)}</td>
++          </tr>
++        </tfoot>
++      </table>
++    </div>
++  );
++}
+--- a/src/components/charts/CostBreakdownChart.tsx
++++ b/src/components/charts/CostBreakdownChart.tsx
+@@ -0,0 +1,119 @@
++import type { MonthlyPoint } from '../../lib/types';
++import { formatMonth, formatMoneyCompact } from '../../lib/format';
++
++const WIDTH = 640;
++const HEIGHT = 260;
++const MARGIN = { top: 16, right: 16, bottom: 28, left: 56 };
++const BAR_GAP = 2;
++const SERIES: { key: 'cogs' | 'opex' | 'ebitda'; label: string; color: string }[] = [
++  { key: 'cogs', label: 'COGS', color: 'var(--series-1)' },
++  { key: 'opex', label: 'OpEx', color: 'var(--series-2)' },
++  { key: 'ebitda', label: 'EBITDA', color: 'var(--series-3)' },
++];
++
++interface CostBreakdownChartProps {
++  data: MonthlyPoint[];
++}
++
++export function CostBreakdownChart({ data }: CostBreakdownChartProps) {
++  const innerWidth = WIDTH - MARGIN.left - MARGIN.right;
++  const innerHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
++
++  const values = data.flatMap((point) => [point.cogs, point.opex, point.ebitda]);
++  const maxValue = Math.max(...values, 0);
++  const minValue = Math.min(...values, 0);
++  const zeroY = MARGIN.top + innerHeight - ((0 - minValue) / (maxValue - minValue || 1)) * innerHeight;
++  const yFor = (value: number) =>
++    MARGIN.top + innerHeight - ((value - minValue) / (maxValue - minValue || 1)) * innerHeight;
++
++  const groupWidth = innerWidth / data.length;
++  const barWidth = Math.min(20, (groupWidth - BAR_GAP * (SERIES.length + 1)) / SERIES.length);
++
++  const summary = data
++    .map((p) => `${p.month}: COGS ${formatMoneyCompact(p.cogs)}, OpEx ${formatMoneyCompact(p.opex)}, EBITDA ${formatMoneyCompact(p.ebitda)}`)
++    .join('; ');
++
++  return (
++    <div>
++      <div className="chart-scroll">
++        <svg
++          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
++          width="100%"
++          height={HEIGHT}
++          role="img"
++          aria-label={`Cost and profitability breakdown by month. ${summary}`}
++        >
++          <line x1={MARGIN.left} x2={WIDTH - MARGIN.right} y1={zeroY} y2={zeroY} stroke="var(--baseline)" strokeWidth={1} />
++          <text x={MARGIN.left - 8} y={zeroY} textAnchor="end" dominantBaseline="middle" fontSize={10} fill="var(--text-muted)">
++            {formatMoneyCompact(0)}
++          </text>
++          <text x={MARGIN.left - 8} y={MARGIN.top} textAnchor="end" dominantBaseline="hanging" fontSize={10} fill="var(--text-muted)">
++            {formatMoneyCompact(maxValue)}
++          </text>
++          {minValue < 0 && (
++            <text x={MARGIN.left - 8} y={MARGIN.top + innerHeight} textAnchor="end" dominantBaseline="auto" fontSize={10} fill="var(--text-muted)">
++              {formatMoneyCompact(minValue)}
++            </text>
++          )}
++
++          {data.map((point, groupIndex) => {
++            const groupX = MARGIN.left + groupIndex * groupWidth;
++            return (
++              <g key={point.month}>
++                {SERIES.map((series, seriesIndex) => {
++                  const value = point[series.key];
++                  const barX = groupX + BAR_GAP + seriesIndex * (barWidth + BAR_GAP);
++                  const barY = value >= 0 ? yFor(value) : zeroY;
++                  const barHeight = Math.abs(yFor(value) - zeroY);
++                  return (
++                    <rect
++                      key={series.key}
++                      x={barX}
++                      y={barY}
++                      width={barWidth}
++                      height={Math.max(barHeight, 0.5)}
++                      fill={series.color}
++                      rx={2}
++                    />
++                  );
++                })}
++                <text x={groupX + groupWidth / 2} y={HEIGHT - 8} textAnchor="middle" fontSize={10} fill="var(--text-muted)">
++                  {formatMonth(point.month)}
++                </text>
++              </g>
++            );
++          })}
++        </svg>
++      </div>
++      <div className="chart-legend">
++        {SERIES.map((series) => (
++          <span className="chart-legend-item" key={series.key}>
++            <span className="chart-legend-swatch" style={{ background: series.color }} />
++            {series.label}
++          </span>
++        ))}
++      </div>
++      <table className="sr-only">
++        <caption>Cost and profitability breakdown by month</caption>
++        <thead>
++          <tr>
++            <th>Month</th>
++            <th>COGS</th>
++            <th>OpEx</th>
++            <th>EBITDA</th>
++          </tr>
++        </thead>
++        <tbody>
++          {data.map((point) => (
++            <tr key={point.month}>
++              <td>{point.month}</td>
++              <td>{formatMoneyCompact(point.cogs)}</td>
++              <td>{formatMoneyCompact(point.opex)}</td>
++              <td>{formatMoneyCompact(point.ebitda)}</td>
++            </tr>
++          ))}
++        </tbody>
++      </table>
++    </div>
++  );
++}
+--- a/src/components/charts/RevenueBudgetChart.tsx
++++ b/src/components/charts/RevenueBudgetChart.tsx
+@@ -0,0 +1,133 @@
++import type { MonthlyPoint } from '../../lib/types';
++import { formatMonth, formatMoneyCompact } from '../../lib/format';
++
++const WIDTH = 640;
++const HEIGHT = 260;
++const MARGIN = { top: 16, right: 16, bottom: 28, left: 56 };
++
++interface RevenueBudgetChartProps {
++  data: MonthlyPoint[];
++}
++
++function niceTicks(max: number, min: number, count = 4): number[] {
++  if (max === min) return [min];
++  const span = max - min;
++  const step = span / count;
++  return Array.from({ length: count + 1 }, (_, i) => min + step * i);
++}
++
++export function RevenueBudgetChart({ data }: RevenueBudgetChartProps) {
++  const innerWidth = WIDTH - MARGIN.left - MARGIN.right;
++  const innerHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
++
++  const values = data.flatMap((point) => [point.revenue, point.budget]);
++  const maxValue = Math.max(...values, 0);
++  const minValue = Math.min(...values, 0);
++  const ticks = niceTicks(maxValue, minValue);
++
++  const xFor = (index: number) =>
++    data.length <= 1 ? MARGIN.left : MARGIN.left + (index / (data.length - 1)) * innerWidth;
++  const yFor = (value: number) =>
++    MARGIN.top + innerHeight - ((value - minValue) / (maxValue - minValue || 1)) * innerHeight;
++
++  const revenuePath = data.map((p, i) => `${i === 0 ? 'M' : 'L'}${xFor(i)},${yFor(p.revenue)}`).join(' ');
++  const budgetPath = data.map((p, i) => `${i === 0 ? 'M' : 'L'}${xFor(i)},${yFor(p.budget)}`).join(' ');
++
++  const lastRevenue = data.at(-1)?.revenue ?? 0;
++  const lastBudget = data.at(-1)?.budget ?? 0;
++
++  const summary = `${data.length} months. Revenue ranges from ${formatMoneyCompact(
++    Math.min(...data.map((p) => p.revenue)),
++  )} to ${formatMoneyCompact(Math.max(...data.map((p) => p.revenue)))}; budget from ${formatMoneyCompact(
++    Math.min(...data.map((p) => p.budget)),
++  )} to ${formatMoneyCompact(Math.max(...data.map((p) => p.budget)))}.`;
++
++  return (
++    <div>
++      <div className="chart-scroll">
++        <svg
++          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
++          width="100%"
++          height={HEIGHT}
++          role="img"
++          aria-label={`Revenue versus budget by month. ${summary}`}
++        >
++          {ticks.map((tick) => (
++            <g key={tick}>
++              <line
++                x1={MARGIN.left}
++                x2={WIDTH - MARGIN.right}
++                y1={yFor(tick)}
++                y2={yFor(tick)}
++                stroke="var(--gridline)"
++                strokeWidth={1}
++              />
++              <text x={MARGIN.left - 8} y={yFor(tick)} textAnchor="end" dominantBaseline="middle" fontSize={10} fill="var(--text-muted)">
++                {formatMoneyCompact(tick)}
++              </text>
++            </g>
++          ))}
++
++          {data.map((point, i) => (
++            <text
++              key={point.month}
++              x={xFor(i)}
++              y={HEIGHT - 8}
++              textAnchor="middle"
++              fontSize={10}
++              fill="var(--text-muted)"
++            >
++              {formatMonth(point.month)}
++            </text>
++          ))}
++
++          <path d={budgetPath} fill="none" stroke="var(--series-2)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
++          <path d={revenuePath} fill="none" stroke="var(--series-1)" strokeWidth={2} strokeLinejoin="round" strokeLinecap="round" />
++
++          {data.map((point, i) => (
++            <circle key={`b-${point.month}`} cx={xFor(i)} cy={yFor(point.budget)} r={3} fill="var(--series-2)" stroke="var(--surface-1)" strokeWidth={2} />
++          ))}
++          {data.map((point, i) => (
++            <circle key={`r-${point.month}`} cx={xFor(i)} cy={yFor(point.revenue)} r={3} fill="var(--series-1)" stroke="var(--surface-1)" strokeWidth={2} />
++          ))}
++
++          <text x={xFor(data.length - 1) + 6} y={yFor(lastRevenue)} fontSize={10} fill="var(--text-primary)" dominantBaseline="middle">
++            {formatMoneyCompact(lastRevenue)}
++          </text>
++          <text x={xFor(data.length - 1) + 6} y={yFor(lastBudget)} fontSize={10} fill="var(--text-primary)" dominantBaseline="middle">
++            {formatMoneyCompact(lastBudget)}
++          </text>
++        </svg>
++      </div>
++      <div className="chart-legend">
++        <span className="chart-legend-item">
++          <span className="chart-legend-swatch" style={{ background: 'var(--series-1)' }} />
++          Revenue
++        </span>
++        <span className="chart-legend-item">
++          <span className="chart-legend-swatch" style={{ background: 'var(--series-2)' }} />
++          Budget
++        </span>
++      </div>
++      <table className="sr-only">
++        <caption>Revenue versus budget by month</caption>
++        <thead>
++          <tr>
++            <th>Month</th>
++            <th>Revenue</th>
++            <th>Budget</th>
++          </tr>
++        </thead>
++        <tbody>
++          {data.map((point) => (
++            <tr key={point.month}>
++              <td>{point.month}</td>
++              <td>{formatMoneyCompact(point.revenue)}</td>
++              <td>{formatMoneyCompact(point.budget)}</td>
++            </tr>
++          ))}
++        </tbody>
++      </table>
++    </div>
++  );
++}
+--- a/src/components/charts/SegmentComparisonChart.tsx
++++ b/src/components/charts/SegmentComparisonChart.tsx
+@@ -0,0 +1,101 @@
++import type { SegmentSummary } from '../../lib/types';
++import { formatMoneyCompact, formatPercent } from '../../lib/format';
++
++const WIDTH = 420;
++const HEIGHT = 260;
++const MARGIN = { top: 16, right: 16, bottom: 40, left: 56 };
++
++const COLORS: Record<SegmentSummary['segment'], string> = {
++  enterprise: 'var(--series-1)',
++  'mid-market': 'var(--series-2)',
++  smb: 'var(--series-3)',
++  all: 'var(--series-1)',
++};
++
++interface SegmentComparisonChartProps {
++  data: SegmentSummary[];
++}
++
++export function SegmentComparisonChart({ data }: SegmentComparisonChartProps) {
++  const innerWidth = WIDTH - MARGIN.left - MARGIN.right;
++  const innerHeight = HEIGHT - MARGIN.top - MARGIN.bottom;
++
++  const maxRevenue = Math.max(...data.map((d) => d.revenue), 0);
++  const yFor = (value: number) => MARGIN.top + innerHeight - (value / (maxRevenue || 1)) * innerHeight;
++
++  const slotWidth = innerWidth / data.length;
++  const barWidth = Math.min(56, slotWidth - 16);
++
++  const summary = data
++    .map((d) => `${d.name}: revenue ${formatMoneyCompact(d.revenue)}, ${formatPercent(d.share)} of total`)
++    .join('; ');
++
++  return (
++    <div>
++      <div className="chart-scroll">
++        <svg
++          viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
++          width="100%"
++          height={HEIGHT}
++          role="img"
++          aria-label={`Revenue by segment. ${summary}`}
++        >
++          <line
++            x1={MARGIN.left}
++            x2={WIDTH - MARGIN.right}
++            y1={MARGIN.top + innerHeight}
++            y2={MARGIN.top + innerHeight}
++            stroke="var(--baseline)"
++            strokeWidth={1}
++          />
++          <text x={MARGIN.left - 8} y={MARGIN.top + innerHeight} textAnchor="end" dominantBaseline="auto" fontSize={10} fill="var(--text-muted)">
++            {formatMoneyCompact(0)}
++          </text>
++          <text x={MARGIN.left - 8} y={MARGIN.top} textAnchor="end" dominantBaseline="hanging" fontSize={10} fill="var(--text-muted)">
++            {formatMoneyCompact(maxRevenue)}
++          </text>
++
++          {data.map((segment, index) => {
++            const slotX = MARGIN.left + index * slotWidth;
++            const barX = slotX + (slotWidth - barWidth) / 2;
++            const barY = yFor(segment.revenue);
++            const barHeight = MARGIN.top + innerHeight - barY;
++            return (
++              <g key={segment.segment}>
++                <rect x={barX} y={barY} width={barWidth} height={Math.max(barHeight, 0.5)} fill={COLORS[segment.segment]} rx={4} />
++                <text x={barX + barWidth / 2} y={barY - 6} textAnchor="middle" fontSize={11} fontWeight={600} fill="var(--text-primary)">
++                  {formatMoneyCompact(segment.revenue)}
++                </text>
++                <text x={slotX + slotWidth / 2} y={HEIGHT - 24} textAnchor="middle" fontSize={11} fill="var(--text-primary)">
++                  {segment.name}
++                </text>
++                <text x={slotX + slotWidth / 2} y={HEIGHT - 10} textAnchor="middle" fontSize={10} fill="var(--text-muted)">
++                  {formatPercent(segment.share)} share
++                </text>
++              </g>
++            );
++          })}
++        </svg>
++      </div>
++      <table className="sr-only">
++        <caption>Revenue by segment</caption>
++        <thead>
++          <tr>
++            <th>Segment</th>
++            <th>Revenue</th>
++            <th>Share of total</th>
++          </tr>
++        </thead>
++        <tbody>
++          {data.map((segment) => (
++            <tr key={segment.segment}>
++              <td>{segment.name}</td>
++              <td>{formatMoneyCompact(segment.revenue)}</td>
++              <td>{formatPercent(segment.share)}</td>
++            </tr>
++          ))}
++        </tbody>
++      </table>
++    </div>
++  );
++}
+--- a/src/lib/finance.test.ts
++++ b/src/lib/finance.test.ts
+@@ -0,0 +1,111 @@
++import { describe, expect, it } from 'vitest';
++import financial from '../../data/financial.json';
++import { aggregate, monthsForPeriod, segmentSummaries } from './finance';
++import type { FinancialDocument } from './types';
++
++const document = financial as FinancialDocument;
++
++function sumField(
++  months: FinancialDocument['months'],
++  segments: FinancialDocument['meta']['segments'],
++  field: 'revenue' | 'cogs',
++): number {
++  let total = 0;
++  for (const month of months) {
++    for (const name of segments) {
++      total += month.segments[name][field];
++    }
++  }
++  return total;
++}
++
++function sumOpex(
++  months: FinancialDocument['months'],
++  segments: FinancialDocument['meta']['segments'],
++): number {
++  let total = 0;
++  for (const month of months) {
++    for (const name of segments) {
++      const opex = month.segments[name].opex;
++      total += opex.sales_marketing + opex.research_development + opex.general_admin;
++    }
++  }
++  return total;
++}
++
++describe('aggregate', () => {
++  it('sums revenue, cogs, opex and derives EBITDA for Full Year + All segments', () => {
++    const result = aggregate(document, 'full-year', 'all');
++    const expectedRevenue = sumField(document.months, document.meta.segments, 'revenue');
++    const expectedCogs = sumField(document.months, document.meta.segments, 'cogs');
++    const expectedOpex = sumOpex(document.months, document.meta.segments);
++
++    expect(result.revenue).toBeCloseTo(expectedRevenue, 2);
++    expect(result.cogs).toBeCloseTo(expectedCogs, 2);
++    expect(result.opex).toBeCloseTo(expectedOpex, 2);
++    expect(result.ebitda).toBeCloseTo(expectedRevenue - expectedCogs - expectedOpex, 2);
++  });
++
++  it('selects exactly the three months of a quarter', () => {
++    const q2Months = monthsForPeriod(document, 'q2');
++    expect(q2Months.map((month) => month.month)).toEqual(['2025-04', '2025-05', '2025-06']);
++
++    const result = aggregate(document, 'q2', 'all');
++    const expectedRevenue = sumField(q2Months, document.meta.segments, 'revenue');
++    expect(result.revenue).toBeCloseTo(expectedRevenue, 2);
++  });
++
++  it('excludes other segments when a single segment filter is applied', () => {
++    const enterpriseOnly = aggregate(document, 'full-year', 'enterprise');
++    const expectedRevenue = sumField(document.months, ['Enterprise'], 'revenue');
++    const allSegmentsRevenue = sumField(document.months, document.meta.segments, 'revenue');
++
++    expect(enterpriseOnly.revenue).toBeCloseTo(expectedRevenue, 2);
++    expect(enterpriseOnly.revenue).toBeLessThan(allSegmentsRevenue);
++  });
++
++  it('computes churn rate as total churned over total customers at period start', () => {
++    const result = aggregate(document, 'full-year', 'all');
++
++    let churned = 0;
++    let customersStart = 0;
++    for (const month of document.months) {
++      for (const name of document.meta.segments) {
++        churned += month.segments[name].churned_customers;
++        customersStart += month.segments[name].customers_start;
++      }
++    }
++
++    expect(result.churn_rate).toBeCloseTo(churned / customersStart, 6);
++  });
++
++  it('resolves cash to the closing balance of the last month and ignores the segment filter', () => {
++    const q1AllSegments = aggregate(document, 'q1', 'all');
++    const q1Enterprise = aggregate(document, 'q1', 'enterprise');
++    const lastMonthOfQ1 = monthsForPeriod(document, 'q1').at(-1);
++
++    expect(lastMonthOfQ1).toBeDefined();
++    expect(q1AllSegments.cash).toBeCloseTo(lastMonthOfQ1!.cash.closing_balance, 2);
++    expect(q1AllSegments.cash).toBe(q1Enterprise.cash);
++  });
++
++  it('computes budget variance as revenue minus budget', () => {
++    const result = aggregate(document, 'full-year', 'all');
++    expect(result.budget_variance).toBeCloseTo(result.revenue - result.budget, 2);
++  });
++});
++
++describe('segmentSummaries', () => {
++  it('returns all three segments whose revenue shares sum to 1', () => {
++    const summaries = segmentSummaries(document, 'full-year');
++    expect(summaries).toHaveLength(3);
++    expect(summaries.map((item) => item.segment).sort()).toEqual([
++      'enterprise',
++      'mid-market',
++      'smb',
++    ]);
++
++    const totalShare = summaries.reduce((sum, item) => sum + item.share, 0);
++    expect(totalShare).toBeCloseTo(1, 6);
++  });
++});
+--- a/src/lib/finance.ts
++++ b/src/lib/finance.ts
+@@ -0,0 +1,168 @@
++import type {
++  Aggregate,
++  FinancialDocument,
++  MonthData,
++  MonthlyPoint,
++  PeriodKey,
++  SegmentFilterKey,
++  SegmentName,
++  SegmentSummary,
++} from './types';
++
++export const PERIODS: PeriodKey[] = ['full-year', 'q1', 'q2', 'q3', 'q4'];
++
++export const SEGMENT_FILTERS: SegmentFilterKey[] = ['all', 'enterprise', 'mid-market', 'smb'];
++
++export const SEGMENT_KEYS: Record<Exclude<SegmentFilterKey, 'all'>, SegmentName> = {
++  enterprise: 'Enterprise',
++  'mid-market': 'Mid-Market',
++  smb: 'SMB',
++};
++
++export function monthsForPeriod(document: FinancialDocument, period: PeriodKey): MonthData[] {
++  if (period === 'full-year') return document.months;
++  const quarter = period.toUpperCase();
++  return document.months.filter((month) => month.quarter === quarter);
++}
++
++export function segmentNamesForFilter(
++  document: FinancialDocument,
++  segment: SegmentFilterKey,
++): SegmentName[] {
++  if (segment === 'all') return document.meta.segments;
++  return [SEGMENT_KEYS[segment]];
++}
++
++function opexTotal(opex: MonthData['segments'][SegmentName]['opex']): number {
++  return opex.sales_marketing + opex.research_development + opex.general_admin;
++}
++
++/** Todas as grandezas exigidas pelo TASK, para um par (período, segmento). */
++export function aggregate(
++  document: FinancialDocument,
++  period: PeriodKey,
++  segment: SegmentFilterKey,
++): Aggregate {
++  const months = monthsForPeriod(document, period);
++  const segments = segmentNamesForFilter(document, segment);
++
++  let revenue = 0;
++  let budget = 0;
++  let cogs = 0;
++  let opex = 0;
++  let newCustomers = 0;
++  let churned = 0;
++  let customersStart = 0;
++
++  for (const month of months) {
++    for (const name of segments) {
++      const entry = month.segments[name];
++      revenue += entry.revenue;
++      budget += entry.budget;
++      cogs += entry.cogs;
++      opex += opexTotal(entry.opex);
++      newCustomers += entry.new_customers;
++      churned += entry.churned_customers;
++      customersStart += entry.customers_start;
++    }
++  }
++
++  const lastMonth = months[months.length - 1];
++
++  return {
++    revenue,
++    budget,
++    budget_variance: revenue - budget,
++    cogs,
++    opex,
++    ebitda: revenue - cogs - opex,
++    cash: lastMonth.cash.closing_balance,
++    new_customers: newCustomers,
++    churn_rate: customersStart === 0 ? 0 : churned / customersStart,
++  };
++}
++
++/** Série mensal (dentro do período selecionado) para os gráficos de série temporal. */
++export function monthlySeries(
++  document: FinancialDocument,
++  period: PeriodKey,
++  segment: SegmentFilterKey,
++): MonthlyPoint[] {
++  const months = monthsForPeriod(document, period);
++  const segments = segmentNamesForFilter(document, segment);
++
++  return months.map((month) => {
++    let revenue = 0;
++    let budget = 0;
++    let cogs = 0;
++    let opex = 0;
++
++    for (const name of segments) {
++      const entry = month.segments[name];
++      revenue += entry.revenue;
++      budget += entry.budget;
++      cogs += entry.cogs;
++      opex += opexTotal(entry.opex);
++    }
++
++    return {
++      month: month.month,
++      revenue,
++      budget,
++      cogs,
++      opex,
++      ebitda: revenue - cogs - opex,
++    };
++  });
++}
++
++/** Resumo por segmento (sempre os três, independente do filtro) para a tabela e o gráfico de comparação. */
++export function segmentSummaries(
++  document: FinancialDocument,
++  period: PeriodKey,
++): SegmentSummary[] {
++  const months = monthsForPeriod(document, period);
++  const filters: Exclude<SegmentFilterKey, 'all'>[] = ['enterprise', 'mid-market', 'smb'];
++
++  const raw = filters.map((filterKey) => {
++    const name = SEGMENT_KEYS[filterKey];
++    let revenue = 0;
++    let cogs = 0;
++    let opex = 0;
++
++    for (const month of months) {
++      const entry = month.segments[name];
++      revenue += entry.revenue;
++      cogs += entry.cogs;
++      opex += opexTotal(entry.opex);
++    }
++
++    return {
++      segment: filterKey,
++      name,
++      revenue,
++      cogs,
++      opex,
++      ebitda: revenue - cogs - opex,
++    };
++  });
++
++  const totalRevenue = raw.reduce((sum, item) => sum + item.revenue, 0);
++
++  return raw.map((item) => ({
++    ...item,
++    share: totalRevenue === 0 ? 0 : item.revenue / totalRevenue,
++  }));
++}
++
++export const MONEY_KEYS: (keyof Aggregate)[] = [
++  'revenue',
++  'budget',
++  'budget_variance',
++  'cogs',
++  'opex',
++  'ebitda',
++  'cash',
++];
++export const COUNT_KEYS: (keyof Aggregate)[] = ['new_customers'];
++export const RATE_KEYS: (keyof Aggregate)[] = ['churn_rate'];
+--- a/src/lib/format.ts
++++ b/src/lib/format.ts
+@@ -0,0 +1,47 @@
++const currencyFormatter = new Intl.NumberFormat('en-US', {
++  style: 'currency',
++  currency: 'USD',
++  maximumFractionDigits: 0,
++});
++
++const compactCurrencyFormatter = new Intl.NumberFormat('en-US', {
++  style: 'currency',
++  currency: 'USD',
++  notation: 'compact',
++  maximumFractionDigits: 1,
++});
++
++const numberFormatter = new Intl.NumberFormat('en-US');
++
++const percentFormatter = new Intl.NumberFormat('en-US', {
++  style: 'percent',
++  minimumFractionDigits: 1,
++  maximumFractionDigits: 1,
++});
++
++export function formatMoney(value: number): string {
++  return currencyFormatter.format(value);
++}
++
++export function formatMoneyCompact(value: number): string {
++  return compactCurrencyFormatter.format(value);
++}
++
++export function formatSignedMoneyCompact(value: number): string {
++  const sign = value > 0 ? '+' : value < 0 ? '-' : '';
++  return `${sign}${compactCurrencyFormatter.format(Math.abs(value))}`;
++}
++
++export function formatNumber(value: number): string {
++  return numberFormatter.format(value);
++}
++
++export function formatPercent(value: number): string {
++  return percentFormatter.format(value);
++}
++
++export function formatMonth(monthKey: string): string {
++  const [year, month] = monthKey.split('-');
++  const date = new Date(Number(year), Number(month) - 1, 1);
++  return date.toLocaleDateString('en-US', { month: 'short' });
++}
+--- a/src/lib/types.ts
++++ b/src/lib/types.ts
+@@ -0,0 +1,82 @@
++export interface OpexCategories {
++  sales_marketing: number;
++  research_development: number;
++  general_admin: number;
++}
++
++export interface SegmentMonthData {
++  revenue: number;
++  budget: number;
++  cogs: number;
++  opex: OpexCategories;
++  customers_start: number;
++  new_customers: number;
++  churned_customers: number;
++  customers_end: number;
++}
++
++export interface CashBlock {
++  opening_balance: number;
++  non_operating_outflow: number;
++  closing_balance: number;
++}
++
++export const SEGMENT_NAMES = ['Enterprise', 'Mid-Market', 'SMB'] as const;
++export type SegmentName = (typeof SEGMENT_NAMES)[number];
++
++export interface MonthData {
++  month: string;
++  quarter: 'Q1' | 'Q2' | 'Q3' | 'Q4';
++  segments: Record<SegmentName, SegmentMonthData>;
++  cash: CashBlock;
++}
++
++export interface FinancialMeta {
++  company: string;
++  fiscal_year: number;
++  currency: string;
++  amounts_in: string;
++  segments: SegmentName[];
++  quarters: string[];
++  opex_categories: string[];
++  notes: string[];
++}
++
++export interface FinancialDocument {
++  meta: FinancialMeta;
++  months: MonthData[];
++}
++
++export type PeriodKey = 'full-year' | 'q1' | 'q2' | 'q3' | 'q4';
++export type SegmentFilterKey = 'all' | 'enterprise' | 'mid-market' | 'smb';
++
++export interface Aggregate {
++  revenue: number;
++  budget: number;
++  budget_variance: number;
++  cogs: number;
++  opex: number;
++  ebitda: number;
++  cash: number;
++  new_customers: number;
++  churn_rate: number;
++}
++
++export interface MonthlyPoint {
++  month: string;
++  revenue: number;
++  budget: number;
++  cogs: number;
++  opex: number;
++  ebitda: number;
++}
++
++export interface SegmentSummary {
++  segment: SegmentFilterKey;
++  name: SegmentName;
++  revenue: number;
++  cogs: number;
++  opex: number;
++  ebitda: number;
++  share: number;
++}
+--- a/src/seed.test.ts
++++ b/src/seed.test.ts
+@@ -1,9 +0,0 @@
+-// Teste de scaffold: mantém a suíte executável antes de existirem testes reais.
+-// Acrescente os seus próprios arquivos *.test.ts / *.test.tsx em src/.
+-import { describe, expect, it } from 'vitest';
+-
+-describe('environment', () => {
+-  it('runs in a DOM environment', () => {
+-    expect(typeof document).toBe('object');
+-  });
+-});
+--- a/src/styles.css
++++ b/src/styles.css
+@@ -4,7 +4,289 @@
+   box-sizing: border-box;
+ }
+ 
++:root {
++  color-scheme: light;
++  --surface-1: #fcfcfb;
++  --page-plane: #f9f9f7;
++  --text-primary: #0b0b0b;
++  --text-secondary: #52514e;
++  --text-muted: #898781;
++  --gridline: #e1e0d9;
++  --baseline: #c3c2b7;
++  --border: rgba(11, 11, 11, 0.1);
++
++  --series-1: #2a78d6;
++  --series-2: #eb6834;
++  --series-3: #1baf7a;
++
++  --status-good: #006300;
++  --status-critical: #d03b3b;
++}
++
+ body {
+   margin: 0;
+   font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+-}
++  color: var(--text-primary);
++  background: var(--page-plane);
++}
++
++.sr-only {
++  position: absolute;
++  width: 1px;
++  height: 1px;
++  padding: 0;
++  margin: -1px;
++  overflow: hidden;
++  clip: rect(0, 0, 0, 0);
++  white-space: nowrap;
++  border: 0;
++}
++
++.app {
++  max-width: 1280px;
++  margin: 0 auto;
++  padding: 24px 24px 48px;
++}
++
++.app-header {
++  display: flex;
++  flex-direction: column;
++  gap: 4px;
++  margin-bottom: 20px;
++}
++
++.app-header h1 {
++  font-size: 1.6rem;
++  margin: 0;
++}
++
++.app-header p {
++  margin: 0;
++  color: var(--text-secondary);
++  font-size: 0.9rem;
++}
++
++.filters {
++  display: flex;
++  flex-wrap: wrap;
++  gap: 16px;
++  align-items: flex-end;
++  margin-bottom: 24px;
++  padding: 16px;
++  background: var(--surface-1);
++  border: 1px solid var(--border);
++  border-radius: 12px;
++}
++
++.filter-group {
++  display: flex;
++  flex-direction: column;
++  gap: 6px;
++}
++
++.filter-group legend {
++  font-size: 0.75rem;
++  font-weight: 600;
++  color: var(--text-secondary);
++  text-transform: uppercase;
++  letter-spacing: 0.04em;
++  padding: 0;
++}
++
++.filter-buttons {
++  display: flex;
++  gap: 6px;
++  flex-wrap: wrap;
++}
++
++.filter-buttons button {
++  border: 1px solid var(--border);
++  background: var(--surface-1);
++  color: var(--text-primary);
++  padding: 6px 12px;
++  border-radius: 8px;
++  font-size: 0.85rem;
++  cursor: pointer;
++  font-family: inherit;
++}
++
++.filter-buttons button:hover {
++  background: var(--gridline);
++}
++
++.filter-buttons button[aria-pressed='true'] {
++  background: var(--series-1);
++  border-color: var(--series-1);
++  color: #fff;
++  font-weight: 600;
++}
++
++.kpi-grid {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
++  gap: 12px;
++  margin-bottom: 24px;
++}
++
++.kpi-card {
++  background: var(--surface-1);
++  border: 1px solid var(--border);
++  border-radius: 12px;
++  padding: 14px 16px;
++  display: flex;
++  flex-direction: column;
++  gap: 4px;
++  min-width: 0;
++}
++
++.kpi-label {
++  font-size: 0.75rem;
++  color: var(--text-secondary);
++  text-transform: uppercase;
++  letter-spacing: 0.03em;
++}
++
++.kpi-value {
++  font-size: 1.35rem;
++  font-weight: 600;
++  color: var(--text-primary);
++  white-space: nowrap;
++  overflow: hidden;
++  text-overflow: ellipsis;
++}
++
++.kpi-sub {
++  font-size: 0.8rem;
++  color: var(--text-muted);
++}
++
++.kpi-sub.positive {
++  color: var(--status-good);
++}
++
++.kpi-sub.negative {
++  color: var(--status-critical);
++}
++
++.panels {
++  display: grid;
++  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
++  gap: 16px;
++  margin-bottom: 24px;
++}
++
++.panel {
++  background: var(--surface-1);
++  border: 1px solid var(--border);
++  border-radius: 12px;
++  padding: 16px;
++  min-width: 0;
++  overflow: hidden;
++}
++
++.panel h2 {
++  font-size: 1rem;
++  margin: 0 0 4px;
++}
++
++.panel-subtitle {
++  font-size: 0.8rem;
++  color: var(--text-muted);
++  margin: 0 0 12px;
++}
++
++.chart-legend {
++  display: flex;
++  gap: 14px;
++  flex-wrap: wrap;
++  margin-top: 8px;
++  font-size: 0.78rem;
++  color: var(--text-secondary);
++}
++
++.chart-legend-item {
++  display: flex;
++  align-items: center;
++  gap: 6px;
++}
++
++.chart-legend-swatch {
++  width: 10px;
++  height: 10px;
++  border-radius: 2px;
++  display: inline-block;
++}
++
++.chart-scroll {
++  overflow-x: auto;
++}
++
++.chart-scroll svg {
++  display: block;
++}
++
++table.segment-table {
++  width: 100%;
++  border-collapse: collapse;
++  font-size: 0.88rem;
++}
++
++table.segment-table caption {
++  text-align: left;
++  font-size: 0.8rem;
++  color: var(--text-muted);
++  margin-bottom: 8px;
++}
++
++table.segment-table th,
++table.segment-table td {
++  text-align: right;
++  padding: 8px 10px;
++  border-bottom: 1px solid var(--gridline);
++  font-variant-numeric: tabular-nums;
++  white-space: nowrap;
++}
++
++table.segment-table th:first-child,
++table.segment-table td:first-child {
++  text-align: left;
++  font-variant-numeric: normal;
++}
++
++table.segment-table thead th {
++  color: var(--text-secondary);
++  font-weight: 600;
++  font-size: 0.78rem;
++  text-transform: uppercase;
++  letter-spacing: 0.02em;
++}
++
++table.segment-table tfoot td {
++  font-weight: 600;
++  border-bottom: none;
++  border-top: 2px solid var(--baseline);
++}
++
++.table-wrapper {
++  overflow-x: auto;
++}
++
++.cash-note {
++  font-size: 0.78rem;
++  color: var(--text-muted);
++  margin: -8px 0 24px;
++}
++
++@media (max-width: 480px) {
++  .app {
++    padding: 16px 12px 32px;
++  }
++
++  .kpi-value {
++    font-size: 1.15rem;
++  }
++
++  .filters {
++    padding: 12px;
++  }
++}

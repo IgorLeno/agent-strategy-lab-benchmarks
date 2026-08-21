@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "B04-atlas",
+  "arm": "agentlab",
+  "seed_sha": "7f95c4b294e459ed017fb7e5403aa3ff342fc076",
+  "task_sha256": "4fcff64ab9aac698a88ef53925762eae7d4d3de4d108f2568fb7108db447fdc2",
+  "financial_json_sha256": "7ac11b8a3dfe8985cdbb7afd64132b1346e67fb7e05cb5270154fff63d38cb4c",
+  "agent": "claude",
+  "model": "claude-sonnet-5",
+  "reasoning_effort": "medium",
+  "profile_id": "claude-build-worker-subscription-sonnet5-medium-v3",
+  "started_at": "2026-08-21T01:50:42.720Z",
+  "finished_at": "2026-08-21T01:55:55.934Z",
+  "wall_clock_ms": 313214,
+  "wall_clock_ms_provenance": "ISO delta of sealed arm.json started_at/finished_at (arm including validation). The private metrics also stored a hardcoded wall_clock_ms=316515 that disagrees by 3301 ms; see experiment.json integrity.metrics_divergence. Overhead uses this ISO delta.",
+  "worker_runtime_ms": {
+    "value": 276618,
+    "provenance": "harness B4.launch.json duration_ms (worker process); Claude JSON duration_ms=274164"
+  },
+  "launch_count": 1,
+  "first_pass": true,
+  "repair_used": false,
+  "final_status": "PASS",
+  "tokens": {
+    "input": 90,
+    "cached_input": 2607716,
+    "output": 26188,
+    "reasoning": 4307,
+    "total": 2694157,
+    "provenance": "claude JSON usage no B4.stdout.log: input_tokens=90, cache_creation_input_tokens=60163, cache_read_input_tokens=2607716, output_tokens=26188, thinking_tokens=4307 (subset of output). total = input + cache_creation + cache_read + output."
+  },
+  "quota": {
+    "value": 60,
+    "unit": "five_hour_remaining_pct_after",
+    "provenance": "harness /usage before=31% used after=40% used consumed_pp=9 same_window=True reason=OK; seven_day after_used_pct=39"
+  },
+  "api_equivalent_usd": {
+    "value": 1.5412247999999995,
+    "provenance": "claude JSON total_cost_usd / modelUsage — API-equivalent estimate, not charged (subscription). Includes helper Haiku 0.004842 + Sonnet 1.5363827999999995"
+  },
+  "billing_mode": "subscription_only",
+  "human_interventions": [],
+  "changed_files": {
+    "count": 12,
+    "paths": [
+      "src/App.tsx",
+      "src/components/FilterBar.tsx",
+      "src/components/KpiRow.tsx",
+      "src/components/SegmentTable.tsx",
+      "src/components/charts/CostBreakdownChart.tsx",
+      "src/components/charts/RevenueBudgetChart.tsx",
+      "src/components/charts/SegmentComparisonChart.tsx",
+      "src/data.ts",
+      "src/lib/finance.test.ts",
+      "src/lib/finance.ts",
+      "src/lib/format.ts",
+      "src/styles.css"
+    ],
+    "insertions": 1098,
+    "deletions": 3
+  },
+  "final_commit_sha": "4437ec484df72462219f30687fbb7b8640e41263",
+  "modelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 4782,
+      "outputTokens": 12,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.004842,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty"
+    },
+    "claude-sonnet-5": {
+      "inputTokens": 90,
+      "outputTokens": 26188,
+      "cacheReadInputTokens": 2607716,
+      "cacheCreationInputTokens": 60163,
+      "webSearchRequests": 0,
+      "costUSD": 1.5363827999999995,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "canonicalModel": "claude-sonnet-5",
+      "provider": "firstParty"
+    }
+  },
+  "model_purity_warning": {
+    "code": "MODEL_PURITY_WARNING",
+    "implementer": "claude-sonnet-5",
+    "implementer_effort": "medium",
+    "helper_models": [
+      "claude-haiku-4-5-20251001"
+    ],
+    "action": "preserved modelUsage; not invalidated because implementer remained Sonnet 5 Medium"
+  }
+}

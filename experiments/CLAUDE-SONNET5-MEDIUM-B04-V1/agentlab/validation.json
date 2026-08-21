@@ -1,0 +1,62 @@
+{
+  "passed": true,
+  "repair": null,
+  "protected_paths_unmodified": true,
+  "tests": {
+    "passed": 8,
+    "failed": 0
+  },
+  "commands": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 4932,
+      "stdout_sha256": "4a442ac653b0be9b8a9d9777df624e1b9f15078565b13c517dab95a322fd6dfb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 3920,
+      "stdout_sha256": "64db529a379070aa75510f5aa4f8a919858a15a9792a6947209add161da76ee5",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 5733,
+      "stdout_sha256": "d1bbcfbd7cec829ba596f4696265490ddfb5072d76dd4745b1b2bdd77262b131",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 8189,
+      "stdout_sha256": "a937e9ac8c10f04c87c462fb982611fe8b80a0f79772b58237fd34f41436d224",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "notes": [
+    "The Agent Lab orchestrator also ran `git diff --cached --check` (exit 0). That extra check is not part of the frozen four-command validator.",
+    "The extra passing test relative to Direct is src/seed.test.ts (seed scaffold), not an additional required aggregation case."
+  ]
+}

@@ -42,6 +42,7 @@ benchmarks/
 experiments/
   CLAUDE-SONNET5-MEDIUM-B02-V1/
   CLAUDE-SONNET5-MEDIUM-B03-V1/
+  CLAUDE-SONNET5-MEDIUM-B04-V1/
 docs/
   methodology.md
   terminology.md
@@ -77,6 +78,8 @@ Recompute hashes with:
 [CLAUDE-SONNET5-MEDIUM-B02-V1](experiments/CLAUDE-SONNET5-MEDIUM-B02-V1/result.md) — Claude Sonnet 5, medium effort, B02 Minesweeper. Both arms passed deterministic validation on the first attempt. Direct was more efficient and received the higher blind visual/UX score. **n = 1.**
 
 [CLAUDE-SONNET5-MEDIUM-B03-V1](experiments/CLAUDE-SONNET5-MEDIUM-B03-V1/result.md) — Claude Sonnet 5, medium effort, B03 LUMA. Both arms passed deterministic validation on the first attempt. Direct was more efficient on wall/runtime/tokens/API-equivalent. Visual scoring is pending blind evaluation. **n = 1.**
+
+[CLAUDE-SONNET5-MEDIUM-B04-V1](experiments/CLAUDE-SONNET5-MEDIUM-B04-V1/result.md) — Claude Sonnet 5, medium effort, B04 ATLAS. Blind quality: Agent Lab 85/100, Direct 79/100 (+6). Both passed deterministic validation on the first attempt and share a segment-filter panel gap. **n = 1.**
 
 ## What is not published
 

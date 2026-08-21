@@ -1,0 +1,169 @@
+{
+  "capture_protocol": "b04-atlas-visual-v1",
+  "benchmark_id": "B04-atlas",
+  "origin": "validated dist/",
+  "deviceScaleFactor": 1,
+  "files": {
+    "desktop-default.png": {
+      "id": "desktop-default",
+      "fullPage": true,
+      "viewport": "desktop",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 111295
+    },
+    "desktop-dashboard.png": {
+      "id": "desktop-dashboard",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 88942
+    },
+    "kpi-filters.png": {
+      "id": "kpi-filters",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "union",
+        "hooks": [
+          {
+            "testid": "kpi",
+            "all": true
+          },
+          {
+            "testid": "filter-period"
+          },
+          {
+            "testid": "filter-segment"
+          }
+        ]
+      },
+      "bytes": 36155
+    },
+    "chart-revenue-budget.png": {
+      "id": "chart-revenue-budget",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "chart",
+        "nth": 0,
+        "purpose": "TASK §3 chart 1: revenue vs budget over time"
+      },
+      "bytes": 11982
+    },
+    "chart-cost-profitability.png": {
+      "id": "chart-cost-profitability",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "chart",
+        "nth": 1,
+        "purpose": "TASK §3 chart 2: cost/profitability breakdown"
+      },
+      "bytes": 8916
+    },
+    "chart-segment-comparison.png": {
+      "id": "chart-segment-comparison",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "chart",
+        "nth": 2,
+        "purpose": "TASK §3 chart 3: segment comparison"
+      },
+      "bytes": 9445
+    },
+    "segment-table.png": {
+      "id": "segment-table",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "segment-table"
+      },
+      "bytes": 11048
+    },
+    "state-q1-all.png": {
+      "id": "state-q1-all",
+      "fullPage": true,
+      "viewport": "desktop",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 107804
+    },
+    "state-q1-all-viewport.png": {
+      "id": "state-q1-all-viewport",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 86603
+    },
+    "state-full-year-enterprise.png": {
+      "id": "state-full-year-enterprise",
+      "fullPage": true,
+      "viewport": "desktop",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 111869
+    },
+    "state-full-year-enterprise-viewport.png": {
+      "id": "state-full-year-enterprise-viewport",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 89486
+    },
+    "mobile-default.png": {
+      "id": "mobile-default",
+      "fullPage": true,
+      "viewport": "mobile",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 102064
+    },
+    "mobile-dashboard.png": {
+      "id": "mobile-dashboard",
+      "fullPage": false,
+      "viewport": "mobile",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 55810
+    },
+    "mobile-chart.png": {
+      "id": "mobile-chart",
+      "fullPage": false,
+      "viewport": "mobile",
+      "target": {
+        "kind": "testid",
+        "testid": "chart",
+        "nth": 0,
+        "purpose": "TASK §3 chart 1 at 390x844"
+      },
+      "bytes": 6015
+    },
+    "mobile-table.png": {
+      "id": "mobile-table",
+      "fullPage": false,
+      "viewport": "mobile",
+      "target": {
+        "kind": "testid",
+        "testid": "segment-table"
+      },
+      "bytes": 668
+    }
+  }
+}

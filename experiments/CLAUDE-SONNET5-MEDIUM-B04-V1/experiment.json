@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B04-V1",
+  "benchmark_id": "B04-atlas",
+  "status": "COMPLETE",
+  "quality_status": "COMPLETE",
+  "agent_lab_baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "model": "claude-sonnet-5",
+  "reasoning_effort": "medium",
+  "billing_mode": "subscription_only",
+  "direct_profile": null,
+  "agentlab_profile": "claude-build-worker-subscription-sonnet5-medium-v3",
+  "seed_sha": "7f95c4b294e459ed017fb7e5403aa3ff342fc076",
+  "task_sha256": "4fcff64ab9aac698a88ef53925762eae7d4d3de4d108f2568fb7108db447fdc2",
+  "rubric_sha256": "1cc77fbd23cdc11f028b3727b4d13f2c16a68f8e5dc3bc76013ae2c14cd3c9d4",
+  "financial_json_sha256": "7ac11b8a3dfe8985cdbb7afd64132b1346e67fb7e05cb5270154fff63d38cb4c",
+  "arm_order": [
+    "DIRECT",
+    "AGENTLAB"
+  ],
+  "validity": "VALID_WITH_MODEL_PURITY_WARNING",
+  "warning": "Both arms' modelUsage included a small claude-haiku-4-5 helper invocation; the implementer remained claude-sonnet-5 medium in both arms.",
+  "winner": "AGENTLAB",
+  "quality_scores": {
+    "direct": 79,
+    "agentlab": 85,
+    "out_of": 100
+  },
+  "quality_margin": {
+    "value": 6,
+    "winner": "AGENTLAB"
+  },
+  "deterministic_functionality": "TIE",
+  "efficiency_winner": "AGENTLAB",
+  "sample_size": {
+    "benchmarks": 1,
+    "note": "n = 1 benchmark. Do not generalise this result to Agent Strategy Lab as a whole."
+  },
+  "integrity": {
+    "same_seed": true,
+    "same_task": true,
+    "same_implementer_model": true,
+    "same_effort": true,
+    "same_validation": true,
+    "a24_used": false,
+    "api_billing": false,
+    "cross_arm_leak": false,
+    "metrics_verified_against_local_evidence": true,
+    "metrics_divergence": {
+      "field": "wall_clock_ms",
+      "direct": {
+        "iso_started_finished_delta_ms": 346783,
+        "private_metrics_hardcoded_field_ms": 348708,
+        "delta_ms": 1925
+      },
+      "agentlab": {
+        "iso_started_finished_delta_ms": 313214,
+        "private_metrics_hardcoded_field_ms": 316515,
+        "delta_ms": 3301
+      },
+      "resolution": "Published wall_clock_ms is the ISO delta of sealed started_at/finished_at (recomputable). The hardcoded private-metrics field is retained only in this divergence record. Overhead uses the ISO delta. Worker runtime, tokens, API-equivalent, modelUsage, and diffstat agreed across primary sources."
+    },
+    "patch_verified": {
+      "direct": {
+        "changed_files": 13,
+        "insertions": 1342,
+        "deletions": 12
+      },
+      "agentlab": {
+        "changed_files": 12,
+        "insertions": 1098,
+        "deletions": 3
+      }
+    },
+    "blind_source_identity": {
+      "candidate-x_equals_direct_source": true,
+      "candidate-y_equals_agentlab_source": true,
+      "candidate-x_patch_equals_direct_patch": true,
+      "candidate-y_patch_equals_agentlab_patch": true
+    }
+  },
+  "evaluation": {
+    "blind": true,
+    "score_sealed_before_reveal": true,
+    "status": "COMPLETE",
+    "labels_during_scoring": {
+      "Candidate X": "unassigned-during-scoring",
+      "Candidate Y": "unassigned-during-scoring"
+    },
+    "revealed_after_scoring": {
+      "Candidate X": "DIRECT",
+      "Candidate Y": "AGENTLAB"
+    },
+    "functionality": {
+      "direct": "PASS",
+      "agentlab": "PASS",
+      "source": "deterministic validator",
+      "first_pass": {
+        "direct": true,
+        "agentlab": true
+      },
+      "repair": {
+        "direct": false,
+        "agentlab": false
+      }
+    },
+    "scores": {
+      "direct": {
+        "correctness": 20,
+        "visualization": 23,
+        "filters": 17,
+        "polish": 12,
+        "responsive": 2,
+        "code": 5,
+        "total": 79,
+        "out_of": 100
+      },
+      "agentlab": {
+        "correctness": 20,
+        "visualization": 23,
+        "filters": 19,
+        "polish": 14,
+        "responsive": 4,
+        "code": 5,
+        "total": 85,
+        "out_of": 100
+      }
+    },
+    "code_quality": {
+      "direct": 5,
+      "agentlab": 5,
+      "out_of": 5
+    }
+  },
+  "metrics": {
+    "direct": "direct/metrics.json",
+    "agentlab": "agentlab/metrics.json"
+  },
+  "overhead_agentlab_vs_direct": {
+    "wall_clock": "-10%",
+    "worker_runtime": "-13%",
+    "tokens": "-26%",
+    "api_equivalent": "-24%",
+    "exact": {
+      "wall_clock": -0.09680116960750673,
+      "worker_runtime": -0.1318955831863573,
+      "tokens": -0.2642893364489529,
+      "api_equivalent": -0.23503954854360865
+    },
+    "wall_basis": "ISO started_at/finished_at delta"
+  },
+  "descriptive_ratios": {
+    "note": "Descriptive ratios only. Not causal or statistical efficiency.",
+    "quality_points_gained": 6,
+    "additional_agentlab_tokens_per_quality_point": -161303.66666666666,
+    "additional_agentlab_wall_ms_per_quality_point": -5594.833333333333
+  },
+  "screenshots": {
+    "required": true,
+    "canonical": "PNG",
+    "direct": "direct/screenshots/",
+    "agentlab": "agentlab/screenshots/",
+    "blind_connector_previews": "evaluation/blind/CLAUDE-SONNET5-MEDIUM-B04-V1/"
+  },
+  "experimental_backlog": [
+    "Every independent filter axis that is specified to affect every panel must have a stale-panel validation transition. B04 check.mjs tests table/chart stale on PERIOD change, not on SEGMENT change. Do not patch B04 retroactively.",
+    "npm CLI invocations were denied by the versioned Claude settings allow-list; workers fell back to node binaries (same observation as B02/B03). Not implemented.",
+    "Private metrics.wall_clock_ms was hardcoded at seal time and disagrees with the ISO timestamp delta in the same file. Future seals must compute wall from started_at/finished_at."
+  ],
+  "unpublished_on_purpose": [
+    "raw run/ directories",
+    "auth-status.json",
+    "dev-runtime/",
+    "dev-inbox/",
+    "worker stdout/stderr logs",
+    "subscription quota probes",
+    "absolute operator paths",
+    "node_modules/",
+    "dist/"
+  ]
+}
