@@ -1,0 +1,141 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "B06-bridge",
+  "short_id": "B6",
+  "title": "BRIDGE contract migration V1 to V2 (TypeScript monorepo)",
+  "status": "FROZEN",
+  "frozen_at": "2026-08-21",
+  "language": "typescript",
+  "language_requirement": "Node >= 22, npm workspaces, TypeScript 5.9 project references",
+  "task_type": "cross_layer_migration",
+  "visual": false,
+  "network_policy": "none",
+  "seed_sha": "7c5e7b37040d0d65adc7ed10a3f75a61c717e53c",
+  "seed_tree_sha1": "9d2686f51b438f38acd97549dde3a02f6afc7234",
+  "seed_sha_note": "Recomputable: git init -b main on seed/, git add -A, commit as 'Agent Strategy Lab Benchmarks <benchmarks@agent-strategy-lab.invalid>' with author and committer date 2026-08-21T00:00:00+00:00 and message 'seed(B06-bridge): frozen starting tree'. node_modules/ and dist/ are excluded by seed/.gitignore. Nested .git directories are not stored in this corpus.",
+  "task_file": "TASK.md",
+  "task_sha256": "55d4e4fcc6057efe74496fd3cfec72f92bb57da032314f6726d0d1d18cdbb88a",
+  "task_sha256_in_seed": "55d4e4fcc6057efe74496fd3cfec72f92bb57da032314f6726d0d1d18cdbb88a",
+  "rubric_file": "rubric.md",
+  "rubric_sha256": "2a388a7d00f0ffd05ddee7095ad3770ffe37a0a72983eadc5dbb73d42dc236dc",
+  "plan_file": "plan.yaml",
+  "plan_file_sha256": "fae2b2a64e8bafde115b330a810f69f7cafa32eb9756035b57fcaf7fad2816b1",
+  "package_lock_sha256": "fd51fb64dc8f98c328aa8830555924fb856d7053eafc8a478f68e5fbcf16ccd0",
+  "package_lock_note": "Own lockfile: typescript 5.9.3 and @types/node 22.10.5 only. Not the B01-B04 lockfile.",
+  "validator_seed_root": "validation",
+  "rubric_weights": {
+    "correctness": 50,
+    "backward_compatibility": 20,
+    "migration_idempotency": 15,
+    "cross_layer_completeness": 10,
+    "code": 5
+  },
+  "layers": [
+    {
+      "id": "parser",
+      "path": "packages/core/src/parser.ts"
+    },
+    {
+      "id": "serializer",
+      "path": "packages/core/src/serializer.ts"
+    },
+    {
+      "id": "migration",
+      "path": "packages/core/src/migrate.ts"
+    },
+    {
+      "id": "api",
+      "path": "packages/api/src/index.ts"
+    },
+    {
+      "id": "client",
+      "path": "packages/client/src/index.ts"
+    },
+    {
+      "id": "cli",
+      "path": "apps/cli/src/main.ts"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "validation/fixtures/migration-cases.json",
+      "sha256": "bb1d2fcc11b2dcb98c66aa44aab1e1c5ac9be7dcd579b9b827e4ca0f82a13d72",
+      "also_at": "seed/validation/fixtures/migration-cases.json"
+    },
+    {
+      "path": "validation/fixtures/invalid-cases.json",
+      "sha256": "018a25f21a197523558491a4d83997b1b6033b3f0dc08c6860497dfd94192a99",
+      "also_at": "seed/validation/fixtures/invalid-cases.json"
+    }
+  ],
+  "validators": [
+    {
+      "path": "validation/check.mjs",
+      "sha256": "c25b743cffbde21e846a9a25028948d8bbd3425900207f21e1e8766854265af1"
+    },
+    {
+      "path": "validation/PROTECTED.sha256",
+      "sha256": "deb5573c9b67402febd591d83d21d5cc76f932ae9d79f02a5f22e59d25c8a78d"
+    }
+  ],
+  "validation": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "timeout_seconds": 300
+    }
+  ],
+  "protected_files": [
+    "validation/**",
+    "package.json",
+    "package-lock.json",
+    "tsconfig.json",
+    "tsconfig.base.json",
+    "packages/*/package.json",
+    "packages/*/tsconfig.json",
+    "apps/*/package.json",
+    "apps/*/tsconfig.json"
+  ],
+  "max_runtime_seconds": 900,
+  "integrity": {
+    "source_protocol_id": "sonnet5-medium-battery-v2",
+    "recomputed_and_matched": [
+      "seed_sha",
+      "seed_tree_sha1",
+      "task_sha256",
+      "task_sha256_in_seed",
+      "rubric_sha256",
+      "plan_file_sha256",
+      "package_lock_sha256",
+      "fixture hashes",
+      "validator hashes"
+    ],
+    "hash_mismatch": false
+  }
+}

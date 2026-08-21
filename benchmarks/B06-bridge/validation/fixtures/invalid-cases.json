@@ -1,0 +1,226 @@
+{
+  "schema_version": 1,
+  "description": "Frozen error contract: each malformed document must raise ConfigError with this code, and this path when the code is E_INVALID_FIELD.",
+  "cases": [
+    {
+      "id": "not-object",
+      "input": [
+        1,
+        2,
+        3
+      ],
+      "code": "E_NOT_OBJECT",
+      "path": null
+    },
+    {
+      "id": "null-input",
+      "input": null,
+      "code": "E_NOT_OBJECT",
+      "path": null
+    },
+    {
+      "id": "missing-version",
+      "input": {
+        "name": "x"
+      },
+      "code": "E_MISSING_VERSION",
+      "path": null
+    },
+    {
+      "id": "unsupported-version",
+      "input": {
+        "version": 3,
+        "name": "x"
+      },
+      "code": "E_UNSUPPORTED_VERSION",
+      "path": null
+    },
+    {
+      "id": "version-string",
+      "input": {
+        "version": "1",
+        "name": "x"
+      },
+      "code": "E_UNSUPPORTED_VERSION",
+      "path": null
+    },
+    {
+      "id": "v1-missing-name",
+      "input": {
+        "version": 1
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "name"
+    },
+    {
+      "id": "v1-timeout-zero",
+      "input": {
+        "version": 1,
+        "name": "x",
+        "timeout": 0
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "timeout"
+    },
+    {
+      "id": "v1-retries-negative",
+      "input": {
+        "version": 1,
+        "name": "x",
+        "retries": -1
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "retries"
+    },
+    {
+      "id": "v1-notify-not-strings",
+      "input": {
+        "version": 1,
+        "name": "x",
+        "notify": [
+          1
+        ]
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "notify"
+    },
+    {
+      "id": "v1-cache-not-boolean",
+      "input": {
+        "version": 1,
+        "name": "x",
+        "cache": "yes"
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "cache"
+    },
+    {
+      "id": "v1-env-not-strings",
+      "input": {
+        "version": 1,
+        "name": "x",
+        "env": {
+          "A": 1
+        }
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "env.A"
+    },
+    {
+      "id": "v2-missing-name",
+      "input": {
+        "version": 2
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "name"
+    },
+    {
+      "id": "v2-execution-not-object",
+      "input": {
+        "version": 2,
+        "name": "x",
+        "execution": 5
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "execution"
+    },
+    {
+      "id": "v2-timeout-zero",
+      "input": {
+        "version": 2,
+        "name": "x",
+        "execution": {
+          "timeout_seconds": 0
+        }
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "execution.timeout_seconds"
+    },
+    {
+      "id": "v2-concurrency-zero",
+      "input": {
+        "version": 2,
+        "name": "x",
+        "execution": {
+          "concurrency": 0
+        }
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "execution.concurrency"
+    },
+    {
+      "id": "v2-max-attempts-negative",
+      "input": {
+        "version": 2,
+        "name": "x",
+        "execution": {
+          "retry": {
+            "max_attempts": -1
+          }
+        }
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "execution.retry.max_attempts"
+    },
+    {
+      "id": "v2-backoff-unknown",
+      "input": {
+        "version": 2,
+        "name": "x",
+        "execution": {
+          "retry": {
+            "backoff": "linearish"
+          }
+        }
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "execution.retry.backoff"
+    },
+    {
+      "id": "v2-notify-not-array",
+      "input": {
+        "version": 2,
+        "name": "x",
+        "delivery": {
+          "notify": "ops"
+        }
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "delivery.notify"
+    },
+    {
+      "id": "v2-cache-enabled-not-boolean",
+      "input": {
+        "version": 2,
+        "name": "x",
+        "cache": {
+          "enabled": 1
+        }
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "cache.enabled"
+    },
+    {
+      "id": "v2-ttl-negative",
+      "input": {
+        "version": 2,
+        "name": "x",
+        "cache": {
+          "ttl_seconds": -1
+        }
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "cache.ttl_seconds"
+    },
+    {
+      "id": "v2-extensions-not-object",
+      "input": {
+        "version": 2,
+        "name": "x",
+        "extensions": []
+      },
+      "code": "E_INVALID_FIELD",
+      "path": "extensions"
+    }
+  ]
+}

@@ -1,0 +1,402 @@
+{
+  "schema_version": 1,
+  "description": "Frozen migration contract. 'expected' is the exact document migrateToV2 must produce, and the exact object the canonical serializer must emit.",
+  "cases": [
+    {
+      "id": "full-v1",
+      "input": {
+        "version": 1,
+        "name": "nightly",
+        "timeout": 30,
+        "retries": 3,
+        "concurrency": 4,
+        "notify": [
+          "ops@example.com",
+          "oncall@example.com"
+        ],
+        "cache": true,
+        "env": {
+          "TZ": "UTC",
+          "LANG": "C"
+        }
+      },
+      "expected": {
+        "version": 2,
+        "name": "nightly",
+        "execution": {
+          "timeout_seconds": 30,
+          "concurrency": 4,
+          "retry": {
+            "max_attempts": 3,
+            "backoff": "exponential"
+          }
+        },
+        "delivery": {
+          "notify": [
+            "ops@example.com",
+            "oncall@example.com"
+          ]
+        },
+        "cache": {
+          "enabled": true,
+          "ttl_seconds": 300
+        },
+        "env": {
+          "LANG": "C",
+          "TZ": "UTC"
+        },
+        "extensions": {}
+      }
+    },
+    {
+      "id": "bare-v1",
+      "input": {
+        "version": 1,
+        "name": "bare"
+      },
+      "expected": {
+        "version": 2,
+        "name": "bare",
+        "execution": {
+          "timeout_seconds": 60,
+          "concurrency": 1,
+          "retry": {
+            "max_attempts": 0,
+            "backoff": "none"
+          }
+        },
+        "delivery": {
+          "notify": []
+        },
+        "cache": {
+          "enabled": false,
+          "ttl_seconds": 0
+        },
+        "env": {},
+        "extensions": {}
+      }
+    },
+    {
+      "id": "cache-false",
+      "input": {
+        "version": 1,
+        "name": "c",
+        "cache": false
+      },
+      "expected": {
+        "version": 2,
+        "name": "c",
+        "execution": {
+          "timeout_seconds": 60,
+          "concurrency": 1,
+          "retry": {
+            "max_attempts": 0,
+            "backoff": "none"
+          }
+        },
+        "delivery": {
+          "notify": []
+        },
+        "cache": {
+          "enabled": false,
+          "ttl_seconds": 0
+        },
+        "env": {},
+        "extensions": {}
+      }
+    },
+    {
+      "id": "retries-zero",
+      "input": {
+        "version": 1,
+        "name": "r",
+        "retries": 0
+      },
+      "expected": {
+        "version": 2,
+        "name": "r",
+        "execution": {
+          "timeout_seconds": 60,
+          "concurrency": 1,
+          "retry": {
+            "max_attempts": 0,
+            "backoff": "none"
+          }
+        },
+        "delivery": {
+          "notify": []
+        },
+        "cache": {
+          "enabled": false,
+          "ttl_seconds": 0
+        },
+        "env": {},
+        "extensions": {}
+      }
+    },
+    {
+      "id": "retries-one",
+      "input": {
+        "version": 1,
+        "name": "r1",
+        "retries": 1
+      },
+      "expected": {
+        "version": 2,
+        "name": "r1",
+        "execution": {
+          "timeout_seconds": 60,
+          "concurrency": 1,
+          "retry": {
+            "max_attempts": 1,
+            "backoff": "exponential"
+          }
+        },
+        "delivery": {
+          "notify": []
+        },
+        "cache": {
+          "enabled": false,
+          "ttl_seconds": 0
+        },
+        "env": {},
+        "extensions": {}
+      }
+    },
+    {
+      "id": "unknown-fields",
+      "input": {
+        "version": 1,
+        "name": "x",
+        "owner": "platform",
+        "tags": [
+          "a",
+          "b"
+        ],
+        "nested": {
+          "a": 1
+        },
+        "timeout": 15
+      },
+      "expected": {
+        "version": 2,
+        "name": "x",
+        "execution": {
+          "timeout_seconds": 15,
+          "concurrency": 1,
+          "retry": {
+            "max_attempts": 0,
+            "backoff": "none"
+          }
+        },
+        "delivery": {
+          "notify": []
+        },
+        "cache": {
+          "enabled": false,
+          "ttl_seconds": 0
+        },
+        "env": {},
+        "extensions": {
+          "nested": {
+            "a": 1
+          },
+          "owner": "platform",
+          "tags": [
+            "a",
+            "b"
+          ]
+        }
+      }
+    },
+    {
+      "id": "notify-order-preserved",
+      "input": {
+        "version": 1,
+        "name": "n",
+        "notify": [
+          "z@example.com",
+          "a@example.com"
+        ]
+      },
+      "expected": {
+        "version": 2,
+        "name": "n",
+        "execution": {
+          "timeout_seconds": 60,
+          "concurrency": 1,
+          "retry": {
+            "max_attempts": 0,
+            "backoff": "none"
+          }
+        },
+        "delivery": {
+          "notify": [
+            "z@example.com",
+            "a@example.com"
+          ]
+        },
+        "cache": {
+          "enabled": false,
+          "ttl_seconds": 0
+        },
+        "env": {},
+        "extensions": {}
+      }
+    },
+    {
+      "id": "v2-identity",
+      "input": {
+        "version": 2,
+        "name": "nightly",
+        "execution": {
+          "timeout_seconds": 30,
+          "concurrency": 4,
+          "retry": {
+            "max_attempts": 3,
+            "backoff": "exponential"
+          }
+        },
+        "delivery": {
+          "notify": [
+            "ops@example.com",
+            "oncall@example.com"
+          ]
+        },
+        "cache": {
+          "enabled": true,
+          "ttl_seconds": 300
+        },
+        "env": {
+          "LANG": "C",
+          "TZ": "UTC"
+        },
+        "extensions": {}
+      },
+      "expected": {
+        "version": 2,
+        "name": "nightly",
+        "execution": {
+          "timeout_seconds": 30,
+          "concurrency": 4,
+          "retry": {
+            "max_attempts": 3,
+            "backoff": "exponential"
+          }
+        },
+        "delivery": {
+          "notify": [
+            "ops@example.com",
+            "oncall@example.com"
+          ]
+        },
+        "cache": {
+          "enabled": true,
+          "ttl_seconds": 300
+        },
+        "env": {
+          "LANG": "C",
+          "TZ": "UTC"
+        },
+        "extensions": {}
+      }
+    },
+    {
+      "id": "v2-partial-groups",
+      "input": {
+        "version": 2,
+        "name": "p",
+        "execution": {
+          "timeout_seconds": 5
+        }
+      },
+      "expected": {
+        "version": 2,
+        "name": "p",
+        "execution": {
+          "timeout_seconds": 5,
+          "concurrency": 1,
+          "retry": {
+            "max_attempts": 0,
+            "backoff": "none"
+          }
+        },
+        "delivery": {
+          "notify": []
+        },
+        "cache": {
+          "enabled": false,
+          "ttl_seconds": 0
+        },
+        "env": {},
+        "extensions": {}
+      }
+    },
+    {
+      "id": "v2-unknown-top-level",
+      "input": {
+        "version": 2,
+        "name": "u",
+        "owner": "platform"
+      },
+      "expected": {
+        "version": 2,
+        "name": "u",
+        "execution": {
+          "timeout_seconds": 60,
+          "concurrency": 1,
+          "retry": {
+            "max_attempts": 0,
+            "backoff": "none"
+          }
+        },
+        "delivery": {
+          "notify": []
+        },
+        "cache": {
+          "enabled": false,
+          "ttl_seconds": 0
+        },
+        "env": {},
+        "extensions": {
+          "owner": "platform"
+        }
+      }
+    },
+    {
+      "id": "v2-explicit-extensions",
+      "input": {
+        "version": 2,
+        "name": "e",
+        "extensions": {
+          "a": 1
+        },
+        "owner": "platform"
+      },
+      "expected": {
+        "version": 2,
+        "name": "e",
+        "execution": {
+          "timeout_seconds": 60,
+          "concurrency": 1,
+          "retry": {
+            "max_attempts": 0,
+            "backoff": "none"
+          }
+        },
+        "delivery": {
+          "notify": []
+        },
+        "cache": {
+          "enabled": false,
+          "ttl_seconds": 0
+        },
+        "env": {},
+        "extensions": {
+          "a": 1,
+          "owner": "platform"
+        }
+      }
+    }
+  ]
+}

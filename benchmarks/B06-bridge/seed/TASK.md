@@ -1,0 +1,242 @@
+# B6 — BRIDGE contract migration V1 → V2 (TypeScript monorepo)
+
+`BRIDGE` is a small monorepo that reads, validates, transforms and writes a
+pipeline configuration document. Version 1 of that document is deployed and
+works end to end today.
+
+Version 2 is specified below and is implemented **nowhere**. Your job is to
+make version 2 work across every layer, without breaking version 1.
+
+---
+
+## 1. Environment
+
+- Node 22 with npm. The toolchain is already installed in `node_modules/`.
+- **There is no network access.** Do not add, remove, upgrade or vendor any
+  dependency, and do not run `npm install`. The only dependencies are
+  `typescript` and `@types/node`.
+- npm workspaces. TypeScript project references. ES modules.
+- Work only inside this repository.
+
+```
+packages/core     parser, serializer, migration, contract types
+packages/api      the transport-independent service layer
+packages/client   the ergonomic reader/writer callers use
+apps/cli          the `bridge` command line front end
+validation/       the external validator (do not modify)
+```
+
+## 2. Contract, version 1 (frozen — must keep working)
+
+A flat document. `version` and `name` are required; everything else is
+optional. Any top-level key that is not listed here is an **extension**: it is
+unknown to this package and must never be dropped.
+
+| Field | Type | Constraint |
+| --- | --- | --- |
+| `version` | number | `1` |
+| `name` | string | non-empty |
+| `timeout` | number | integer >= 1 |
+| `retries` | number | integer >= 0 |
+| `concurrency` | number | integer >= 1 |
+| `notify` | string[] | |
+| `cache` | boolean | |
+| `env` | object | string values |
+
+## 3. Contract, version 2 (to implement)
+
+A grouped document with explicit units and an explicit home for extensions.
+
+```json
+{
+  "version": 2,
+  "name": "nightly",
+  "execution": {
+    "timeout_seconds": 30,
+    "concurrency": 4,
+    "retry": { "max_attempts": 3, "backoff": "exponential" }
+  },
+  "delivery": { "notify": ["ops@example.com"] },
+  "cache": { "enabled": true, "ttl_seconds": 300 },
+  "env": { "TZ": "UTC" },
+  "extensions": { "owner": "platform" }
+}
+```
+
+Constraints: `execution.timeout_seconds` integer >= 1, `execution.concurrency`
+integer >= 1, `execution.retry.max_attempts` integer >= 0,
+`execution.retry.backoff` one of `none` / `linear` / `exponential`,
+`delivery.notify` an array of strings, `cache.enabled` boolean,
+`cache.ttl_seconds` integer >= 0, `env` an object of string values,
+`extensions` an object.
+
+### Parsing a version 2 document
+
+Missing groups are filled with these defaults, independently of each other:
+
+| Field | Default |
+| --- | --- |
+| `execution.timeout_seconds` | `60` |
+| `execution.concurrency` | `1` |
+| `execution.retry.max_attempts` | `0` |
+| `execution.retry.backoff` | `"none"` |
+| `delivery.notify` | `[]` |
+| `cache.enabled` | `false` |
+| `cache.ttl_seconds` | `0` |
+| `env` | `{}` |
+| `extensions` | `{}` |
+
+Any top-level key that version 2 does not define is moved into `extensions` and
+must not remain at the top level. When a key is present both as an unknown
+top-level key and inside an explicit `extensions` object, the explicit
+`extensions` entry wins.
+
+## 4. Migration V1 → V2 (exact)
+
+| V2 field | Value |
+| --- | --- |
+| `version` | `2` |
+| `name` | V1 `name` |
+| `execution.timeout_seconds` | V1 `timeout`, else `60` |
+| `execution.concurrency` | V1 `concurrency`, else `1` |
+| `execution.retry.max_attempts` | V1 `retries`, else `0` |
+| `execution.retry.backoff` | `"exponential"` when `max_attempts > 0`, else `"none"` |
+| `delivery.notify` | V1 `notify` with its order preserved, else `[]` |
+| `cache.enabled` | `true` only when V1 `cache` is exactly `true` |
+| `cache.ttl_seconds` | `300` when `cache.enabled`, else `0` |
+| `env` | V1 `env`, else `{}` |
+| `extensions` | every V1 top-level key that section 2 does not define, values unchanged |
+
+Two further requirements:
+
+- **Idempotent.** Migrating a version 2 document returns an equal version 2
+  document. `migrate(migrate(x))` deep-equals `migrate(x)` for every input.
+- **Non-destructive.** Migration must not mutate the object it was given.
+
+## 5. Canonical serialization
+
+Serialization is byte-stable. The same config always produces the same text:
+two-space indentation, a trailing newline, and this key order.
+
+- Version 1: `version`, `name`, `timeout`, `retries`, `concurrency`, `notify`,
+  `cache`, `env`, then the extension keys sorted alphabetically. Absent
+  optional fields are omitted.
+- Version 2: `version`, `name`, `execution`, `delivery`, `cache`, `env`,
+  `extensions`; inside `execution`: `timeout_seconds`, `concurrency`, `retry`;
+  inside `retry`: `max_attempts`, `backoff`; inside `delivery`: `notify`;
+  inside `cache`: `enabled`, `ttl_seconds`. Keys of `env` and `extensions` are
+  sorted alphabetically. No field is omitted.
+
+Round trip: parsing canonical text and serializing it again produces the same
+bytes.
+
+## 6. Error contract (frozen)
+
+Every failure that crosses a package boundary is a `ConfigError` whose message
+is exactly `` `${code}: ${detail}` ``.
+
+| Code | When |
+| --- | --- |
+| `E_NOT_OBJECT` | the document is not a JSON object, or the text is not JSON |
+| `E_MISSING_VERSION` | the `version` field is absent |
+| `E_UNSUPPORTED_VERSION` | `version` is present but is not 1 or 2 |
+| `E_INVALID_FIELD` | a field is present with an unacceptable value |
+
+`E_INVALID_FIELD` carries the dotted path of the offending field in `path`, in
+the vocabulary of the version being parsed: `timeout` for a version 1
+document, `execution.timeout_seconds` for a version 2 one, `env.A` for a bad
+entry inside `env`.
+
+## 7. What each layer owns
+
+The same rule must not be implemented twice. `packages/core` owns the contract;
+every other layer delegates to it. But each layer has its own responsibility,
+and each one has to be updated for version 2:
+
+1. **parser** — decide whether a document is acceptable and produce a typed,
+   normalised config. Today it rejects version 2.
+2. **serializer** — produce canonical text. Today it refuses version 2.
+3. **migration** — the single definition of what V1 means in V2 terms. Today it
+   throws.
+4. **api** — the service policy: which versions the service accepts
+   (`ConfigApi.SUPPORTED_VERSIONS`), and the `POST /configs/:id/migrate`
+   operation, which migrates the stored document in place and reports whether
+   it changed. Today the policy accepts version 1 only and the migrate
+   operation answers `501`.
+5. **client** — resolve version 2 field paths against a stored document of
+   *either* version, for reading and for writing. Today it throws for anything
+   that is not version 1.
+6. **cli** — the `bridge` commands, their flags, their output format and their
+   exit codes. Today `bridge migrate` is a stub that exits 1.
+
+Fixing five of these six leaves the product broken. The validator checks each
+layer separately.
+
+## 8. Behaviour required of each layer
+
+**api** — `create` and `validate` accept both versions; `create` returns `201`
+with the canonical object of the document as submitted; `migrate` returns `200`
+with the canonical version 2 object, `migrated: true` the first time and
+`migrated: false` when the stored document was already version 2, and leaves
+the migrated document stored. Unknown id stays `404` with `E_NOT_FOUND`; a
+contract error stays `400` with the code from section 6.
+
+**client** — `read` and `write` speak version 2 field paths only, against a
+document of either version. Reading a version 1 document yields the value the
+migration of section 4 would produce. Writing into a version 2 document keeps
+it version 2; writing into a version 1 document keeps it version 1. Unknown or
+non-writable paths raise `E_INVALID_FIELD`.
+
+**cli** — for a document of either version:
+
+```
+bridge validate <file>                          -> "ok: version N", exit 0
+bridge migrate  <file>                          -> canonical V2 text, exit 0
+bridge migrate  <file> --out <file>             -> writes it, prints "wrote <file>"
+bridge show     <file> --field <path>           -> the value, exit 0
+bridge set      <file> --field <path> --value V -> canonical text, exit 0
+```
+
+`bridge migrate` on an already-version-2 document prints the same bytes as
+migrating a version 1 document that maps to it. A contract error exits 1 with
+the `CODE: detail` message on stderr; a usage or I/O problem exits 2.
+
+## 9. Backward compatibility (frozen)
+
+Every behaviour that works for version 1 today must still work, unchanged:
+parsing, canonical version 1 serialization with its extension keys, the client
+reading version 2 paths off a version 1 document, `bridge set` on a version 1
+file printing a version 1 document, and every error code and path in section 6.
+
+## 10. Tests
+
+The repository test suite lives next to the code as `*.test.ts` files compiled
+into `dist/`. Extend it: version 2 parsing, the migration table of section 4,
+idempotency, extension preservation, canonical serialization, and the new
+behaviour of each of the six layers. Do not delete existing coverage.
+
+## 11. Validation (this is exactly what will be run)
+
+```
+npm run typecheck
+npm run build
+npm test
+npm run check
+```
+
+`npm run check` runs `validation/check.mjs`. It imports the built packages
+through their workspace names, recomputes the canonical contract itself, drives
+every layer separately, and spawns the real CLI. It does not take your test
+suite as evidence of correctness, though it does re-run it.
+
+`validation/`, the `tsconfig*.json` files and every `package.json` are the
+validation contract: **do not modify them.**
+
+## 12. Definition of done
+
+- All four validation commands exit 0.
+- Version 2 works in the parser, the serializer, the migration, the API, the
+  client and the CLI.
+- The migration table of section 4 is exact, idempotent and non-destructive.
+- Canonical serialization is byte-stable in the declared key order.
+- Every version 1 behaviour of section 9 is unchanged.
