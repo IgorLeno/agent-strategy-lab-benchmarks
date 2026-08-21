@@ -1,0 +1,58 @@
+{
+  "passed": true,
+  "repair": null,
+  "protected_paths_unmodified": true,
+  "tests": {
+    "passed": 1,
+    "failed": 0
+  },
+  "commands": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 6577,
+      "stdout_sha256": "4a442ac653b0be9b8a9d9777df624e1b9f15078565b13c517dab95a322fd6dfb",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 4345,
+      "stdout_sha256": "85aeda6b57f0e79373683733f41853ed2753e1e0240f033f1d1ec437f216d6b2",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 5332,
+      "stdout_sha256": "8c2c38ea183ffb925550c8846918ad1f7026f07af488f658296894cfcb93bffc",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "exit_code": 0,
+      "timed_out": false,
+      "duration_ms": 6055,
+      "stdout_sha256": "23c680dae7c0dda70f49dfc0d2ddbe3ade37e9447a60e159b4cbfe0742f36c58",
+      "stderr_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

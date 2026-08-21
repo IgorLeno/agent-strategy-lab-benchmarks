@@ -1,0 +1,1140 @@
+diff --git a/src/App.test.tsx b/src/App.test.tsx
+new file mode 100644
+index 0000000..d28a482
+--- /dev/null
++++ b/src/App.test.tsx
+@@ -0,0 +1,44 @@
++import { render, screen } from '@testing-library/react';
++import { describe, expect, it } from 'vitest';
++import App from './App';
++
++describe('App', () => {
++  it('renders the required markup contract', () => {
++    render(<App />);
++
++    expect(screen.getAllByTestId('app-shell')).toHaveLength(1);
++    expect(screen.getAllByTestId('sidebar')).toHaveLength(1);
++    expect(screen.getAllByTestId('stat-card')).toHaveLength(4);
++    expect(screen.getAllByTestId('chart')).toHaveLength(1);
++    expect(screen.getAllByTestId('projects-table')).toHaveLength(1);
++    expect(screen.getAllByTestId('activity')).toHaveLength(1);
++    expect(screen.getAllByTestId('quota')).toHaveLength(1);
++  });
++
++  it('has exactly one h1 and the expected landmarks', () => {
++    render(<App />);
++
++    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1);
++    expect(screen.getByRole('main')).toBeInTheDocument();
++    expect(screen.getByRole('navigation', { name: /workspace/i })).toBeInTheDocument();
++  });
++
++  it('lists all five projects', () => {
++    render(<App />);
++
++    const table = screen.getByTestId('projects-table');
++    expect(table.querySelectorAll('tbody tr')).toHaveLength(5);
++  });
++
++  it('every interactive control has an accessible name', () => {
++    render(<App />);
++
++    for (const button of screen.getAllByRole('button')) {
++      expect(button).toHaveAccessibleName();
++    }
++    for (const link of screen.getAllByRole('link')) {
++      expect(link).toHaveAccessibleName();
++    }
++    expect(screen.getByPlaceholderText('Search projects...')).toHaveAccessibleName();
++  });
++});
+diff --git a/src/App.tsx b/src/App.tsx
+index cb09f35..d4c5271 100644
+--- a/src/App.tsx
++++ b/src/App.tsx
+@@ -1,5 +1,29 @@
+-// Scaffold inicial. Substitua por sua implementação da interface descrita em
+-// TASK.md e mostrada em reference/reference.png.
++import ActivityPanel from './components/ActivityPanel';
++import Chart from './components/Chart';
++import Header from './components/Header';
++import ProjectsTable from './components/ProjectsTable';
++import QuotaPanel from './components/QuotaPanel';
++import Sidebar from './components/Sidebar';
++import StatCards from './components/StatCards';
++
+ export default function App() {
+-  return <div />;
++  return (
++    <div className="app-shell" data-testid="app-shell">
++      <Sidebar />
++      <main className="content">
++        <Header />
++        <StatCards />
++        <div className="content-grid">
++          <div className="content-main">
++            <Chart />
++            <ProjectsTable />
++          </div>
++          <div className="content-side">
++            <ActivityPanel />
++            <QuotaPanel />
++          </div>
++        </div>
++      </main>
++    </div>
++  );
+ }
+diff --git a/src/components/ActivityPanel.tsx b/src/components/ActivityPanel.tsx
+new file mode 100644
+index 0000000..34b5e0c
+--- /dev/null
++++ b/src/components/ActivityPanel.tsx
+@@ -0,0 +1,26 @@
++import { activity } from '../data';
++
++export default function ActivityPanel() {
++  return (
++    <section className="panel activity-panel" data-testid="activity" aria-label="Activity">
++      <h2>Activity</h2>
++      <ul className="activity-list">
++        {activity.map((entry) => (
++          <li key={entry.time + entry.initials}>
++            <span className="activity-avatar" aria-hidden="true">
++              {entry.initials}
++            </span>
++            <div>
++              <p className="activity-text">
++                {entry.segments.map((segment, index) =>
++                  segment.bold ? <strong key={index}>{segment.text}</strong> : <span key={index}>{segment.text}</span>,
++                )}
++              </p>
++              <p className="activity-time">{entry.time}</p>
++            </div>
++          </li>
++        ))}
++      </ul>
++    </section>
++  );
++}
+diff --git a/src/components/Chart.tsx b/src/components/Chart.tsx
+new file mode 100644
+index 0000000..7da2386
+--- /dev/null
++++ b/src/components/Chart.tsx
+@@ -0,0 +1,38 @@
++import { useState } from 'react';
++import { deploymentVolume } from '../data';
++
++const ranges = ['7d', '30d', '90d'] as const;
++type Range = (typeof ranges)[number];
++
++export default function Chart() {
++  const [range, setRange] = useState<Range>('7d');
++
++  return (
++    <section className="panel chart-panel" data-testid="chart" aria-label="Deployment volume">
++      <div className="panel-header">
++        <h2>Deployment volume</h2>
++        <div className="range-toggle" role="group" aria-label="Time range">
++          {ranges.map((value) => (
++            <button
++              key={value}
++              type="button"
++              className={value === range ? 'range-button range-button--active' : 'range-button'}
++              aria-pressed={value === range}
++              onClick={() => setRange(value)}
++            >
++              {value}
++            </button>
++          ))}
++        </div>
++      </div>
++      <div className="bar-chart">
++        {deploymentVolume.map((point) => (
++          <div className="bar-column" key={point.day}>
++            <div className="bar" style={{ height: `${point.value}%` }} />
++            <span className="bar-label">{point.day}</span>
++          </div>
++        ))}
++      </div>
++    </section>
++  );
++}
+diff --git a/src/components/Header.tsx b/src/components/Header.tsx
+new file mode 100644
+index 0000000..83d5a6b
+--- /dev/null
++++ b/src/components/Header.tsx
+@@ -0,0 +1,22 @@
++export default function Header() {
++  return (
++    <header className="content-header">
++      <div>
++        <h1>Overview</h1>
++        <p className="content-subtitle">Tuesday, 12 March — 4 environments running</p>
++      </div>
++      <div className="content-header-actions">
++        <label className="search-field">
++          <span className="visually-hidden">Search projects</span>
++          <input type="search" placeholder="Search projects..." />
++        </label>
++        <button type="button" className="primary-button">
++          New project
++        </button>
++        <span className="avatar" aria-hidden="true">
++          IL
++        </span>
++      </div>
++    </header>
++  );
++}
+diff --git a/src/components/ProjectsTable.tsx b/src/components/ProjectsTable.tsx
+new file mode 100644
+index 0000000..3bdbd7a
+--- /dev/null
++++ b/src/components/ProjectsTable.tsx
+@@ -0,0 +1,56 @@
++import { projects, type ProjectStatus } from '../data';
++
++function statusClass(status: ProjectStatus): string {
++  switch (status) {
++    case 'Live':
++      return 'status-badge status-badge--live';
++    case 'In review':
++      return 'status-badge status-badge--review';
++    case 'Paused':
++      return 'status-badge status-badge--paused';
++  }
++}
++
++export default function ProjectsTable() {
++  return (
++    <section className="panel projects-panel">
++      <div className="panel-header">
++        <h2>Recent projects</h2>
++        <a href="#" className="view-all-link">
++          View all
++        </a>
++      </div>
++      <div className="table-scroll">
++        <table data-testid="projects-table">
++          <thead>
++            <tr>
++              <th scope="col">Project</th>
++              <th scope="col">Owner</th>
++              <th scope="col">Status</th>
++              <th scope="col">Updated</th>
++            </tr>
++          </thead>
++          <tbody>
++            {projects.map((project) => (
++              <tr key={project.name}>
++                <td>
++                  <div className="project-cell">
++                    <span className="project-avatar" aria-hidden="true">
++                      {project.initials}
++                    </span>
++                    {project.name}
++                  </div>
++                </td>
++                <td>{project.owner}</td>
++                <td>
++                  <span className={statusClass(project.status)}>{project.status}</span>
++                </td>
++                <td>{project.updated}</td>
++              </tr>
++            ))}
++          </tbody>
++        </table>
++      </div>
++    </section>
++  );
++}
+diff --git a/src/components/QuotaPanel.tsx b/src/components/QuotaPanel.tsx
+new file mode 100644
+index 0000000..968bc27
+--- /dev/null
++++ b/src/components/QuotaPanel.tsx
+@@ -0,0 +1,24 @@
++import { quota } from '../data';
++
++export default function QuotaPanel() {
++  return (
++    <section className="panel quota-panel" data-testid="quota" aria-label="Quota">
++      <h2>Quota</h2>
++      <ul className="quota-list">
++        {quota.map((item) => (
++          <li key={item.label}>
++            <div className="quota-row">
++              <span>{item.label}</span>
++              <span>
++                {item.used} / {item.total}
++              </span>
++            </div>
++            <div className="quota-bar" role="progressbar" aria-label={item.label} aria-valuenow={item.percent} aria-valuemin={0} aria-valuemax={100}>
++              <div className="quota-bar-fill" style={{ width: `${item.percent}%` }} />
++            </div>
++          </li>
++        ))}
++      </ul>
++    </section>
++  );
++}
+diff --git a/src/components/Sidebar.tsx b/src/components/Sidebar.tsx
+new file mode 100644
+index 0000000..767d1e1
+--- /dev/null
++++ b/src/components/Sidebar.tsx
+@@ -0,0 +1,47 @@
++import { accountNav, workspaceNav } from '../data';
++
++export default function Sidebar() {
++  return (
++    <aside className="sidebar" data-testid="sidebar" aria-label="Primary">
++      <div className="sidebar-logo">
++        <span className="logo-mark" aria-hidden="true">
++          N
++        </span>
++        <span className="logo-text">Nimbus</span>
++      </div>
++
++      <nav className="sidebar-nav" aria-label="Workspace">
++        <p className="nav-heading">Workspace</p>
++        <ul>
++          {workspaceNav.map((item) => (
++            <li key={item.label}>
++              <a href="#" className={item.active ? 'nav-link nav-link--active' : 'nav-link'} aria-current={item.active ? 'page' : undefined}>
++                <span className="nav-dot" aria-hidden="true" />
++                {item.label}
++              </a>
++            </li>
++          ))}
++        </ul>
++
++        <p className="nav-heading">Account</p>
++        <ul>
++          {accountNav.map((item) => (
++            <li key={item.label}>
++              <a href="#" className="nav-link">
++                <span className="nav-dot" aria-hidden="true" />
++                {item.label}
++              </a>
++            </li>
++          ))}
++        </ul>
++      </nav>
++
++      <div className="plan-card">
++        <p>You are on the Starter plan. Upgrade for unlimited environments.</p>
++        <button type="button" className="upgrade-button">
++          Upgrade plan
++        </button>
++      </div>
++    </aside>
++  );
++}
+diff --git a/src/components/StatCards.tsx b/src/components/StatCards.tsx
+new file mode 100644
+index 0000000..1172d90
+--- /dev/null
++++ b/src/components/StatCards.tsx
+@@ -0,0 +1,17 @@
++import { statCards } from '../data';
++
++export default function StatCards() {
++  return (
++    <div className="stat-grid">
++      {statCards.map((card) => (
++        <div className="stat-card" data-testid="stat-card" key={card.id}>
++          <p className="stat-label">{card.label}</p>
++          <p className="stat-value">{card.value}</p>
++          <p className={card.direction === 'up' ? 'stat-delta stat-delta--up' : 'stat-delta stat-delta--down'}>
++            <span aria-hidden="true">{card.direction === 'up' ? '▲' : '▼'}</span> {card.delta}
++          </p>
++        </div>
++      ))}
++    </div>
++  );
++}
+diff --git a/src/data.ts b/src/data.ts
+new file mode 100644
+index 0000000..f1d4c9c
+--- /dev/null
++++ b/src/data.ts
+@@ -0,0 +1,131 @@
++export interface StatCardData {
++  id: string;
++  label: string;
++  value: string;
++  delta: string;
++  direction: 'up' | 'down';
++}
++
++export const statCards: StatCardData[] = [
++  { id: 'active-deploys', label: 'Active deploys', value: '128', delta: '12.4% vs last week', direction: 'up' },
++  { id: 'build-success', label: 'Build success', value: '96.2%', delta: '1.8% vs last week', direction: 'up' },
++  { id: 'avg-build-time', label: 'Avg build time', value: '3m 41s', delta: '8.1% slower', direction: 'down' },
++  { id: 'open-incidents', label: 'Open incidents', value: '2', delta: '1 resolved today', direction: 'up' },
++];
++
++export interface DeploymentPoint {
++  day: string;
++  value: number;
++}
++
++export const deploymentVolume: DeploymentPoint[] = [
++  { day: 'Mon', value: 62 },
++  { day: 'Tue', value: 88 },
++  { day: 'Wed', value: 48 },
++  { day: 'Thu', value: 100 },
++  { day: 'Fri', value: 78 },
++  { day: 'Sat', value: 32 },
++  { day: 'Sun', value: 58 },
++];
++
++export type ProjectStatus = 'Live' | 'In review' | 'Paused';
++
++export interface ProjectRow {
++  initials: string;
++  name: string;
++  owner: string;
++  status: ProjectStatus;
++  updated: string;
++}
++
++export const projects: ProjectRow[] = [
++  { initials: 'AP', name: 'atlas-payments', owner: 'Dana Whitfield', status: 'Live', updated: '4 min ago' },
++  { initials: 'OR', name: 'orbit-reports', owner: 'Marcus Lee', status: 'In review', updated: '26 min ago' },
++  { initials: 'HL', name: 'halo-landing', owner: 'Priya Raman', status: 'Live', updated: '1 h ago' },
++  { initials: 'VE', name: 'vertex-edge', owner: 'Tom Okafor', status: 'Paused', updated: '3 h ago' },
++  { initials: 'SN', name: 'signal-node', owner: 'Ana Duarte', status: 'Live', updated: 'Yesterday' },
++];
++
++export interface ActivityItem {
++  initials: string;
++  text: string;
++  boldParts: string[];
++  time: string;
++}
++
++export interface ActivityEntry {
++  initials: string;
++  segments: Array<{ text: string; bold: boolean }>;
++  time: string;
++}
++
++export const activity: ActivityEntry[] = [
++  {
++    initials: 'DW',
++    segments: [
++      { text: 'Dana', bold: true },
++      { text: ' promoted ', bold: false },
++      { text: 'atlas-payments', bold: true },
++      { text: ' to production.', bold: false },
++    ],
++    time: '4 minutes ago',
++  },
++  {
++    initials: 'ML',
++    segments: [
++      { text: 'Marcus', bold: true },
++      { text: ' opened a review on ', bold: false },
++      { text: 'orbit-reports', bold: true },
++      { text: '.', bold: false },
++    ],
++    time: '26 minutes ago',
++  },
++  {
++    initials: 'PR',
++    segments: [
++      { text: 'Priya', bold: true },
++      { text: ' rotated credentials for ', bold: false },
++      { text: 'halo-landing', bold: true },
++      { text: '.', bold: false },
++    ],
++    time: '1 hour ago',
++  },
++  {
++    initials: 'TO',
++    segments: [
++      { text: 'Tom', bold: true },
++      { text: ' paused the ', bold: false },
++      { text: 'vertex-edge', bold: true },
++      { text: ' pipeline.', bold: false },
++    ],
++    time: '3 hours ago',
++  },
++];
++
++export interface QuotaItem {
++  label: string;
++  used: string;
++  total: string;
++  percent: number;
++}
++
++export const quota: QuotaItem[] = [
++  { label: 'Build minutes', used: '1,840', total: '3,000', percent: 61 },
++  { label: 'Bandwidth', used: '412 GB', total: '750 GB', percent: 55 },
++  { label: 'Seats', used: '9', total: '12', percent: 75 },
++];
++
++export interface NavItem {
++  label: string;
++  active?: boolean;
++}
++
++export const workspaceNav: NavItem[] = [
++  { label: 'Overview', active: true },
++  { label: 'Projects' },
++  { label: 'Deployments' },
++  { label: 'Insights' },
++  { label: 'Team' },
++];
++
++export const accountNav: NavItem[] = [{ label: 'Billing' }, { label: 'Settings' }];
+diff --git a/src/styles.css b/src/styles.css
+index b3a40d0..0658492 100644
+--- a/src/styles.css
++++ b/src/styles.css
+@@ -4,7 +4,638 @@
+   box-sizing: border-box;
+ }
+ 
++:root {
++  --bg: #0b0c12;
++  --panel-bg: #14151f;
++  --panel-border: #23242f;
++  --text-primary: #f5f6f8;
++  --text-secondary: #9295a6;
++  --text-muted: #6b6e7f;
++  --accent: #6f7bf5;
++  --accent-strong: #5865e8;
++  --green: #34d399;
++  --green-bg: rgba(52, 211, 153, 0.12);
++  --amber: #f5b942;
++  --amber-bg: rgba(245, 185, 66, 0.14);
++  --gray-bg: rgba(146, 149, 166, 0.14);
++  --orange: #f5813a;
++  --radius-md: 10px;
++  --radius-lg: 14px;
++}
++
++html,
++body {
++  margin: 0;
++  background: var(--bg);
++  color: var(--text-primary);
++  font-family: -apple-system, 'Segoe UI', Roboto, system-ui, sans-serif;
++}
++
+ body {
++  overflow-x: hidden;
++}
++
++button,
++input {
++  font-family: inherit;
++}
++
++a {
++  color: inherit;
++  text-decoration: none;
++}
++
++.visually-hidden {
++  position: absolute;
++  width: 1px;
++  height: 1px;
++  padding: 0;
++  margin: -1px;
++  overflow: hidden;
++  clip: rect(0, 0, 0, 0);
++  white-space: nowrap;
++  border: 0;
++}
++
++/* ---------------------------------------------------------------- shell */
++
++.app-shell {
++  display: grid;
++  grid-template-columns: 236px 1fr;
++  min-height: 100vh;
++}
++
++/* --------------------------------------------------------------- sidebar */
++
++.sidebar {
++  display: flex;
++  flex-direction: column;
++  padding: 24px 16px;
++  border-right: 1px solid var(--panel-border);
++  min-height: 100vh;
++}
++
++.sidebar-logo {
++  display: flex;
++  align-items: center;
++  gap: 10px;
++  padding: 0 8px 24px;
++}
++
++.logo-mark {
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  width: 30px;
++  height: 30px;
++  border-radius: 8px;
++  background: linear-gradient(135deg, #8b7cf6, #6f7bf5);
++  font-weight: 700;
++  font-size: 15px;
++}
++
++.logo-text {
++  font-weight: 700;
++  font-size: 17px;
++}
++
++.sidebar-nav {
++  flex: 1;
++}
++
++.nav-heading {
++  margin: 20px 8px 8px;
++  font-size: 11px;
++  font-weight: 600;
++  letter-spacing: 0.08em;
++  color: var(--text-muted);
++  text-transform: uppercase;
++}
++
++.sidebar-nav ul {
++  list-style: none;
++  margin: 0;
++  padding: 0;
++}
++
++.nav-link {
++  display: flex;
++  align-items: center;
++  gap: 10px;
++  padding: 8px 8px;
++  margin: 2px 0;
++  border-radius: 8px;
++  font-size: 14px;
++  color: var(--text-secondary);
++}
++
++.nav-link:hover {
++  color: var(--text-primary);
++}
++
++.nav-link--active {
++  color: var(--text-primary);
++  font-weight: 600;
++}
++
++.nav-dot {
++  width: 6px;
++  height: 6px;
++  border-radius: 50%;
++  background: var(--text-muted);
++  flex-shrink: 0;
++}
++
++.nav-link--active .nav-dot {
++  background: var(--accent);
++}
++
++.plan-card {
++  background: var(--panel-bg);
++  border: 1px solid var(--panel-border);
++  border-radius: var(--radius-lg);
++  padding: 14px;
++  margin-top: 16px;
++}
++
++.plan-card p {
++  margin: 0 0 12px;
++  font-size: 13px;
++  color: var(--text-secondary);
++  line-height: 1.4;
++}
++
++.upgrade-button {
++  width: 100%;
++  padding: 9px 12px;
++  border: none;
++  border-radius: 8px;
++  background: var(--accent);
++  color: white;
++  font-size: 13px;
++  font-weight: 600;
++  cursor: pointer;
++}
++
++.upgrade-button:hover {
++  background: var(--accent-strong);
++}
++
++/* --------------------------------------------------------------- content */
++
++.content {
++  padding: 24px 32px 40px;
++  min-width: 0;
++}
++
++.content-header {
++  display: flex;
++  align-items: flex-start;
++  justify-content: space-between;
++  gap: 16px;
++  margin-bottom: 24px;
++  flex-wrap: wrap;
++}
++
++.content-header h1 {
++  margin: 0;
++  font-size: 26px;
++  font-weight: 700;
++}
++
++.content-subtitle {
++  margin: 4px 0 0;
++  color: var(--text-secondary);
++  font-size: 14px;
++}
++
++.content-header-actions {
++  display: flex;
++  align-items: center;
++  gap: 12px;
++}
++
++.search-field input {
++  width: 220px;
++  padding: 9px 14px;
++  border-radius: 8px;
++  border: 1px solid var(--panel-border);
++  background: var(--panel-bg);
++  color: var(--text-primary);
++  font-size: 13px;
++}
++
++.search-field input::placeholder {
++  color: var(--text-muted);
++}
++
++.primary-button {
++  padding: 9px 16px;
++  border: none;
++  border-radius: 8px;
++  background: var(--accent);
++  color: white;
++  font-size: 13px;
++  font-weight: 600;
++  cursor: pointer;
++  white-space: nowrap;
++}
++
++.primary-button:hover {
++  background: var(--accent-strong);
++}
++
++.avatar {
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  width: 34px;
++  height: 34px;
++  border-radius: 50%;
++  background: var(--orange);
++  font-size: 12px;
++  font-weight: 700;
++  flex-shrink: 0;
++}
++
++/* ------------------------------------------------------------- stat grid */
++
++.stat-grid {
++  display: grid;
++  grid-template-columns: repeat(4, 1fr);
++  gap: 16px;
++  margin-bottom: 24px;
++}
++
++.stat-card {
++  background: var(--panel-bg);
++  border: 1px solid var(--panel-border);
++  border-radius: var(--radius-lg);
++  padding: 18px 20px;
++}
++
++.stat-label {
++  margin: 0 0 10px;
++  font-size: 13px;
++  color: var(--text-secondary);
++}
++
++.stat-value {
++  margin: 0 0 10px;
++  font-size: 26px;
++  font-weight: 700;
++}
++
++.stat-delta {
++  margin: 0;
++  font-size: 12px;
++  display: flex;
++  align-items: center;
++  gap: 4px;
++}
++
++.stat-delta--up {
++  color: var(--green);
++}
++
++.stat-delta--down {
++  color: #f16d6d;
++}
++
++/* ------------------------------------------------------------ content grid */
++
++.content-grid {
++  display: grid;
++  grid-template-columns: 1fr 320px;
++  gap: 20px;
++  align-items: start;
++}
++
++.content-main,
++.content-side {
++  display: flex;
++  flex-direction: column;
++  gap: 20px;
++  min-width: 0;
++}
++
++.panel {
++  background: var(--panel-bg);
++  border: 1px solid var(--panel-border);
++  border-radius: var(--radius-lg);
++  padding: 20px;
++}
++
++.panel-header {
++  display: flex;
++  align-items: center;
++  justify-content: space-between;
++  margin-bottom: 20px;
++  gap: 12px;
++}
++
++.panel h2 {
+   margin: 0;
+-  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
++  font-size: 16px;
++  font-weight: 700;
++}
++
++.view-all-link {
++  font-size: 13px;
++  color: var(--accent);
++  font-weight: 600;
++}
++
++/* -------------------------------------------------------------- chart */
++
++.range-toggle {
++  display: flex;
++  gap: 2px;
++  background: var(--bg);
++  border-radius: 8px;
++  padding: 3px;
++}
++
++.range-button {
++  border: none;
++  background: transparent;
++  color: var(--text-secondary);
++  font-size: 12px;
++  padding: 6px 12px;
++  border-radius: 6px;
++  cursor: pointer;
++}
++
++.range-button--active {
++  background: var(--accent);
++  color: white;
++  font-weight: 600;
++}
++
++.bar-chart {
++  display: flex;
++  align-items: flex-end;
++  gap: 20px;
++  height: 190px;
++  padding: 0 4px;
++}
++
++.bar-column {
++  flex: 1;
++  display: flex;
++  flex-direction: column;
++  align-items: center;
++  justify-content: flex-end;
++  height: 100%;
++  gap: 10px;
++}
++
++.bar {
++  width: 100%;
++  max-width: 46px;
++  border-radius: 8px 8px 4px 4px;
++  background: linear-gradient(180deg, #8b93f8, #5f6bf0);
++}
++
++.bar-label {
++  font-size: 12px;
++  color: var(--text-secondary);
++}
++
++/* -------------------------------------------------------------- table */
++
++.table-scroll {
++  overflow-x: auto;
++}
++
++table {
++  width: 100%;
++  border-collapse: collapse;
++  font-size: 14px;
++}
++
++th {
++  text-align: left;
++  font-size: 11px;
++  letter-spacing: 0.06em;
++  text-transform: uppercase;
++  color: var(--text-muted);
++  font-weight: 600;
++  padding: 0 12px 12px 0;
++  white-space: nowrap;
++}
++
++td {
++  padding: 12px 12px 12px 0;
++  border-top: 1px solid var(--panel-border);
++  white-space: nowrap;
++  color: var(--text-secondary);
++}
++
++td:first-child {
++  color: var(--text-primary);
++}
++
++.project-cell {
++  display: flex;
++  align-items: center;
++  gap: 10px;
++}
++
++.project-avatar {
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  width: 28px;
++  height: 28px;
++  border-radius: 50%;
++  background: #2a2c3a;
++  font-size: 11px;
++  font-weight: 700;
++  color: var(--text-primary);
++  flex-shrink: 0;
++}
++
++.status-badge {
++  display: inline-flex;
++  padding: 4px 10px;
++  border-radius: 999px;
++  font-size: 12px;
++  font-weight: 600;
++}
++
++.status-badge--live {
++  background: var(--green-bg);
++  color: var(--green);
++}
++
++.status-badge--review {
++  background: var(--amber-bg);
++  color: var(--amber);
++}
++
++.status-badge--paused {
++  background: var(--gray-bg);
++  color: var(--text-secondary);
++}
++
++/* ----------------------------------------------------------- activity */
++
++.activity-list {
++  list-style: none;
++  margin: 0;
++  padding: 0;
++  display: flex;
++  flex-direction: column;
++  gap: 18px;
++}
++
++.activity-list li {
++  display: flex;
++  gap: 10px;
++  align-items: flex-start;
++}
++
++.activity-avatar {
++  display: inline-flex;
++  align-items: center;
++  justify-content: center;
++  width: 28px;
++  height: 28px;
++  border-radius: 50%;
++  background: #2a2c3a;
++  font-size: 11px;
++  font-weight: 700;
++  flex-shrink: 0;
++}
++
++.activity-text {
++  margin: 0;
++  font-size: 13.5px;
++  line-height: 1.45;
++  color: var(--text-secondary);
++}
++
++.activity-text strong {
++  color: var(--text-primary);
++  font-weight: 600;
++}
++
++.activity-time {
++  margin: 4px 0 0;
++  font-size: 12px;
++  color: var(--text-muted);
++}
++
++/* -------------------------------------------------------------- quota */
++
++.quota-list {
++  list-style: none;
++  margin: 0;
++  padding: 0;
++  display: flex;
++  flex-direction: column;
++  gap: 16px;
++}
++
++.quota-row {
++  display: flex;
++  justify-content: space-between;
++  font-size: 13px;
++  margin-bottom: 8px;
++}
++
++.quota-row span:first-child {
++  color: var(--text-secondary);
++}
++
++.quota-row span:last-child {
++  color: var(--text-primary);
++  font-weight: 600;
++}
++
++.quota-bar {
++  height: 6px;
++  border-radius: 999px;
++  background: var(--bg);
++  overflow: hidden;
++}
++
++.quota-bar-fill {
++  height: 100%;
++  border-radius: 999px;
++  background: var(--accent);
++}
++
++/* ------------------------------------------------------------ responsive */
++
++@media (max-width: 900px) {
++  .content-grid {
++    grid-template-columns: 1fr;
++  }
++}
++
++@media (max-width: 768px) {
++  .app-shell {
++    grid-template-columns: 1fr;
++  }
++
++  .sidebar {
++    min-height: auto;
++    border-right: none;
++    border-bottom: 1px solid var(--panel-border);
++    padding: 16px;
++  }
++
++  .sidebar-nav {
++    display: flex;
++    flex-direction: column;
++  }
++
++  .nav-heading {
++    margin: 12px 8px 6px;
++  }
++
++  .plan-card {
++    margin-top: 16px;
++  }
++
++  .content {
++    padding: 20px 16px 32px;
++  }
++
++  .content-header {
++    flex-direction: column;
++    align-items: stretch;
++  }
++
++  .content-header-actions {
++    flex-wrap: wrap;
++  }
++
++  .search-field input {
++    width: 100%;
++  }
++
++  .stat-grid {
++    grid-template-columns: 1fr 1fr;
++  }
++
++  .bar-chart {
++    gap: 10px;
++  }
++}
++
++@media (max-width: 480px) {
++  .stat-grid {
++    grid-template-columns: 1fr;
++  }
++
++  .content-header-actions {
++    justify-content: space-between;
++  }
++
++  .search-field input {
++    width: 100%;
++  }
+ }

@@ -1,0 +1,119 @@
+# B1 — Screenshot-to-Interface (React + TypeScript)
+
+Reproduce the interface shown in `reference/reference.png` as a working React +
+TypeScript application, with the highest possible visual fidelity.
+
+The screenshot is the specification. Everything you need to know about layout,
+spacing, color, typography, hierarchy and content is in that image. Read it
+carefully before writing code.
+
+---
+
+## 1. Environment
+
+- Node 22 with npm. The toolchain is already installed in `node_modules/`.
+- **There is no network access.** Do not add, remove, upgrade or vendor any
+  dependency, and do not run `npm install`. Everything required is present:
+  React 19, TypeScript, Vite, Vitest, Testing Library, puppeteer-core.
+- The application is a Vite SPA. Entry point: `index.html` -> `src/main.tsx`.
+- Work only inside this repository.
+
+## 2. What to build
+
+A single-screen application that reproduces `reference/reference.png`.
+
+- Implement it in `src/`, in React function components with TypeScript.
+- Break the screen into components that match the visual structure of the
+  reference. A single 800-line `App.tsx` is not acceptable.
+- All text content must match the reference exactly, including labels, numbers,
+  percentages, names and relative timestamps.
+- **Do not invent sections, widgets, navigation entries, rows or metrics that
+  are not visible in the reference.** Reproduce what is there — no more.
+- Do not remove sections that are visible in the reference either.
+
+## 3. Viewports
+
+The result must be correct at both of these viewports:
+
+| Viewport | Size      | Expectation                                                   |
+| -------- | --------- | ------------------------------------------------------------- |
+| Desktop  | 1440x900  | Matches the reference layout as closely as possible.            |
+| Mobile   | 390x844   | A deliberate responsive adaptation of the same content.        |
+
+Mobile rules:
+
+- No horizontal scrolling of the page at 390px width.
+- No content clipped, overlapped or pushed outside the viewport.
+- The desktop sidebar must not simply stay as a fixed 236px column squeezing the
+  content; adapt it (stack, collapse, or move it) so the content stays readable.
+- Wide content that cannot shrink (for example a data table) may scroll
+  horizontally **inside its own container**, never by scrolling the page body.
+
+## 4. Assets
+
+- Local assets only. No remote fonts, images, scripts, styles or API calls at
+  runtime. The validated build must work fully offline.
+- Use CSS, inline SVG, or files you create under `src/` or `public/`.
+- `reference/reference.png` is the specification, not an asset: do not ship it,
+  embed it, screenshot it, or reference it from the application.
+
+## 5. Accessibility (basic)
+
+- Exactly one `<h1>` on the page.
+- Semantic landmarks: the navigation inside `<nav>`, the primary content inside
+  `<main>`, the sidebar as `<aside>` or a labelled landmark.
+- Interactive controls are real controls: `<button>` for buttons, `<a>` for
+  links, `<input>` for the search field. No clickable `<div>`s.
+- Every interactive control has an accessible name (visible text, `aria-label`,
+  or an associated `<label>`).
+- Images that carry meaning have `alt` text; decorative graphics are hidden from
+  assistive technology (`aria-hidden="true"` or empty `alt`).
+- Text contrast must remain at least as readable as the reference.
+
+## 6. Required markup contract
+
+External validation depends on these hooks. They are part of the task.
+
+- The application root renders inside `#root`.
+- `data-testid="app-shell"` on the outermost element of the screen.
+- `data-testid="sidebar"` on the sidebar region.
+- `data-testid="stat-card"` on **each** of the four summary metric cards at the
+  top of the content area.
+- `data-testid="chart"` on the container of the bar chart panel.
+- `data-testid="projects-table"` on the `<table>` listing the projects.
+- `data-testid="activity"` on the activity panel.
+- `data-testid="quota"` on the quota panel.
+
+Do not use these attributes anywhere else.
+
+## 7. Quality bar
+
+- Fidelity first: proportions, spacing rhythm, color values, font sizes and
+  weights, border radii, and the relative visual weight of each block.
+- Clean, readable, typed code. No `any`, no unused exports, no dead code.
+- No TypeScript errors, no runtime console errors, no React key warnings.
+
+## 8. Validation (this is exactly what will be run)
+
+```
+npm run typecheck
+npm run build
+npm test
+npm run check
+```
+
+`npm run check` builds nothing: it serves the existing `dist/` produced by
+`npm run build` and drives a headless Chrome over it. Run `npm run build`
+before `npm run check`.
+
+`scripts/` (the external validation harness), `vitest.config.ts`,
+`vite.config.ts`, `tsconfig.json` and `package.json` are the validation
+contract: **do not modify them**. Add your own tests under `src/`.
+
+## 9. Definition of done
+
+- All four validation commands exit 0.
+- The rendered application at 1440x900 is visually as close to
+  `reference/reference.png` as you can make it.
+- The rendered application at 390x844 is a coherent, unbroken adaptation.
+- No network requests at runtime, no invented content, no missing sections.

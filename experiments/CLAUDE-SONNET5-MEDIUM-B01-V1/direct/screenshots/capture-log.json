@@ -1,0 +1,123 @@
+{
+  "capture_protocol": "b01-screenshot-visual-v1",
+  "benchmark_id": "B01-screenshot",
+  "origin": "validated dist/",
+  "deviceScaleFactor": 1,
+  "files": {
+    "desktop-full.png": {
+      "id": "desktop-full",
+      "fullPage": true,
+      "viewport": "desktop",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 141455
+    },
+    "desktop-shell.png": {
+      "id": "desktop-shell",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 137768
+    },
+    "sidebar.png": {
+      "id": "sidebar",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "sidebar"
+      },
+      "bytes": 20232
+    },
+    "stat-cards.png": {
+      "id": "stat-cards",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "stat-card",
+        "all": true
+      },
+      "bytes": 16889
+    },
+    "chart.png": {
+      "id": "chart",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "chart"
+      },
+      "bytes": 17842
+    },
+    "projects-table.png": {
+      "id": "projects-table",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "projects-table"
+      },
+      "bytes": 30285
+    },
+    "activity-quota.png": {
+      "id": "activity-quota",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "union",
+        "hooks": [
+          {
+            "testid": "activity"
+          },
+          {
+            "testid": "quota"
+          }
+        ]
+      },
+      "bytes": 33671
+    },
+    "mobile-full.png": {
+      "id": "mobile-full",
+      "fullPage": true,
+      "viewport": "mobile",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 120587
+    },
+    "mobile-shell.png": {
+      "id": "mobile-shell",
+      "fullPage": false,
+      "viewport": "mobile",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 44240
+    },
+    "mobile-stat-cards.png": {
+      "id": "mobile-stat-cards",
+      "fullPage": false,
+      "viewport": "mobile",
+      "target": {
+        "kind": "testid",
+        "testid": "stat-card",
+        "all": true
+      },
+      "bytes": 21986
+    },
+    "mobile-projects-table.png": {
+      "id": "mobile-projects-table",
+      "fullPage": false,
+      "viewport": "mobile",
+      "target": {
+        "kind": "testid",
+        "testid": "projects-table"
+      },
+      "bytes": 1109
+    }
+  }
+}

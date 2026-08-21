@@ -1,0 +1,182 @@
+{
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B01-V1",
+  "benchmark_id": "B01-screenshot",
+  "status": "COMPLETE",
+  "quality_status": "COMPLETE",
+  "agent_lab_baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "model": "claude-sonnet-5",
+  "reasoning_effort": "medium",
+  "billing_mode": "subscription_only",
+  "direct_profile": null,
+  "agentlab_profile": "claude-build-worker-subscription-sonnet5-medium-v3",
+  "seed_sha": "efaac54bde9169e85aff7653faec42eaff72df9b",
+  "frozen_seed_sha_identity": "6e05bc6c557ff0d6bbddcbb2d92fabb1f01478ee",
+  "task_sha256": "f7c737526774b34860860a1fa5f654bca4ce7393b0d7469bb599e715fdaae3b0",
+  "rubric_sha256": "c1c6f631bfeec1cd43f3a328add0b6e485ddb2e53c40d4e47b1f7a9ec771db3a",
+  "reference_sha256": "8295dcde60aaa7fb83cf5c44179f741d30f48d3735d579957d8b105d2ffcb030",
+  "arm_order": [
+    "AGENTLAB",
+    "DIRECT"
+  ],
+  "validity": "VALID_WITH_MODEL_PURITY_WARNING",
+  "warning": "Both arms' modelUsage included a small claude-haiku-4-5 helper invocation; the implementer remained claude-sonnet-5 medium in both arms.",
+  "winner": "DIRECT",
+  "quality_scores": {
+    "direct": 87,
+    "agentlab": 79,
+    "out_of": 100
+  },
+  "quality_margin": {
+    "value": 8,
+    "winner": "DIRECT"
+  },
+  "deterministic_functionality": "TIE",
+  "efficiency_winner": "DIRECT",
+  "sample_size": {
+    "benchmarks": 1,
+    "note": "n = 1 benchmark. Do not generalise this result to Agent Strategy Lab as a whole."
+  },
+  "integrity": {
+    "same_seed": true,
+    "same_task": true,
+    "same_implementer_model": true,
+    "same_effort": true,
+    "same_validation": true,
+    "a24_used": false,
+    "api_billing": false,
+    "cross_arm_leak": false,
+    "score_sealed_before_reveal": true,
+    "score_seal_commit": "5d8ef7c3e0d4c62029d14a1e868036bfceebb2ee",
+    "metrics_verified_against_local_evidence": true,
+    "metrics_divergence": null,
+    "wall_clock_basis": "ISO started_at/finished_at delta",
+    "patch_verified": {
+      "direct": {
+        "changed_files": 10,
+        "insertions": 1062,
+        "deletions": 4
+      },
+      "agentlab": {
+        "changed_files": 11,
+        "insertions": 1064,
+        "deletions": 4
+      }
+    },
+    "blind_source_identity": {
+      "candidate-x_equals_direct_source": true,
+      "candidate-y_equals_agentlab_source": true,
+      "candidate-x_patch_equals_direct_patch": true,
+      "candidate-y_patch_equals_agentlab_patch": true
+    },
+    "canonical_png_identity": {
+      "candidate-x_equals_direct_screenshots": true,
+      "candidate-y_equals_agentlab_screenshots": true
+    }
+  },
+  "evaluation": {
+    "blind": true,
+    "score_sealed_before_reveal": true,
+    "status": "COMPLETE",
+    "labels_during_scoring": {
+      "Candidate X": "unassigned-during-scoring",
+      "Candidate Y": "unassigned-during-scoring"
+    },
+    "revealed_after_scoring": {
+      "Candidate X": "DIRECT",
+      "Candidate Y": "AGENTLAB"
+    },
+    "functionality": {
+      "direct": "PASS",
+      "agentlab": "PASS",
+      "source": "deterministic validator",
+      "first_pass": {
+        "direct": true,
+        "agentlab": true
+      },
+      "repair": {
+        "direct": false,
+        "agentlab": false
+      }
+    },
+    "scores": {
+      "direct": {
+        "visual_fidelity": 48,
+        "responsive": 14,
+        "completeness": 10,
+        "build_correctness": 10,
+        "code_quality": 5,
+        "total": 87,
+        "out_of": 100
+      },
+      "agentlab": {
+        "visual_fidelity": 44,
+        "responsive": 10,
+        "completeness": 10,
+        "build_correctness": 10,
+        "code_quality": 5,
+        "total": 79,
+        "out_of": 100
+      }
+    },
+    "code_quality": {
+      "direct": 5,
+      "agentlab": 5,
+      "out_of": 5
+    }
+  },
+  "metrics": {
+    "direct": "direct/metrics.json",
+    "agentlab": "agentlab/metrics.json"
+  },
+  "overhead_agentlab_vs_direct": {
+    "wall_clock": "+40%",
+    "worker_runtime": "+42%",
+    "tokens": "+40%",
+    "api_equivalent": "+38%",
+    "exact": {
+      "wall_clock": 0.39681776981795536,
+      "worker_runtime": 0.42131367292225197,
+      "tokens": 0.40104973385160436,
+      "api_equivalent": 0.3803726640441212
+    },
+    "wall_basis": "ISO started_at/finished_at delta"
+  },
+  "descriptive_ratios": {
+    "note": "Descriptive ratios only. Not causal or statistical efficiency. Agent Lab lost 8 quality points on this trial, so the denominator is negative.",
+    "quality_points_gained_agentlab_minus_direct": -8,
+    "additional_agentlab_tokens_per_quality_point": -66123.125,
+    "additional_agentlab_wall_ms_per_quality_point": -9084.25
+  },
+  "screenshots": {
+    "required": true,
+    "canonical": "PNG",
+    "direct": "direct/screenshots/",
+    "agentlab": "agentlab/screenshots/",
+    "blind_canonical_pngs": "evaluation/blind/CLAUDE-SONNET5-MEDIUM-B01-V1/",
+    "visual_artifact": {
+      "name": "visual-b01-blind-review",
+      "workflow_run_id": 32458290950,
+      "artifact_id": 9438007646,
+      "digest": "sha256:e714bff6893b08b66d4dcd5826ebe214c73dc2d4763268cd73a6720f07e18da5"
+    }
+  },
+  "experimental_backlog": [
+    "npm CLI invocations were denied by the versioned Claude settings allow-list on the Direct arm; the harness still ran the four frozen validators after the worker and they passed. Same class of observation as B02/B03/B04. Not implemented.",
+    "The Agent Lab orchestrator added a fifth check `git diff --cached --check` (exit 0). It is not one of the four frozen validators and is not scored.",
+    "B01 has no visual-capture.json inside the frozen benchmark directory. Capture configuration lives in protocols/sonnet5-medium-battery-v2/visual/ so benchmarks/B01-screenshot/ stays byte-identical.",
+    "Local seed commit SHA efaac54bde9169e85aff7653faec42eaff72df9b was used by both arms and matches frozen seed identity 6e05bc6c557ff0d6bbddcbb2d92fabb1f01478ee."
+  ],
+  "unpublished_on_purpose": [
+    "raw run/ directories",
+    "auth-status.json",
+    "dev-runtime/",
+    "dev-inbox/",
+    "worker stdout/stderr logs",
+    "subscription quota probes",
+    "absolute operator paths",
+    "node_modules/",
+    "dist/"
+  ]
+}
