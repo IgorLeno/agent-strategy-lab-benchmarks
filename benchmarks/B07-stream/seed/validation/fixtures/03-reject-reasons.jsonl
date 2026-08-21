@@ -1,0 +1,20 @@
+not json at all
+{"event_id":"evt-r1","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":100,"status":"settled"}
+{"customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":100,"status":"settled"}
+{"event_id":"evt-r2","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":100,"status":"settled"}
+{"event_id":"evt-r3","customer_id":"cust-01","category":"purchase","amount":100,"status":"settled"}
+{"event_id":"evt-r4","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","amount":100,"status":"settled"}
+{"event_id":"evt-r5","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","status":"settled"}
+{"event_id":"evt-r6","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":100}
+{"event_id":"","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":100,"status":"settled"}
+{"event_id":"evt-r7","customer_id":"","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":100,"status":"settled"}
+{"event_id":"evt-r8","customer_id":"cust-01","timestamp":"tomorrow","category":"purchase","amount":100,"status":"settled"}
+{"event_id":"evt-r9","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"barter","amount":100,"status":"settled"}
+{"event_id":"evt-r10","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":10.5,"status":"settled"}
+{"event_id":"evt-r11","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":-100,"status":"settled"}
+{"event_id":"evt-r12","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"refund","amount":100,"status":"settled"}
+{"event_id":"evt-r13","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":99999999,"status":"settled"}
+{"event_id":"evt-r14","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":100,"status":"queued"}
+{"event_id":"evt-r15","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":null,"status":"settled"}
+["not","an","object"]
+{"event_id":"zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz","customer_id":"cust-01","timestamp":"2026-03-01T00:00:00Z","category":"purchase","amount":100,"status":"settled"}

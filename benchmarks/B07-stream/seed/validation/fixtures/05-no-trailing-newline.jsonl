@@ -1,0 +1,2 @@
+{"event_id":"evt-t1","customer_id":"cust-09","timestamp":"2026-05-01T00:00:00Z","category":"purchase","amount":1,"status":"settled"}
+{"event_id":"evt-t2","customer_id":"cust-09","timestamp":"2026-05-01T00:00:01Z","category":"purchase","amount":2,"status":"settled"}

@@ -1,0 +1,7 @@
+
+   
+{"event_id":"evt-e1","customer_id":"клиент-01","timestamp":"2026-04-01T10:00:00+02:00","category":"purchase","amount":10000000,"status":"settled"}
+
+{"event_id":"evt-e2","customer_id":"cust-é","timestamp":"2026-03-31T22:00:00Z","category":"refund","amount":-10000000,"status":"failed"}
+	
+{"event_id":"evt-e3","customer_id":"cust-01","timestamp":"2026-04-01T08:00:00-05:00","category":"adjustment","amount":0,"status":"pending"}

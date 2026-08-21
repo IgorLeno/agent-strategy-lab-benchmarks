@@ -1,0 +1,5 @@
+{"event_id":"evt-0001","customer_id":"cust-01","timestamp":"2026-01-02T03:04:05Z","category":"purchase","amount":1200,"status":"settled"}
+{"event_id":"evt-0002","customer_id":"cust-02","timestamp":"2026-01-02T05:00:00Z","category":"refund","amount":-300,"status":"pending"}
+{"event_id":"evt-0003","customer_id":"cust-01","timestamp":"2026-01-01T23:59:59Z","category":"subscription","amount":999,"status":"settled"}
+{"event_id":"evt-0004","customer_id":"cust-03","timestamp":"2026-01-05T12:00:00Z","category":"adjustment","amount":-1,"status":"failed"}
+{"event_id":"evt-0005","customer_id":"cust-01","timestamp":"2026-01-04T08:30:00Z","category":"adjustment","amount":0,"status":"settled"}

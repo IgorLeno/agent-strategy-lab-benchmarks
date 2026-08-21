@@ -1,0 +1,245 @@
+# PlanFile do braço AGENTLAB da bateria Sonnet 5 Medium v2.
+# `objective` carrega o TASK.md do benchmark VERBATIM: os dois braços recebem
+# exatamente o mesmo texto. O mesmo arquivo também está na raiz do repositório
+# alvo, versionado no seed commit.
+schema_version: 1
+
+tasks:
+  - id: B7
+    title: "Completar o pipeline de eventos JSONL STREAM em Go"
+    blocked_by: []
+    objective: |
+      # B7 — STREAM JSONL event pipeline (Go)
+
+      `stream` is a command line tool that reads a JSONL file of commerce events and
+      writes two artifacts: an aggregated `summary.json` and a `rejects.jsonl` log of
+      every line it refused.
+
+      The repository already contains the types, a partially implemented CLI, small
+      fixtures and a green test suite. It does **not** yet satisfy the contract
+      below: it is not correct, it is not deterministic, and it does not stream.
+
+      Your job is to complete it.
+
+      ---
+
+      ## 1. Environment
+
+      - Go 1.24 or newer. **Standard library only**: `go.mod` must declare no
+        dependency and there must be no `go.sum`.
+      - **There is no network access.** Do not import `net`, `net/http`, `net/url`,
+        `crypto/tls`, `os/exec`, or any module outside the standard library.
+      - Work only inside this repository.
+
+      ```
+      cmd/stream/          the CLI entry point
+      internal/event/      the input record and its validation rules
+      internal/pipeline/   the streaming processor, the summary and the reject log
+      validation/          the external validator (do not modify)
+      ```
+
+      ## 2. Command line
+
+      ```
+      stream process --input <file> --outdir <dir> [--buffer-size <bytes>]
+      ```
+
+      - `--buffer-size` defaults to `65536` and must be at least `1024`. It selects
+        the read buffer. **It must never change the output.**
+      - On success the tool writes both artifacts into `--outdir`, prints exactly
+
+        ```
+        processed <lines_read> lines: <accepted> accepted, <rejected> rejected
+        ```
+
+        to stdout, and exits `0`.
+      - Exit `2` for a usage problem: no command, an unknown command, a missing
+        `--input` or `--outdir`, a `--buffer-size` below the minimum, or an input
+        file that cannot be read. Write a message to stderr.
+      - Exit `1` for a failure while processing.
+
+      Both artifacts are written on every successful run, including for an empty
+      input, in which case `rejects.jsonl` is an empty file.
+
+      ## 3. Input
+
+      One JSON object per line, UTF-8. A line that is empty or contains only
+      whitespace is **blank**: it counts in `lines_read` and in `blank_lines`, and is
+      neither accepted nor rejected. A trailing newline at end of file does not
+      create an extra line.
+
+      | Field | Type | Constraint |
+      | --- | --- | --- |
+      | `event_id` | string | non-empty, at most 64 bytes |
+      | `customer_id` | string | non-empty |
+      | `timestamp` | string | RFC 3339 |
+      | `category` | string | `adjustment`, `purchase`, `refund` or `subscription` |
+      | `amount` | number | integer, `-10000000 <= amount <= 10000000`, in **cents** |
+      | `status` | string | `failed`, `pending` or `settled` |
+
+      Amounts are integer minor units. They are never floats in the output: every
+      total is an exact integer sum.
+
+      Sign rules by category: `purchase` and `subscription` require `amount > 0`,
+      `refund` requires `amount < 0`, `adjustment` accepts any value in range,
+      including `0`.
+
+      ## 4. Rejection reasons (frozen)
+
+      Exactly one reason per rejected line, chosen by the **first** rule that
+      applies, in this order:
+
+      1. `line_too_long` — the line exceeds 1 MiB.
+      2. `malformed_json` — the line is not a JSON object.
+      3. `missing_field:<name>` — a required field is absent or `null`. Fields are
+         examined in the order `event_id`, `customer_id`, `timestamp`, `category`,
+         `amount`, `status`; the first one missing wins.
+      4. `invalid_field:<name>` — a field is present but breaks section 3. Fields are
+         examined in the same order; the first one invalid wins.
+      5. `duplicate_event_id` — an earlier accepted line already used this
+         `event_id`. The first occurrence is accepted; every later one is rejected.
+
+      The reason for a line must never depend on map iteration order.
+
+      ## 5. `rejects.jsonl`
+
+      One JSON object per rejected line, in input order, newline-terminated:
+
+      ```json
+      {"line":3,"reason":"malformed_json","raw":"not json at all"}
+      ```
+
+      - `line` is the 1-based number of the line in the input, counting blank lines.
+      - `reason` is one of section 4.
+      - `raw` is the line as read, truncated to its **first 1024 bytes**.
+      - The keys appear in exactly this order and the object is compact: no spaces,
+        no indentation.
+
+      ## 6. `summary.json`
+
+      Exactly this shape, in exactly this key order, indented with two spaces and
+      ending with a newline:
+
+      ```json
+      {
+        "input": { "path": "events.jsonl", "lines_read": 0, "blank_lines": 0 },
+        "events": { "accepted": 0, "rejected": 0, "duplicates": 0 },
+        "totals": {
+          "amount": 0,
+          "by_category": [{ "category": "adjustment", "count": 0, "amount": 0 }],
+          "by_status": [{ "status": "failed", "count": 0, "amount": 0 }]
+        },
+        "customers": { "unique": 0, "top": [] },
+        "time_range": { "first": null, "last": null }
+      }
+      ```
+
+      - `input.path` is the **base name** of the input file, not its path.
+      - `events.duplicates` counts the lines rejected as `duplicate_event_id`; those
+        lines are also counted in `events.rejected`.
+      - `totals.amount` is the sum over accepted events.
+      - `by_category` always carries **all four** categories, in alphabetical order,
+        including categories with a zero count. `by_status` always carries **all
+        three** statuses, in alphabetical order.
+      - `customers.unique` is the number of distinct `customer_id` values among
+        accepted events. `customers.top` carries at most 10 rows, ordered by `count`
+        descending and then by `customer_id` ascending. With no accepted events it is
+        an empty array, not `null`.
+      - `time_range.first` and `time_range.last` are the earliest and latest accepted
+        timestamps, normalised to **UTC** and rendered as RFC 3339
+        (`2026-01-02T03:04:05Z`), regardless of the offset written in the input. With
+        no accepted events both are `null`.
+
+      Two runs over the same input must produce byte-identical artifacts, and so must
+      runs at different `--buffer-size` values.
+
+      ## 7. Streaming, memory and runtime
+
+      The tool must process the input as a stream. It must not hold the whole file,
+      nor all of its lines, nor all of its events, in memory.
+
+      The external validator generates a deterministic fixture of 400 000 events
+      (about 57 MiB) and a small fixture of 2 000 events from the same seed, runs the
+      tool on both, and measures the child process's peak resident memory
+      (`getrusage` on the terminated child, read while the validator itself is still
+      small so the measurement is not inherited across `fork`).
+
+      Frozen envelope:
+
+      | Property | Bound |
+      | --- | --- |
+      | Peak resident memory on the large fixture | at most **128 MiB** |
+      | Growth of peak memory from the small to the large fixture | at most **100%** of the growth in input size |
+      | Wall time on the large fixture | at most **60 s** |
+
+      The bounds are deliberately loose. They are there to separate an
+      implementation that keeps per-event state from one that keeps the file; they
+      are not a micro-optimisation target. Per-event state that is inherently
+      proportional to the number of distinct events — the set of seen `event_id`
+      values, the per-customer totals — is expected and fits comfortably inside the
+      envelope.
+
+      A line may legitimately be much larger than the read buffer: a 200 KiB line
+      must be handled correctly at `--buffer-size 1024`. Only a line above 1 MiB is
+      `line_too_long`, and the stream must stay aligned after one.
+
+      ## 8. Tests
+
+      The repository has tests under `internal/`. Extend them: the rejection reasons
+      and their order, duplicate handling, blank lines, the exact shape of both
+      artifacts, UTC normalisation, ordering of `by_category` / `by_status` /
+      `customers.top`, buffer-size independence, and the CLI exit codes. Do not
+      delete existing coverage.
+
+      ## 9. Validation (this is exactly what will be run)
+
+      ```
+      go build ./...
+      go vet ./...
+      go test ./...
+      go run ./validation
+      ```
+
+      `go run ./validation` is external. It builds the CLI itself, drives it over the
+      frozen fixtures in `validation/fixtures/` and over generated fixtures,
+      recomputes every expected byte of both artifacts with its own independent
+      implementation, and measures memory and time. It also re-runs your test suite,
+      checks that no networking or external module is used, and verifies that
+      `validation/` and `go.mod` are unmodified.
+
+      One of its checks runs a second generated fixture from a different seed: an
+      output that was fitted to the fixtures rather than computed will not survive it.
+
+      `validation/` and `go.mod` are the validation contract: **do not modify them.**
+
+      ## 10. Definition of done
+
+      - All four validation commands exit 0.
+      - Both artifacts match the contract byte for byte, for every fixture.
+      - Output is identical across repeated runs and across buffer sizes.
+      - The tool streams, and stays inside the frozen memory and time envelope.
+      - Exit codes follow section 2.
+    initial_files:
+      - TASK.md
+      - internal/pipeline/pipeline.go
+    acceptance:
+      - "go build ./..., go vet ./..., go test ./... e go run ./validation terminam com exit code 0."
+      - "summary.json e rejects.jsonl batem byte a byte com o contrato das seções 3 a 6 do TASK.md."
+      - "A saída é idêntica entre execuções repetidas e entre tamanhos de buffer."
+      - "A ferramenta processa em streaming e permanece dentro do envelope de memória e tempo da seção 7."
+      - "Os exit codes seguem a seção 2 do TASK.md."
+    validation:
+      - argv: ["go", "build", "./..."]
+        timeout_seconds: 120
+      - argv: ["go", "vet", "./..."]
+        timeout_seconds: 120
+      - argv: ["go", "test", "./..."]
+        timeout_seconds: 300
+      - argv: ["go", "run", "./validation"]
+        timeout_seconds: 600
+    constraints:
+      - "Somente biblioteca padrão: go.mod não pode declarar dependências e não pode existir go.sum."
+      - "Não há acesso à rede: não importe net, net/http, net/url, crypto/tls nem os/exec."
+      - "Não modifique validation/ nem go.mod — são o contrato de validação."
+      - "Trabalhe somente dentro do repositório alvo."
+    include_previous_handoff: false
