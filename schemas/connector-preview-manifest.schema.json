@@ -1,0 +1,67 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "connector-preview-manifest.schema.json",
+  "title": "ConnectorPreviewManifestV1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "kind",
+    "schema_version",
+    "experiment_id",
+    "candidate_id",
+    "capture_protocol",
+    "generated_at",
+    "size_budget_bytes",
+    "previews"
+  ],
+  "properties": {
+    "kind": { "const": "ConnectorPreviewManifestV1" },
+    "schema_version": { "const": 1 },
+    "experiment_id": { "type": "string" },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^(candidate-x|candidate-y)$"
+    },
+    "capture_protocol": { "type": "string" },
+    "generated_at": { "type": "string" },
+    "size_budget_bytes": { "const": 40960 },
+    "previews": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "filename",
+          "sha256",
+          "byte_size",
+          "source_png",
+          "width",
+          "height",
+          "encoding",
+          "jpeg_quality",
+          "candidate_id"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "filename": { "type": "string", "pattern": "^[^/\\\\]+\\.jpg$" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "byte_size": { "type": "integer", "minimum": 1, "maximum": 40960 },
+          "width": { "type": "integer", "minimum": 1 },
+          "height": { "type": "integer", "minimum": 1 },
+          "encoding": { "const": "jpeg" },
+          "jpeg_quality": { "type": "integer", "minimum": 1, "maximum": 100 },
+          "candidate_id": { "type": "string" },
+          "source_png": {
+            "type": "object",
+            "required": ["filename", "sha256"],
+            "properties": {
+              "filename": { "type": "string", "pattern": "^[^/\\\\]+\\.png$" },
+              "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

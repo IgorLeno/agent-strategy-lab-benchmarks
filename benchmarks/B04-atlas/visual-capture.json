@@ -22,6 +22,9 @@
       "p09 mobile dashboard",
       "p10 mobile chart",
       "p11 mobile table"
+    ],
+    "connector_previews": [
+      "01-dashboard through 11-mobile-table; viewport/target captures only, never full-page as primary JPEG source"
     ]
   },
   "screenshots": [
@@ -33,6 +36,16 @@
       "target": { "kind": "page" },
       "state": "default",
       "review_label": "p01 dashboard desktop default",
+      "actions": []
+    },
+    {
+      "id": "desktop-dashboard",
+      "filename": "desktop-dashboard.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": { "kind": "page" },
+      "state": "default",
+      "review_label": "01-dashboard viewport",
       "actions": []
     },
     {
@@ -121,6 +134,19 @@
       ]
     },
     {
+      "id": "state-q1-all-viewport",
+      "filename": "state-q1-all-viewport.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": { "kind": "page" },
+      "state": "period=q1,segment=all",
+      "review_label": "07-q1-all viewport",
+      "actions": [
+        { "type": "set-filter", "filter": "period", "value": "q1" },
+        { "type": "set-filter", "filter": "segment", "value": "all" }
+      ]
+    },
+    {
       "id": "state-full-year-enterprise",
       "filename": "state-full-year-enterprise.png",
       "viewport": "desktop",
@@ -134,6 +160,19 @@
       ]
     },
     {
+      "id": "state-full-year-enterprise-viewport",
+      "filename": "state-full-year-enterprise-viewport.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": { "kind": "page" },
+      "state": "period=full-year,segment=enterprise",
+      "review_label": "08-full-year-enterprise viewport",
+      "actions": [
+        { "type": "set-filter", "filter": "period", "value": "full-year" },
+        { "type": "set-filter", "filter": "segment", "value": "enterprise" }
+      ]
+    },
+    {
       "id": "mobile-default",
       "filename": "mobile-default.png",
       "viewport": "mobile",
@@ -141,6 +180,16 @@
       "target": { "kind": "page" },
       "state": "default",
       "review_label": "p09 mobile dashboard",
+      "actions": []
+    },
+    {
+      "id": "mobile-dashboard",
+      "filename": "mobile-dashboard.png",
+      "viewport": "mobile",
+      "full_page": false,
+      "target": { "kind": "page" },
+      "state": "default",
+      "review_label": "09-mobile-dashboard viewport",
       "actions": []
     },
     {
@@ -168,5 +217,18 @@
       "review_label": "p11 mobile table",
       "actions": []
     }
+  ],
+  "connector_previews": [
+    { "id": "01-dashboard", "filename": "01-dashboard.jpg", "source_screenshot_id": "desktop-dashboard" },
+    { "id": "02-kpis-filters", "filename": "02-kpis-filters.jpg", "source_screenshot_id": "kpi-filters" },
+    { "id": "03-revenue-budget", "filename": "03-revenue-budget.jpg", "source_screenshot_id": "chart-revenue-budget" },
+    { "id": "04-cost-profitability", "filename": "04-cost-profitability.jpg", "source_screenshot_id": "chart-cost-profitability" },
+    { "id": "05-segment-comparison", "filename": "05-segment-comparison.jpg", "source_screenshot_id": "chart-segment-comparison" },
+    { "id": "06-segment-table", "filename": "06-segment-table.jpg", "source_screenshot_id": "segment-table" },
+    { "id": "07-q1-all", "filename": "07-q1-all.jpg", "source_screenshot_id": "state-q1-all-viewport" },
+    { "id": "08-full-year-enterprise", "filename": "08-full-year-enterprise.jpg", "source_screenshot_id": "state-full-year-enterprise-viewport" },
+    { "id": "09-mobile-dashboard", "filename": "09-mobile-dashboard.jpg", "source_screenshot_id": "mobile-dashboard" },
+    { "id": "10-mobile-chart", "filename": "10-mobile-chart.jpg", "source_screenshot_id": "mobile-chart" },
+    { "id": "11-mobile-table", "filename": "11-mobile-table.jpg", "source_screenshot_id": "mobile-table" }
   ]
 }

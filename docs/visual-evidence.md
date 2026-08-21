@@ -12,9 +12,14 @@ The corpus therefore publishes a **Visual Evidence Bundle**:
 | --- | --- |
 | PNG | Canonical. Unmodified source pixels. |
 | `visual-manifest.json` | Provenance between PNG and PDF page. |
-| `visual-review.pdf` | Review/transport document generated from the PNGs. |
+| `visual-review.pdf` | Human/document review transport. |
+| JPEG connector preview | GitHub.fetch_file base64 transport. Hard limit 40960 bytes. |
 
-The PDF is not a second original. If PDF and PNG ever disagree, the PNG wins.
+The PDF is not a second original. If PDF and PNG ever disagree, the PNG wins. JPEG previews are not originals either.
+
+## Connector JPEG algorithm
+
+Preferred width 960px, aspect ratio preserved, never upscale. Encode with Chrome JPEG quality 80→32. If the file still exceeds 40960 bytes, drop width by 80px down to min(800, source). If that still exceeds the budget, fail loudly. Do not use a full-page PNG as the primary connector preview.
 
 ## How screenshots are captured
 

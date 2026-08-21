@@ -218,6 +218,25 @@ export async function capturePng(send, options = {}) {
   return Buffer.from(data, 'base64');
 }
 
+export async function captureJpeg(send, options = {}) {
+  const quality = options.quality;
+  if (!Number.isInteger(quality) || quality < 0 || quality > 100) {
+    throw new Error(`jpeg quality inválida: ${quality}`);
+  }
+  const params = { format: 'jpeg', quality, fromSurface: true };
+  if (options.clip) {
+    params.clip = {
+      x: Math.max(0, Math.floor(options.clip.x)),
+      y: Math.max(0, Math.floor(options.clip.y)),
+      width: Math.max(1, Math.ceil(options.clip.width)),
+      height: Math.max(1, Math.ceil(options.clip.height)),
+      scale: 1,
+    };
+  }
+  const { data } = await send('Page.captureScreenshot', params);
+  return Buffer.from(data, 'base64');
+}
+
 export async function printToPdf(send, options = {}) {
   const { data } = await send('Page.printToPDF', {
     printBackground: true,

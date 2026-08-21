@@ -8,7 +8,9 @@ import { fileURLToPath } from 'node:url';
 const here = path.dirname(fileURLToPath(import.meta.url));
 const repo = path.resolve(here, '../..');
 const build = path.join(here, 'build-review.mjs');
+const connector = path.join(here, 'build-connector-previews.mjs');
 const pages = path.join(here, 'fixtures/b03-access-check-pages.json');
+const connectorPages = path.join(here, 'fixtures/b03-connector-preview-pages.json');
 const experiment = 'CLAUDE-SONNET5-MEDIUM-B03-V1';
 const protocol = 'CLAUDE-SONNET5-MEDIUM-B03-V1-screenshots';
 
@@ -57,4 +59,36 @@ await run([
   protocol,
   '--pages-json',
   pages,
+]);
+
+await run([
+  connector,
+  '--screenshots',
+  `experiments/${experiment}/direct/screenshots`,
+  '--out',
+  'evaluation/visual-access-check/candidate-x',
+  '--experiment-id',
+  experiment,
+  '--candidate-id',
+  'candidate-x',
+  '--capture-protocol',
+  protocol,
+  '--pages-json',
+  connectorPages,
+]);
+
+await run([
+  connector,
+  '--screenshots',
+  `experiments/${experiment}/agentlab/screenshots`,
+  '--out',
+  'evaluation/visual-access-check/candidate-y',
+  '--experiment-id',
+  experiment,
+  '--candidate-id',
+  'candidate-y',
+  '--capture-protocol',
+  protocol,
+  '--pages-json',
+  connectorPages,
 ]);

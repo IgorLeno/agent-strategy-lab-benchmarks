@@ -50,6 +50,7 @@ docs/
 schemas/
   experiment-result.schema.json
   visual-evidence-manifest.schema.json
+  connector-preview-manifest.schema.json
 scripts/visual-evidence/
 evaluation/visual-access-check/
 ```

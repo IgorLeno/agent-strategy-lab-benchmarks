@@ -4,7 +4,7 @@
 
 It does not launch workers, call model APIs, or consume Claude/Codex quota.
 
-`visual-evidence/` builds PNG + manifest + review-PDF bundles. See [`visual-evidence/README.md`](visual-evidence/README.md). Tests:
+`visual-evidence/` builds PNG + manifest + review-PDF bundles and JPEG connector previews (≤ 40960 bytes). See [`visual-evidence/README.md`](visual-evidence/README.md). Tests:
 
 ```bash
 node --test scripts/visual-evidence/tests/*.test.mjs

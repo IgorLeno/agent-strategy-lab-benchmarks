@@ -10,5 +10,7 @@ Each candidate folder contains:
 
 - `visual-review.pdf` — review/transport document (one capture per sheet; tall full-page PNGs paginate at readable width)
 - `visual-manifest.json` — SHA256, dimensions, and PNG → PDF page provenance
+- `connector-previews/*.jpg` — GitHub connector transport, each ≤ 40960 bytes
+- `connector-preview-manifest.json` — JPEG provenance back to the source PNG
 
-Canonical pixels remain the original PNGs.
+Canonical pixels remain the original PNGs. Full-page captures are not included in this connector access check.

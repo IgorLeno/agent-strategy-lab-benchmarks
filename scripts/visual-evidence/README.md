@@ -11,13 +11,14 @@ Visual Evidence Bundle
   + review PDF generated from the PNGs
 ```
 
-The PDF does **not** replace the PNG. PNGs remain the canonical pixels. The PDF is a review/transport document so an evaluator that can read GitHub text/code, but cannot render binary PNGs, can still see the captures.
+The PDF does **not** replace the PNG. PNGs remain the canonical pixels. The PDF is a review/transport document. JPEG connector previews are a third layer for GitHub.fetch_file(base64) size limits.
 
 | Layer | Role |
 | --- | --- |
 | PNG | Canonical evidence. Never edited by the review pipeline. No color correction. |
 | Manifest (`VisualEvidenceManifestV1`) | Provenance: SHA256, dimensions, viewport, state, PNG → PDF page mapping. |
-| PDF | Review transport. May scale for page composition only, preserving aspect ratio. Tall full-page captures paginate at readable width instead of shrinking to a thumbnail. |
+| PDF | Human/document review transport. |
+| JPEG (`ConnectorPreviewManifestV1`) | Connector transport. Hard limit 40960 bytes. Derived from a target PNG. |
 
 ## Commands
 
@@ -42,6 +43,19 @@ node scripts/visual-evidence/build-review.mjs \
 # Verify bundle against the source PNGs
 node scripts/visual-evidence/verify.mjs \
   --manifest path/to/visual-manifest.json \
+  --screenshots-dir path/to/screenshots
+
+# JPEG connector previews (<= 40960 bytes)
+node scripts/visual-evidence/build-connector-previews.mjs \
+  --screenshots path/to/screenshots \
+  --out path/to/bundle \
+  --experiment-id EXPERIMENT \
+  --candidate-id candidate-x \
+  --pages desktop-hero,mobile-hero
+
+node scripts/visual-evidence/verify-connector-previews.mjs \
+  --manifest path/to/connector-preview-manifest.json \
+  --previews-dir path/to/connector-previews \
   --screenshots-dir path/to/screenshots
 
 # Blind package (mapping written only to --map-out)
@@ -79,6 +93,26 @@ B03 PNGs already published were produced by the experiment runtime script (Chrom
 4. Sheets are concatenated with `pdfunite` (object copy, not rasterization).
 
 Chrome embeds `/CreationDate`, `/ModDate`, and `/ID`. A rerun with the same PNGs is **semantically** the same review (same PNG hashes, same page mapping, same page count policy) but the PDF SHA256 may change. This is documented rather than faked.
+
+## Connector JPEG previews
+
+GitHub.fetch_file(..., encoding=base64) can return a PNG, but large files truncate. Connector previews are JPEGs derived from canonical PNGs:
+
+1. Display width = min(960, source width). No upscale.
+2. HTML local with only that image; Chrome `Page.captureScreenshot({format:"jpeg", quality})`.
+3. Quality steps: 80, 72, 64, 56, 48, 40, 32.
+4. If still over 40960 bytes, reduce width by 80px and retry.
+5. Never encode below min(800, source width). If the budget still fails, the generator exits: the 40 KiB budget must be revised. No silent degradation.
+
+Full-page captures are not primary connector previews. Use target/viewport PNGs.
+
+Layout for a blind bundle:
+
+```
+evaluation/blind/
+  candidate-x/connector-previews/ + connector-preview-manifest.json
+  candidate-y/connector-previews/ + connector-preview-manifest.json
+```
 
 ## Blind review
 

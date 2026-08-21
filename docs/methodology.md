@@ -63,6 +63,8 @@ Canonical pixels are **PNG**. A **PDF** is a review/transport layer so an evalua
 
 The PDF never replaces the PNG, never color-corrects it, and never crops it destructively. Tall full-page captures paginate at readable width.
 
+JPEG connector previews (≤ 40960 bytes) exist so `GitHub.fetch_file(..., encoding="base64")` can return a complete image. They are not canonical. Full-page PNGs are not used as primary connector previews.
+
 Blind sequence:
 
 1. workers complete;
