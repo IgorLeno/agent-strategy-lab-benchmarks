@@ -1,6 +1,7 @@
 # Transporte binário cego da evidence visual já existente.
 # Não recaptura, não comprime, não gera preview, não corre benchmark, não chama modelo.
 # B01: PNGs canônicos selados → artifact visual-b01-blind-review.
+# B03-R2: PNGs canônicos selados → artifact visual-b03-r2-blind-review.
 # Demais bundles: JPEGs de connector preview.
 name: Visual evidence artifact
 
@@ -13,6 +14,7 @@ on:
         default: CLAUDE-SONNET5-MEDIUM-B01-V1
         options:
           - CLAUDE-SONNET5-MEDIUM-B01-V1
+          - CLAUDE-SONNET5-MEDIUM-B03-R2
           - CLAUDE-SONNET5-MEDIUM-B04-V1
           - visual-access-check
 
@@ -45,8 +47,33 @@ jobs:
           retention-days: 30
           path: ${{ github.workspace }}/.staging/visual-b01-blind-review
 
+  package-b03-r2-blind-review:
+    if: ${{ inputs.bundle == 'CLAUDE-SONNET5-MEDIUM-B03-R2' }}
+    name: Package B03 R2 canonical blind review
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Stage sealed PNGs byte-for-byte
+        run: |
+          set -euo pipefail
+          node scripts/visual-evidence/stage-b03-r2-blind-review.mjs \
+            --out "${{ github.workspace }}/.staging/visual-b03-r2-blind-review"
+
+      - name: Upload visual-b03-r2-blind-review
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-b03-r2-blind-review
+          if-no-files-found: error
+          retention-days: 30
+          path: ${{ github.workspace }}/.staging/visual-b03-r2-blind-review
+
   package-blind-previews:
-    if: ${{ inputs.bundle != 'CLAUDE-SONNET5-MEDIUM-B01-V1' }}
+    if: ${{ inputs.bundle != 'CLAUDE-SONNET5-MEDIUM-B01-V1' && inputs.bundle != 'CLAUDE-SONNET5-MEDIUM-B03-R2' }}
     name: Package blind connector previews
     runs-on: ubuntu-latest
     timeout-minutes: 10
