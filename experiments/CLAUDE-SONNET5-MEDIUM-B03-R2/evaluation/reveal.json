@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B03-R2",
+  "score_sealed_before_reveal": true,
+  "mapping": {
+    "candidate-x": "AGENTLAB",
+    "candidate-y": "DIRECT"
+  },
+  "scores_at_reveal": {
+    "candidate-x": 96,
+    "candidate-y": 98
+  }
+}

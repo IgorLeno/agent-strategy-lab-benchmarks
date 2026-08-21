@@ -1,0 +1,101 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "B03-luma",
+  "arm": "direct",
+  "seed_sha": "f41831b6d5bde0e3897ab0effc1e979e7bca5a78",
+  "frozen_seed_sha_identity": "ccaa84f46741f188f8bd053accbd9308659641f5",
+  "task_sha256": "54b1681097e943f8f9a4626937d6320097c2a61fcb12541cff830300b8ea0cef",
+  "rubric_sha256": "72224ac65770bf5bae5eb72828f017d42985e3e25917fe49f3975dc9258d8abe",
+  "plan_file_sha256": "63d0046d5ae5889bb7e8688c8f00d60781d21f2f93a1ab302b1c9eee3255f10e",
+  "agent": "claude",
+  "model": "claude-sonnet-5",
+  "reasoning_effort": "medium",
+  "profile_id": null,
+  "started_at": "2026-08-21T20:00:32.388Z",
+  "finished_at": "2026-08-21T20:05:18.410Z",
+  "wall_clock_ms": 286022,
+  "wall_clock_ms_provenance": "ISO delta of sealed arm.json started_at/finished_at (arm including validation). Recomputable: 2026-08-21T20:05:18.410Z − 2026-08-21T20:00:32.388Z = 286022 ms.",
+  "worker_runtime_ms": {
+    "value": 261528,
+    "provenance": "claude JSON duration_ms (initial.stdout.json)"
+  },
+  "launch_count": 1,
+  "first_pass": true,
+  "repair_used": false,
+  "final_status": "PASS",
+  "tokens": {
+    "input": 48,
+    "cached_input": 1246359,
+    "output": 28812,
+    "reasoning": 4163,
+    "total": 1328439,
+    "provenance": "claude JSON usage: input_tokens=48, cache_creation_input_tokens=53220, cache_read_input_tokens=1246359, output_tokens=28812, thinking_tokens=4163 (subset of output). total = input + cache_creation + cache_read + output."
+  },
+  "quota": {
+    "value": null,
+    "unit": null,
+    "provenance": "UNKNOWN: no remaining-quota probe on the Direct arm; the run completed, so quota was sufficient for the INITIAL Direct launch. UNKNOWN is not coerced to 0."
+  },
+  "api_equivalent_usd": {
+    "value": 1.1281177,
+    "provenance": "claude JSON total_cost_usd — API-equivalent estimate, not charged (subscription). Includes helper Haiku 0.002566 + Sonnet 1.1255517"
+  },
+  "billing_mode": "subscription_only",
+  "human_interventions": [],
+  "changed_files": {
+    "count": 13,
+    "paths": [
+      "src/App.tsx",
+      "src/components/DayCycle.tsx",
+      "src/components/Faq.tsx",
+      "src/components/Features.tsx",
+      "src/components/Footer.tsx",
+      "src/components/Header.tsx",
+      "src/components/Hero.tsx",
+      "src/components/Pricing.tsx",
+      "src/components/SocialProof.tsx",
+      "src/components/Specs.tsx",
+      "src/components/icons.tsx",
+      "src/content.ts",
+      "src/styles.css"
+    ],
+    "insertions": 1871,
+    "deletions": 4
+  },
+  "final_commit_sha": null,
+  "modelUsage": {
+    "claude-haiku-4-5-20251001": {
+      "inputTokens": 2506,
+      "outputTokens": 12,
+      "cacheReadInputTokens": 0,
+      "cacheCreationInputTokens": 0,
+      "webSearchRequests": 0,
+      "costUSD": 0.002566,
+      "contextWindow": 200000,
+      "maxOutputTokens": 32000,
+      "canonicalModel": "claude-haiku-4-5",
+      "provider": "firstParty"
+    },
+    "claude-sonnet-5": {
+      "inputTokens": 48,
+      "outputTokens": 28812,
+      "cacheReadInputTokens": 1246359,
+      "cacheCreationInputTokens": 53220,
+      "webSearchRequests": 0,
+      "costUSD": 1.1255517,
+      "contextWindow": 1000000,
+      "maxOutputTokens": 64000,
+      "canonicalModel": "claude-sonnet-5",
+      "provider": "firstParty"
+    }
+  },
+  "model_purity_warning": {
+    "code": "MODEL_PURITY_WARNING",
+    "implementer": "claude-sonnet-5",
+    "implementer_effort": "medium",
+    "helper_models": [
+      "claude-haiku-4-5-20251001"
+    ],
+    "action": "preserved modelUsage; not invalidated because implementer remained Sonnet 5 Medium"
+  }
+}

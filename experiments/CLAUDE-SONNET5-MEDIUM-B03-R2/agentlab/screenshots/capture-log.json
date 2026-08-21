@@ -1,0 +1,76 @@
+{
+  "capture_protocol": "b03-luma-visual-v1",
+  "benchmark_id": "B03-luma",
+  "origin": "validated dist/",
+  "deviceScaleFactor": 1,
+  "files": {
+    "desktop-full.png": {
+      "id": "desktop-full",
+      "fullPage": true,
+      "viewport": "desktop",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 906864
+    },
+    "desktop-hero.png": {
+      "id": "desktop-hero",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "hero"
+      },
+      "bytes": 188495
+    },
+    "mobile-full.png": {
+      "id": "mobile-full",
+      "fullPage": true,
+      "viewport": "mobile",
+      "target": {
+        "kind": "page"
+      },
+      "bytes": 811516
+    },
+    "mobile-hero.png": {
+      "id": "mobile-hero",
+      "fullPage": false,
+      "viewport": "mobile",
+      "target": {
+        "kind": "testid",
+        "testid": "hero"
+      },
+      "bytes": 111588
+    },
+    "day-cycle-state-1.png": {
+      "id": "day-cycle-state-1",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "day-cycle"
+      },
+      "bytes": 12321
+    },
+    "day-cycle-state-2.png": {
+      "id": "day-cycle-state-2",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "day-cycle"
+      },
+      "bytes": 12321
+    },
+    "faq-open.png": {
+      "id": "faq-open",
+      "fullPage": false,
+      "viewport": "desktop",
+      "target": {
+        "kind": "testid",
+        "testid": "faq"
+      },
+      "bytes": 5820
+    }
+  }
+}

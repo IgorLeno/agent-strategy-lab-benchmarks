@@ -1,0 +1,190 @@
+{
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B03-R2",
+  "benchmark_id": "B03-luma",
+  "status": "COMPLETE",
+  "quality_status": "COMPLETE",
+  "kind": "REPLICATION",
+  "replication_of": "CLAUDE-SONNET5-MEDIUM-B03-V1",
+  "battery_id": "SONNET5-MEDIUM-BATTERY-V2",
+  "slot": "E05",
+  "agent_lab_baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "model": "claude-sonnet-5",
+  "reasoning_effort": "medium",
+  "billing_mode": "subscription_only",
+  "direct_profile": null,
+  "agentlab_profile": "claude-build-worker-subscription-sonnet5-medium-v3",
+  "seed_sha": "f41831b6d5bde0e3897ab0effc1e979e7bca5a78",
+  "frozen_seed_sha_identity": "ccaa84f46741f188f8bd053accbd9308659641f5",
+  "task_sha256": "54b1681097e943f8f9a4626937d6320097c2a61fcb12541cff830300b8ea0cef",
+  "rubric_sha256": "72224ac65770bf5bae5eb72828f017d42985e3e25917fe49f3975dc9258d8abe",
+  "plan_file_sha256": "63d0046d5ae5889bb7e8688c8f00d60781d21f2f93a1ab302b1c9eee3255f10e",
+  "arm_order": [
+    "DIRECT",
+    "AGENTLAB"
+  ],
+  "validity": "VALID_WITH_MODEL_PURITY_WARNING",
+  "warning": "Both arms' modelUsage included a small claude-haiku-4-5 helper invocation; the implementer remained claude-sonnet-5 medium in both arms.",
+  "winner": "DIRECT",
+  "quality_scores": {
+    "direct": 98,
+    "agentlab": 96,
+    "out_of": 100
+  },
+  "quality_margin": {
+    "value": 2,
+    "winner": "DIRECT"
+  },
+  "quality_delta_agentlab_minus_direct": -2,
+  "deterministic_functionality": "TIE",
+  "efficiency_winner": "DIRECT",
+  "sample_size": {
+    "benchmarks": 1,
+    "note": "n = 1 benchmark. Do not generalise this result to Agent Strategy Lab as a whole."
+  },
+  "integrity": {
+    "same_seed": true,
+    "same_task": true,
+    "same_implementer_model": true,
+    "same_effort": true,
+    "same_validation": true,
+    "a24_used": false,
+    "api_billing": false,
+    "cross_arm_leak": false,
+    "score_sealed_before_reveal": true,
+    "score_seal_commit": "3e67a5053f4d14da35eaa683b6e00091c3779a12",
+    "metrics_verified_against_local_evidence": true,
+    "metrics_divergence": null,
+    "wall_clock_basis": "ISO started_at/finished_at delta",
+    "patch_verified": {
+      "direct": {
+        "changed_files": 13,
+        "insertions": 1871,
+        "deletions": 4
+      },
+      "agentlab": {
+        "changed_files": 19,
+        "insertions": 1781,
+        "deletions": 4
+      }
+    },
+    "blind_source_identity": {
+      "candidate-x_equals_agentlab_source": true,
+      "candidate-y_equals_direct_source": true,
+      "candidate-x_patch_equals_agentlab_patch": true,
+      "candidate-y_patch_equals_direct_patch": true
+    },
+    "canonical_png_identity": {
+      "candidate-x_equals_agentlab_screenshots": true,
+      "candidate-y_equals_direct_screenshots": true
+    }
+  },
+  "evaluation": {
+    "blind": true,
+    "score_sealed_before_reveal": true,
+    "status": "COMPLETE",
+    "labels_during_scoring": {
+      "Candidate X": "unassigned-during-scoring",
+      "Candidate Y": "unassigned-during-scoring"
+    },
+    "revealed_after_scoring": {
+      "Candidate X": "AGENTLAB",
+      "Candidate Y": "DIRECT"
+    },
+    "functionality": {
+      "direct": "PASS",
+      "agentlab": "PASS",
+      "source": "deterministic validator",
+      "first_pass": {
+        "direct": true,
+        "agentlab": true
+      },
+      "repair": {
+        "direct": false,
+        "agentlab": false
+      }
+    },
+    "scores": {
+      "direct": {
+        "visual": 43,
+        "hierarchy": 15,
+        "responsive": 15,
+        "interactions": 10,
+        "completeness": 10,
+        "code": 5,
+        "total": 98,
+        "out_of": 100
+      },
+      "agentlab": {
+        "visual": 41,
+        "hierarchy": 15,
+        "responsive": 15,
+        "interactions": 10,
+        "completeness": 10,
+        "code": 5,
+        "total": 96,
+        "out_of": 100
+      }
+    },
+    "code_quality": {
+      "direct": 5,
+      "agentlab": 5,
+      "out_of": 5
+    }
+  },
+  "metrics": {
+    "direct": "direct/metrics.json",
+    "agentlab": "agentlab/metrics.json"
+  },
+  "overhead_agentlab_vs_direct": {
+    "wall_clock": "+30%",
+    "worker_runtime": "+28%",
+    "tokens": "+54%",
+    "api_equivalent": "+30%",
+    "exact": {
+      "wall_clock": 0.2976204627616057,
+      "worker_runtime": 0.2825701263344651,
+      "tokens": 0.5403627866992764,
+      "api_equivalent": 0.29888184539609663
+    },
+    "wall_basis": "ISO started_at/finished_at delta"
+  },
+  "descriptive_ratios": {
+    "note": "Descriptive ratios only. Not causal or statistical efficiency. Agent Lab lost 2 quality points on this trial, so the denominator is negative.",
+    "quality_points_gained_agentlab_minus_direct": -2,
+    "additional_agentlab_tokens_per_quality_point": -358919.5,
+    "additional_agentlab_wall_ms_per_quality_point": -42563.0
+  },
+  "screenshots": {
+    "required": true,
+    "canonical": "PNG",
+    "direct": "direct/screenshots/",
+    "agentlab": "agentlab/screenshots/",
+    "blind_canonical_pngs": "evaluation/blind/CLAUDE-SONNET5-MEDIUM-B03-R2/",
+    "visual_artifact": {
+      "name": "visual-b03-r2-blind-review",
+      "workflow_run_id": 32523252896,
+      "artifact_id": 9461288560,
+      "digest": "sha256:380ea6589533ba9c397ce3cf4e8f6705a224f049928a393125ff61550d6b0eb7"
+    }
+  },
+  "experimental_backlog": [
+    "npm CLI invocations were denied by the versioned Claude settings allow-list on both arms. Direct did not run the four frozen validators inside the worker session; the harness ran them afterwards and they passed. Agent Lab's worker invoked the same binaries via node (tsc/vite/vitest/scripts/check.mjs); the orchestrator then ran the four frozen npm validators and they passed. Same class of observation as B01/B02/B04. Not implemented.",
+    "The Agent Lab orchestrator added a fifth check `git diff --cached --check` (exit 0). It is not one of the four frozen validators and is not scored.",
+    "Targeted interaction PNGs day-cycle-state-1, day-cycle-state-2 and faq-open were partially non-diagnostic because of capture infrastructure. No visual score was inferred from those clips. Interaction scoring used the published blind source and the frozen validator. Canonical full-page desktop/mobile and hero PNGs remained the Visual/Hierarchy/Responsive basis.",
+    "Local seed commit SHA f41831b6d5bde0e3897ab0effc1e979e7bca5a78 was used by both arms and matches frozen seed identity ccaa84f46741f188f8bd053accbd9308659641f5.",
+    "This trial is a replication of CLAUDE-SONNET5-MEDIUM-B03-V1. R1 vs R2 comparison is recorded separately and was not used to adjust these scores."
+  ],
+  "unpublished_on_purpose": [
+    "raw run/ directories",
+    "auth-status.json",
+    "dev-runtime/",
+    "dev-inbox/",
+    "worker stdout/stderr logs",
+    "subscription quota probes",
+    "absolute operator paths",
+    "node_modules/",
+    "dist/"
+  ]
+}
