@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "battery_id": "SONNET5-MEDIUM-BATTERY-V2",
+  "slot": "E05",
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B03-R2",
+  "benchmark_id": "B03-luma",
+  "benchmark_path": "benchmarks/B03-luma",
+  "kind": "REPLICATION",
+  "replication_of": "CLAUDE-SONNET5-MEDIUM-B03-V1",
+  "question": "Does the B03 quality outcome reproduce when the evaluation is fully blind before the reveal?",
+  "arm_order": [
+    "DIRECT",
+    "AGENTLAB"
+  ],
+  "model": "claude-sonnet-5",
+  "effort": "medium",
+  "billing_mode": "subscription_only",
+  "baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "profile": {
+    "agentlab": "claude-build-worker-subscription-sonnet5-medium-v3",
+    "direct": null
+  },
+  "sessions": "fresh_per_arm",
+  "execution": "serial",
+  "max_repairs": 1,
+  "repair_policy": {
+    "direct": "fresh session, the original TASK.md, and the objective validator diagnostic only",
+    "agentlab": "the bounded repair path of the frozen baseline",
+    "third_attempt": "forbidden"
+  },
+  "blind_evaluation": true,
+  "visual_required": true,
+  "visual_capture_config": "same screenshot set as CLAUDE-SONNET5-MEDIUM-B03-V1; connector previews from scripts/visual-evidence/fixtures/b03-connector-preview-pages.json",
+  "frozen_inputs": {
+    "seed_sha": "ccaa84f46741f188f8bd053accbd9308659641f5",
+    "task_sha256": "54b1681097e943f8f9a4626937d6320097c2a61fcb12541cff830300b8ea0cef",
+    "rubric_sha256": "72224ac65770bf5bae5eb72828f017d42985e3e25917fe49f3975dc9258d8abe",
+    "plan_file": "benchmarks/B03-luma/plan.yaml",
+    "plan_file_sha256": "63d0046d5ae5889bb7e8688c8f00d60781d21f2f93a1ab302b1c9eee3255f10e"
+  },
+  "validation": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "timeout_seconds": 240
+    }
+  ],
+  "protected_files": [
+    "validation/**"
+  ],
+  "special_constraints": [
+    "Use benchmarks/B03-luma/ byte for byte. Do not modify TASK.md, rubric.md, seed/, validation/, manifest.json or plan.yaml.",
+    "No artifact of CLAUDE-SONNET5-MEDIUM-B03-V1 may reach a worker or the evaluator before the R2 score seal: no score, no winner, no screenshot, no source, no patch, no metric, no narrative.",
+    "R2 workspaces are created fresh from the frozen seed. No R1 directory, cache, session or branch is reused."
+  ],
+  "known_limitations": [
+    "CLAUDE-SONNET5-MEDIUM-B03-V1 finished with visual scoring pending; no blind quality score exists for R1. R2 is the first fully blind quality measurement of this task and must be scored end to end."
+  ],
+  "status": "PREPARED_NOT_STARTED",
+  "references": {
+    "execution_order": "protocols/sonnet5-medium-battery-v2/execution-order.md",
+    "evaluation_protocol": "protocols/sonnet5-medium-battery-v2/evaluation-protocol.md",
+    "metrics_schema": "protocols/sonnet5-medium-battery-v2/metrics-schema.md",
+    "replication_policy": "protocols/sonnet5-medium-battery-v2/replication-policy.md",
+    "validity_policy": "protocols/sonnet5-medium-battery-v2/validity-policy.md"
+  }
+}

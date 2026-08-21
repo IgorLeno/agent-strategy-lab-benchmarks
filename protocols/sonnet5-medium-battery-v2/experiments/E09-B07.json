@@ -1,0 +1,94 @@
+{
+  "schema_version": 1,
+  "battery_id": "SONNET5-MEDIUM-BATTERY-V2",
+  "slot": "E09",
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B07-V1",
+  "benchmark_id": "B07-stream",
+  "benchmark_path": "benchmarks/B07-stream",
+  "kind": "NEW_CONTEXT",
+  "replication_of": null,
+  "question": "Does the control plane change the outcome when correctness alone is not enough and memory and determinism are graded properties?",
+  "arm_order": [
+    "DIRECT",
+    "AGENTLAB"
+  ],
+  "model": "claude-sonnet-5",
+  "effort": "medium",
+  "billing_mode": "subscription_only",
+  "baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "profile": {
+    "agentlab": "claude-build-worker-subscription-sonnet5-medium-v3",
+    "direct": null
+  },
+  "sessions": "fresh_per_arm",
+  "execution": "serial",
+  "max_repairs": 1,
+  "repair_policy": {
+    "direct": "fresh session, the original TASK.md, and the objective validator diagnostic only",
+    "agentlab": "the bounded repair path of the frozen baseline",
+    "third_attempt": "forbidden"
+  },
+  "blind_evaluation": true,
+  "visual_required": false,
+  "visual_capture_config": null,
+  "frozen_inputs": {
+    "seed_sha": "f7fd072115e0efa695be6182cb463ca9c109900a",
+    "task_sha256": "150cb4323860370dc0fe2c06413220ea600470fdd3d31c7d1b4637210fb46822",
+    "rubric_sha256": "7fb2b0137b7cfcb9c627c863b34fde33985fcadc8b50da7316e5a185f237360a",
+    "plan_file": "benchmarks/B07-stream/plan.yaml",
+    "plan_file_sha256": "5bb294e32f7d0d3b4043a946058d1e0734ff60b586127462c7f043df83ab3dd5"
+  },
+  "validation": [
+    {
+      "argv": [
+        "go",
+        "build",
+        "./..."
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "go",
+        "vet",
+        "./..."
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "go",
+        "test",
+        "./..."
+      ],
+      "timeout_seconds": 300
+    },
+    {
+      "argv": [
+        "go",
+        "run",
+        "./validation"
+      ],
+      "timeout_seconds": 600
+    }
+  ],
+  "protected_files": [
+    "validation/**",
+    "go.mod"
+  ],
+  "special_constraints": [
+    "Restore validation/ and go.mod into each workspace from the frozen benchmark before running the validators.",
+    "Standard library only: go.mod must declare no dependency and there must be no go.sum.",
+    "The performance fixture is generated at validation time from a frozen seed; it is not stored in the corpus."
+  ],
+  "known_limitations": [],
+  "status": "PREPARED_NOT_STARTED",
+  "references": {
+    "execution_order": "protocols/sonnet5-medium-battery-v2/execution-order.md",
+    "evaluation_protocol": "protocols/sonnet5-medium-battery-v2/evaluation-protocol.md",
+    "metrics_schema": "protocols/sonnet5-medium-battery-v2/metrics-schema.md",
+    "replication_policy": "protocols/sonnet5-medium-battery-v2/replication-policy.md",
+    "validity_policy": "protocols/sonnet5-medium-battery-v2/validity-policy.md"
+  }
+}

@@ -1,0 +1,91 @@
+{
+  "schema_version": 1,
+  "battery_id": "SONNET5-MEDIUM-BATTERY-V2",
+  "slot": "E07",
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B05-V1",
+  "benchmark_id": "B05-relay",
+  "benchmark_path": "benchmarks/B05-relay",
+  "kind": "NEW_CONTEXT",
+  "replication_of": null,
+  "question": "Does the control plane help or hinder when the task is diagnosing regressions in an existing system rather than building one?",
+  "arm_order": [
+    "DIRECT",
+    "AGENTLAB"
+  ],
+  "model": "claude-sonnet-5",
+  "effort": "medium",
+  "billing_mode": "subscription_only",
+  "baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "profile": {
+    "agentlab": "claude-build-worker-subscription-sonnet5-medium-v3",
+    "direct": null
+  },
+  "sessions": "fresh_per_arm",
+  "execution": "serial",
+  "max_repairs": 1,
+  "repair_policy": {
+    "direct": "fresh session, the original TASK.md, and the objective validator diagnostic only",
+    "agentlab": "the bounded repair path of the frozen baseline",
+    "third_attempt": "forbidden"
+  },
+  "blind_evaluation": true,
+  "visual_required": false,
+  "visual_capture_config": null,
+  "frozen_inputs": {
+    "seed_sha": "e9964d2ca14db42adf8de079d926149178bceb1f",
+    "task_sha256": "2f82d177ee12240de0d1cb94442eca16d8de061a6fe01ae45be5d66b3a64597c",
+    "rubric_sha256": "90215a57edb173c40b548bb22b0eaa98bcf22b579cd9864767b16fbef200bf99",
+    "plan_file": "benchmarks/B05-relay/plan.yaml",
+    "plan_file_sha256": "73a2414594fc3d64d8ab48eeb633a5758160a5bd8d1ab257699a2e042f802011"
+  },
+  "validation": [
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "compileall",
+        "-q",
+        "src",
+        "tests"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-t",
+        "tests"
+      ],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "python3",
+        "validation/check.py"
+      ],
+      "timeout_seconds": 300
+    }
+  ],
+  "protected_files": [
+    "validation/**"
+  ],
+  "special_constraints": [
+    "Restore validation/ into each workspace from the frozen benchmark before running the validators.",
+    "Standard library only. The validator rejects a networking import under src/."
+  ],
+  "known_limitations": [],
+  "status": "PREPARED_NOT_STARTED",
+  "references": {
+    "execution_order": "protocols/sonnet5-medium-battery-v2/execution-order.md",
+    "evaluation_protocol": "protocols/sonnet5-medium-battery-v2/evaluation-protocol.md",
+    "metrics_schema": "protocols/sonnet5-medium-battery-v2/metrics-schema.md",
+    "replication_policy": "protocols/sonnet5-medium-battery-v2/replication-policy.md",
+    "validity_policy": "protocols/sonnet5-medium-battery-v2/validity-policy.md"
+  }
+}

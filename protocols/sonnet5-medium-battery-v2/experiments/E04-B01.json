@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "battery_id": "SONNET5-MEDIUM-BATTERY-V2",
+  "slot": "E04",
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B01-V1",
+  "benchmark_id": "B01-screenshot",
+  "benchmark_path": "benchmarks/B01-screenshot",
+  "kind": "NEW_CONTEXT",
+  "replication_of": null,
+  "question": "Does Agent Lab improve fidelity and responsive adaptation when the reference image is the specification?",
+  "arm_order": [
+    "AGENTLAB",
+    "DIRECT"
+  ],
+  "model": "claude-sonnet-5",
+  "effort": "medium",
+  "billing_mode": "subscription_only",
+  "baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "profile": {
+    "agentlab": "claude-build-worker-subscription-sonnet5-medium-v3",
+    "direct": null
+  },
+  "sessions": "fresh_per_arm",
+  "execution": "serial",
+  "max_repairs": 1,
+  "repair_policy": {
+    "direct": "fresh session, the original TASK.md, and the objective validator diagnostic only",
+    "agentlab": "the bounded repair path of the frozen baseline",
+    "third_attempt": "forbidden"
+  },
+  "blind_evaluation": true,
+  "visual_required": true,
+  "visual_capture_config": "protocols/sonnet5-medium-battery-v2/visual/b01-screenshot-visual-capture.json",
+  "frozen_inputs": {
+    "seed_sha": "6e05bc6c557ff0d6bbddcbb2d92fabb1f01478ee",
+    "task_sha256": "f7c737526774b34860860a1fa5f654bca4ce7393b0d7469bb599e715fdaae3b0",
+    "rubric_sha256": "c1c6f631bfeec1cd43f3a328add0b6e485ddb2e53c40d4e47b1f7a9ec771db3a",
+    "plan_file": "benchmarks/B01-screenshot/plan.yaml",
+    "plan_file_sha256": "51f5b63818e529cb17f9942d7cfff67e808f37a9d0ca803193ecf27cd940e49f"
+  },
+  "validation": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "timeout_seconds": 240
+    }
+  ],
+  "protected_files": [
+    "validation/**"
+  ],
+  "special_constraints": [
+    "Use benchmarks/B01-screenshot/rubric.md exactly as frozen. Do not add a metric to the score.",
+    "A perceptual or pixel-difference measurement against reference/reference.png may be recorded as auxiliary evidence only: it must not alter the rubric, decide the winner, or replace human visual scoring, and it is stored outside evaluation/score-seal.md.",
+    "reference/reference.png may appear in the blind bundle: it is identical for both candidates and carries no arm identity.",
+    "Do not modify benchmarks/B01-screenshot/ in any way."
+  ],
+  "known_limitations": [
+    "B01 has no visual-capture.json inside the frozen benchmark directory. The capture configuration for this battery lives in the protocol directory so benchmarks/B01-screenshot/ stays byte-identical."
+  ],
+  "status": "PREPARED_NOT_STARTED",
+  "references": {
+    "execution_order": "protocols/sonnet5-medium-battery-v2/execution-order.md",
+    "evaluation_protocol": "protocols/sonnet5-medium-battery-v2/evaluation-protocol.md",
+    "metrics_schema": "protocols/sonnet5-medium-battery-v2/metrics-schema.md",
+    "replication_policy": "protocols/sonnet5-medium-battery-v2/replication-policy.md",
+    "validity_policy": "protocols/sonnet5-medium-battery-v2/validity-policy.md"
+  }
+}

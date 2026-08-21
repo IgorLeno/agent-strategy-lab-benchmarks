@@ -1,0 +1,155 @@
+{
+  "kind": "VisualCaptureConfigV1",
+  "schema_version": 1,
+  "benchmark_id": "B01-screenshot",
+  "capture_protocol": "b01-screenshot-visual-v1",
+  "device_scale_factor": 1,
+  "viewports": {
+    "desktop": { "width": 1440, "height": 900 },
+    "mobile": { "width": 390, "height": 844 }
+  },
+  "notes": {
+    "location": "This file lives in the battery protocol, not in benchmarks/B01-screenshot/, because that benchmark is frozen and must stay byte-identical. It is evidence configuration: it does not change TASK.md, rubric.md, seed/ or validation/, and it is not part of the frozen benchmark hashes.",
+    "frozen_task": "Uses only the markup contract of benchmarks/B01-screenshot/TASK.md section 6: app-shell, sidebar, stat-card, chart, projects-table, activity, quota. B01 has no interactive filter, so every shot is a default-state capture with no actions.",
+    "reference": "The evaluator compares the desktop captures against benchmarks/B01-screenshot/reference/reference.png, which is identical for both candidates and therefore carries no arm identity.",
+    "review_pages": [
+      "p01 desktop full page",
+      "p02 desktop viewport",
+      "p03 sidebar",
+      "p04 stat cards",
+      "p05 chart",
+      "p06 projects table",
+      "p07 activity and quota",
+      "p08 mobile full page",
+      "p09 mobile viewport",
+      "p10 mobile stat cards",
+      "p11 mobile projects table"
+    ]
+  },
+  "screenshots": [
+    {
+      "id": "desktop-full",
+      "filename": "desktop-full.png",
+      "viewport": "desktop",
+      "full_page": true,
+      "target": { "kind": "page" },
+      "state": "default",
+      "review_label": "p01 desktop full page",
+      "actions": []
+    },
+    {
+      "id": "desktop-shell",
+      "filename": "desktop-shell.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": { "kind": "page" },
+      "state": "default",
+      "review_label": "p02 desktop viewport",
+      "actions": []
+    },
+    {
+      "id": "sidebar",
+      "filename": "sidebar.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": { "kind": "testid", "testid": "sidebar" },
+      "state": "default",
+      "review_label": "p03 sidebar",
+      "actions": []
+    },
+    {
+      "id": "stat-cards",
+      "filename": "stat-cards.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": { "kind": "testid", "testid": "stat-card", "all": true },
+      "state": "default",
+      "review_label": "p04 stat cards",
+      "actions": []
+    },
+    {
+      "id": "chart",
+      "filename": "chart.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": { "kind": "testid", "testid": "chart" },
+      "state": "default",
+      "review_label": "p05 chart",
+      "actions": []
+    },
+    {
+      "id": "projects-table",
+      "filename": "projects-table.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": { "kind": "testid", "testid": "projects-table" },
+      "state": "default",
+      "review_label": "p06 projects table",
+      "actions": []
+    },
+    {
+      "id": "activity-quota",
+      "filename": "activity-quota.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": {
+        "kind": "union",
+        "hooks": [{ "testid": "activity" }, { "testid": "quota" }]
+      },
+      "state": "default",
+      "review_label": "p07 activity and quota",
+      "actions": []
+    },
+    {
+      "id": "mobile-full",
+      "filename": "mobile-full.png",
+      "viewport": "mobile",
+      "full_page": true,
+      "target": { "kind": "page" },
+      "state": "default",
+      "review_label": "p08 mobile full page",
+      "actions": []
+    },
+    {
+      "id": "mobile-shell",
+      "filename": "mobile-shell.png",
+      "viewport": "mobile",
+      "full_page": false,
+      "target": { "kind": "page" },
+      "state": "default",
+      "review_label": "p09 mobile viewport",
+      "actions": []
+    },
+    {
+      "id": "mobile-stat-cards",
+      "filename": "mobile-stat-cards.png",
+      "viewport": "mobile",
+      "full_page": false,
+      "target": { "kind": "testid", "testid": "stat-card", "all": true },
+      "state": "default",
+      "review_label": "p10 mobile stat cards",
+      "actions": []
+    },
+    {
+      "id": "mobile-projects-table",
+      "filename": "mobile-projects-table.png",
+      "viewport": "mobile",
+      "full_page": false,
+      "target": { "kind": "testid", "testid": "projects-table" },
+      "state": "default",
+      "review_label": "p11 mobile projects table",
+      "actions": []
+    }
+  ],
+  "connector_previews": [
+    { "id": "01-desktop-shell", "filename": "01-desktop-shell.jpg", "source_screenshot_id": "desktop-shell" },
+    { "id": "02-sidebar", "filename": "02-sidebar.jpg", "source_screenshot_id": "sidebar" },
+    { "id": "03-stat-cards", "filename": "03-stat-cards.jpg", "source_screenshot_id": "stat-cards" },
+    { "id": "04-chart", "filename": "04-chart.jpg", "source_screenshot_id": "chart" },
+    { "id": "05-projects-table", "filename": "05-projects-table.jpg", "source_screenshot_id": "projects-table" },
+    { "id": "06-activity-quota", "filename": "06-activity-quota.jpg", "source_screenshot_id": "activity-quota" },
+    { "id": "07-mobile-shell", "filename": "07-mobile-shell.jpg", "source_screenshot_id": "mobile-shell" },
+    { "id": "08-mobile-stat-cards", "filename": "08-mobile-stat-cards.jpg", "source_screenshot_id": "mobile-stat-cards" },
+    { "id": "09-mobile-projects-table", "filename": "09-mobile-projects-table.jpg", "source_screenshot_id": "mobile-projects-table" }
+  ]
+}

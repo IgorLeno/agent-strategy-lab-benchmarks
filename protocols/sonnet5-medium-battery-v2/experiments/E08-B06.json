@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "battery_id": "SONNET5-MEDIUM-BATTERY-V2",
+  "slot": "E08",
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B06-V1",
+  "benchmark_id": "B06-bridge",
+  "benchmark_path": "benchmarks/B06-bridge",
+  "kind": "NEW_CONTEXT",
+  "replication_of": null,
+  "question": "Does the control plane help carry one change coherently across every layer it touches?",
+  "arm_order": [
+    "AGENTLAB",
+    "DIRECT"
+  ],
+  "model": "claude-sonnet-5",
+  "effort": "medium",
+  "billing_mode": "subscription_only",
+  "baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "profile": {
+    "agentlab": "claude-build-worker-subscription-sonnet5-medium-v3",
+    "direct": null
+  },
+  "sessions": "fresh_per_arm",
+  "execution": "serial",
+  "max_repairs": 1,
+  "repair_policy": {
+    "direct": "fresh session, the original TASK.md, and the objective validator diagnostic only",
+    "agentlab": "the bounded repair path of the frozen baseline",
+    "third_attempt": "forbidden"
+  },
+  "blind_evaluation": true,
+  "visual_required": false,
+  "visual_capture_config": null,
+  "frozen_inputs": {
+    "seed_sha": "7c5e7b37040d0d65adc7ed10a3f75a61c717e53c",
+    "task_sha256": "55d4e4fcc6057efe74496fd3cfec72f92bb57da032314f6726d0d1d18cdbb88a",
+    "rubric_sha256": "2a388a7d00f0ffd05ddee7095ad3770ffe37a0a72983eadc5dbb73d42dc236dc",
+    "plan_file": "benchmarks/B06-bridge/plan.yaml",
+    "plan_file_sha256": "fae2b2a64e8bafde115b330a810f69f7cafa32eb9756035b57fcaf7fad2816b1"
+  },
+  "validation": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "timeout_seconds": 300
+    }
+  ],
+  "protected_files": [
+    "validation/**",
+    "package.json",
+    "package-lock.json",
+    "tsconfig.json",
+    "tsconfig.base.json",
+    "packages/*/package.json",
+    "packages/*/tsconfig.json",
+    "apps/*/package.json",
+    "apps/*/tsconfig.json"
+  ],
+  "special_constraints": [
+    "node_modules/ must be installed in each workspace before the run; there is no network access during the run.",
+    "Restore validation/, tsconfig*.json and every package.json into each workspace from the frozen benchmark before running the validators.",
+    "The validator reports per-layer groups: parser, serializer, migration, api, client, cli. A candidate that carries five of six layers fails."
+  ],
+  "known_limitations": [],
+  "status": "PREPARED_NOT_STARTED",
+  "references": {
+    "execution_order": "protocols/sonnet5-medium-battery-v2/execution-order.md",
+    "evaluation_protocol": "protocols/sonnet5-medium-battery-v2/evaluation-protocol.md",
+    "metrics_schema": "protocols/sonnet5-medium-battery-v2/metrics-schema.md",
+    "replication_policy": "protocols/sonnet5-medium-battery-v2/replication-policy.md",
+    "validity_policy": "protocols/sonnet5-medium-battery-v2/validity-policy.md"
+  }
+}

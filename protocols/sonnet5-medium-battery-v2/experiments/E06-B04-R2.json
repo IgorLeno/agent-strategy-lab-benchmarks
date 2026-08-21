@@ -1,0 +1,95 @@
+{
+  "schema_version": 1,
+  "battery_id": "SONNET5-MEDIUM-BATTERY-V2",
+  "slot": "E06",
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B04-R2",
+  "benchmark_id": "B04-atlas",
+  "benchmark_path": "benchmarks/B04-atlas",
+  "kind": "REPLICATION",
+  "replication_of": "CLAUDE-SONNET5-MEDIUM-B04-V1",
+  "question": "Does the one observed Agent Lab lead reproduce in a second stochastic realisation of the same task?",
+  "arm_order": [
+    "AGENTLAB",
+    "DIRECT"
+  ],
+  "model": "claude-sonnet-5",
+  "effort": "medium",
+  "billing_mode": "subscription_only",
+  "baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "profile": {
+    "agentlab": "claude-build-worker-subscription-sonnet5-medium-v3",
+    "direct": null
+  },
+  "sessions": "fresh_per_arm",
+  "execution": "serial",
+  "max_repairs": 1,
+  "repair_policy": {
+    "direct": "fresh session, the original TASK.md, and the objective validator diagnostic only",
+    "agentlab": "the bounded repair path of the frozen baseline",
+    "third_attempt": "forbidden"
+  },
+  "blind_evaluation": true,
+  "visual_required": true,
+  "visual_capture_config": "benchmarks/B04-atlas/visual-capture.json",
+  "frozen_inputs": {
+    "seed_sha": "7f95c4b294e459ed017fb7e5403aa3ff342fc076",
+    "task_sha256": "4fcff64ab9aac698a88ef53925762eae7d4d3de4d108f2568fb7108db447fdc2",
+    "rubric_sha256": "1cc77fbd23cdc11f028b3727b4d13f2c16a68f8e5dc3bc76013ae2c14cd3c9d4",
+    "plan_file": "benchmarks/B04-atlas/plan.yaml",
+    "plan_file_sha256": "0864286c721e71866f0d836f05db7fca240ecdbc6ec3425989ea29231805bb0b"
+  },
+  "validation": [
+    {
+      "argv": [
+        "npm",
+        "run",
+        "typecheck"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "build"
+      ],
+      "timeout_seconds": 120
+    },
+    {
+      "argv": [
+        "npm",
+        "test"
+      ],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "npm",
+        "run",
+        "check"
+      ],
+      "timeout_seconds": 240
+    }
+  ],
+  "protected_files": [
+    "validation/**"
+  ],
+  "special_constraints": [
+    "Use benchmarks/B04-atlas/ byte for byte. Do not modify TASK.md, rubric.md, seed/, validation/, data/, visual-capture.json, manifest.json or plan.yaml.",
+    "The R1 result (+6 quality, lower wall/tokens/API-equivalent for Agent Lab) is scientific motivation for the replication, not an operational expectation. It is not shown to any worker, and not to the evaluator before the R2 score seal.",
+    "Do not correct the B04 validator. See known_limitations.",
+    "R2 workspaces are created fresh from the frozen seed. No R1 directory, cache, session or branch is reused."
+  ],
+  "known_limitations": [
+    "Known B04 validator limitation intentionally preserved for R2: benchmarks/B04-atlas/validation/check.mjs tests the stale-panel transition on the period axis and not on the segment axis, although TASK.md requires every panel to react to both. Fixing it would make R2 a different experiment instead of a replication. Do not patch B04."
+  ],
+  "status": "PREPARED_NOT_STARTED",
+  "references": {
+    "execution_order": "protocols/sonnet5-medium-battery-v2/execution-order.md",
+    "evaluation_protocol": "protocols/sonnet5-medium-battery-v2/evaluation-protocol.md",
+    "metrics_schema": "protocols/sonnet5-medium-battery-v2/metrics-schema.md",
+    "replication_policy": "protocols/sonnet5-medium-battery-v2/replication-policy.md",
+    "validity_policy": "protocols/sonnet5-medium-battery-v2/validity-policy.md"
+  }
+}

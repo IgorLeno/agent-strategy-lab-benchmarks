@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "battery_id": "SONNET5-MEDIUM-BATTERY-V2",
+  "protocol_path": "protocols/sonnet5-medium-battery-v2",
+  "status": "PREPARED_NOT_STARTED",
+  "frozen_at": "2026-08-21",
+  "agent_lab_baseline": "14149421ca6d2a430ddcd4208116a12fa2c0c987",
+  "excluded_agent_lab_commit": "a24c0cb1d55724438c6a1c13d546797f11512084",
+  "model": "claude-sonnet-5",
+  "effort": "medium",
+  "billing_mode": "subscription_only",
+  "agentlab_profile": "claude-build-worker-subscription-sonnet5-medium-v3",
+  "direct_profile": null,
+  "sessions": "fresh_per_arm",
+  "execution": "serial",
+  "max_repairs_per_arm": 1,
+  "blind_evaluation": true,
+  "order_counterbalancing": {
+    "direct_first": 3,
+    "agentlab_first": 3
+  },
+  "experiments": [
+    {
+      "slot": "E04",
+      "experiment_id": "CLAUDE-SONNET5-MEDIUM-B01-V1",
+      "benchmark_id": "B01-screenshot",
+      "benchmark_path": "benchmarks/B01-screenshot",
+      "kind": "NEW_CONTEXT",
+      "replication_of": null,
+      "arm_order": [
+        "AGENTLAB",
+        "DIRECT"
+      ],
+      "visual_evaluation": true,
+      "max_repairs": 1,
+      "status": "PREPARED_NOT_STARTED",
+      "packet": "protocols/sonnet5-medium-battery-v2/experiments/E04-B01.json"
+    },
+    {
+      "slot": "E05",
+      "experiment_id": "CLAUDE-SONNET5-MEDIUM-B03-R2",
+      "benchmark_id": "B03-luma",
+      "benchmark_path": "benchmarks/B03-luma",
+      "kind": "REPLICATION",
+      "replication_of": "CLAUDE-SONNET5-MEDIUM-B03-V1",
+      "arm_order": [
+        "DIRECT",
+        "AGENTLAB"
+      ],
+      "visual_evaluation": true,
+      "max_repairs": 1,
+      "status": "PREPARED_NOT_STARTED",
+      "packet": "protocols/sonnet5-medium-battery-v2/experiments/E05-B03-R2.json"
+    },
+    {
+      "slot": "E06",
+      "experiment_id": "CLAUDE-SONNET5-MEDIUM-B04-R2",
+      "benchmark_id": "B04-atlas",
+      "benchmark_path": "benchmarks/B04-atlas",
+      "kind": "REPLICATION",
+      "replication_of": "CLAUDE-SONNET5-MEDIUM-B04-V1",
+      "arm_order": [
+        "AGENTLAB",
+        "DIRECT"
+      ],
+      "visual_evaluation": true,
+      "max_repairs": 1,
+      "status": "PREPARED_NOT_STARTED",
+      "packet": "protocols/sonnet5-medium-battery-v2/experiments/E06-B04-R2.json"
+    },
+    {
+      "slot": "E07",
+      "experiment_id": "CLAUDE-SONNET5-MEDIUM-B05-V1",
+      "benchmark_id": "B05-relay",
+      "benchmark_path": "benchmarks/B05-relay",
+      "kind": "NEW_CONTEXT",
+      "replication_of": null,
+      "arm_order": [
+        "DIRECT",
+        "AGENTLAB"
+      ],
+      "visual_evaluation": false,
+      "max_repairs": 1,
+      "status": "PREPARED_NOT_STARTED",
+      "packet": "protocols/sonnet5-medium-battery-v2/experiments/E07-B05.json"
+    },
+    {
+      "slot": "E08",
+      "experiment_id": "CLAUDE-SONNET5-MEDIUM-B06-V1",
+      "benchmark_id": "B06-bridge",
+      "benchmark_path": "benchmarks/B06-bridge",
+      "kind": "NEW_CONTEXT",
+      "replication_of": null,
+      "arm_order": [
+        "AGENTLAB",
+        "DIRECT"
+      ],
+      "visual_evaluation": false,
+      "max_repairs": 1,
+      "status": "PREPARED_NOT_STARTED",
+      "packet": "protocols/sonnet5-medium-battery-v2/experiments/E08-B06.json"
+    },
+    {
+      "slot": "E09",
+      "experiment_id": "CLAUDE-SONNET5-MEDIUM-B07-V1",
+      "benchmark_id": "B07-stream",
+      "benchmark_path": "benchmarks/B07-stream",
+      "kind": "NEW_CONTEXT",
+      "replication_of": null,
+      "arm_order": [
+        "DIRECT",
+        "AGENTLAB"
+      ],
+      "visual_evaluation": false,
+      "max_repairs": 1,
+      "status": "PREPARED_NOT_STARTED",
+      "packet": "protocols/sonnet5-medium-battery-v2/experiments/E09-B07.json"
+    }
+  ]
+}
