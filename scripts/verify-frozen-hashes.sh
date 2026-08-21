@@ -31,8 +31,12 @@ for manifest_path in sorted((root / "benchmarks").glob("*/manifest.json")):
         (bench / "seed" / "TASK.md", man["task_sha256_in_seed"], "seed/TASK.md"),
         (bench / "rubric.md", man["rubric_sha256"], "rubric.md"),
         (bench / "plan.yaml", man["plan_file_sha256"], "plan.yaml"),
-        (bench / "seed" / "package-lock.json", man["package_lock_sha256"], "package-lock.json"),
     ]
+    # B01-B04 and B06 pin an npm lockfile; B05 (Python) and B07 (Go) have none.
+    if "package_lock_sha256" in man:
+        checks.append(
+            (bench / "seed" / "package-lock.json", man["package_lock_sha256"], "package-lock.json")
+        )
     for path, expected, label in checks:
         got = sha256(path)
         if got != expected:
@@ -63,8 +67,16 @@ for manifest_path in sorted((root / "benchmarks").glob("*/manifest.json")):
             fail = 1
         else:
             print(f"OK   {bid} validator {validator['path']}")
-        seed_copy = bench / "seed" / "scripts" / Path(validator["path"]).relative_to("validation")
-        if seed_copy.exists() and sha256(seed_copy) != validator["sha256"]:
+        # The benchmark-root validation/ tree is a byte-identical copy of the
+        # validator as it ships inside the seed. Where that copy lives inside
+        # the seed differs per benchmark: B01-B04 ship it as seed/scripts/,
+        # B05-B07 as seed/validation/.
+        seed_root = man.get("validator_seed_root", "scripts")
+        seed_copy = bench / "seed" / seed_root / Path(validator["path"]).relative_to("validation")
+        if not seed_copy.exists():
+            print(f"FAIL {bid} missing seed copy of {validator['path']} at {seed_copy.relative_to(bench)}")
+            fail = 1
+        elif sha256(seed_copy) != validator["sha256"]:
             print(f"FAIL {bid} seed copy diverges from validation/ for {validator['path']}")
             fail = 1
 
