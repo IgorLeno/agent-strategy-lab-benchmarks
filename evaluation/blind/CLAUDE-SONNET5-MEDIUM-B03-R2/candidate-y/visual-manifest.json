@@ -1,0 +1,218 @@
+{
+  "kind": "VisualEvidenceManifestV1",
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B03-R2",
+  "candidate_id": "candidate-y",
+  "source_build_identity": "unpublished-arm-identity",
+  "capture_protocol": "b03-luma-visual-v1",
+  "generated_at": "2026-08-21T20:15:57.777Z",
+  "screenshots": [
+    {
+      "id": "desktop-full",
+      "filename": "desktop-full.png",
+      "sha256": "3e0a4b3e05dce0350fdab9bbe54d5f10054a2094b68efb962837620a0637611b",
+      "width": 1440,
+      "height": 6277,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": true,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 1,
+      "pdf_page_span": 5,
+      "review_label": "desktop full page"
+    },
+    {
+      "id": "desktop-hero",
+      "filename": "desktop-hero.png",
+      "sha256": "1dbcdceb9bd263214bfe60e0baf869c70e2c8000758877e451cb8c9d60c7cc4e",
+      "width": 1180,
+      "height": 645,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 6,
+      "pdf_page_span": 1,
+      "review_label": "desktop hero"
+    },
+    {
+      "id": "mobile-full",
+      "filename": "mobile-full.png",
+      "sha256": "159e4d7969bab7651ff268ef1669aa98992c2d39a35c6f6b451b4cbbea15579d",
+      "width": 390,
+      "height": 10766,
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "full_page": true,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 7,
+      "pdf_page_span": 8,
+      "review_label": "mobile full page"
+    },
+    {
+      "id": "mobile-hero",
+      "filename": "mobile-hero.png",
+      "sha256": "97b46b4c727dbb4903d09443e1a60b547678d61c745d396c12d21e744ff2fdc9",
+      "width": 390,
+      "height": 1109,
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 15,
+      "pdf_page_span": 1,
+      "review_label": "mobile hero"
+    },
+    {
+      "id": "day-cycle-state-1",
+      "filename": "day-cycle-state-1.png",
+      "sha256": "24550a023d4ceaf7a59d73b7d9c0e7ad65e5c55235ec7de9a88d2460b11d2fed",
+      "width": 1180,
+      "height": 827,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "day-cycle-option-0",
+      "pdf_page": 16,
+      "pdf_page_span": 1,
+      "review_label": "day cycle state 1"
+    },
+    {
+      "id": "day-cycle-state-2",
+      "filename": "day-cycle-state-2.png",
+      "sha256": "24550a023d4ceaf7a59d73b7d9c0e7ad65e5c55235ec7de9a88d2460b11d2fed",
+      "width": 1180,
+      "height": 827,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "day-cycle-option-1",
+      "pdf_page": 17,
+      "pdf_page_span": 1,
+      "review_label": "day cycle state 2"
+    },
+    {
+      "id": "faq-open",
+      "filename": "faq-open.png",
+      "sha256": "101fa49b2445d9eb4d99881864c7654bee74f585908a9fbce234a84138e427bb",
+      "width": 1180,
+      "height": 1006,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "faq-question-0-open",
+      "pdf_page": 18,
+      "pdf_page_span": 1,
+      "review_label": "faq open"
+    }
+  ],
+  "pdf_pages": [
+    {
+      "page": 1,
+      "screenshot_id": "desktop-full",
+      "filename": "desktop-full.png"
+    },
+    {
+      "page": 2,
+      "screenshot_id": "desktop-full",
+      "filename": "desktop-full.png"
+    },
+    {
+      "page": 3,
+      "screenshot_id": "desktop-full",
+      "filename": "desktop-full.png"
+    },
+    {
+      "page": 4,
+      "screenshot_id": "desktop-full",
+      "filename": "desktop-full.png"
+    },
+    {
+      "page": 5,
+      "screenshot_id": "desktop-full",
+      "filename": "desktop-full.png"
+    },
+    {
+      "page": 6,
+      "screenshot_id": "desktop-hero",
+      "filename": "desktop-hero.png"
+    },
+    {
+      "page": 7,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 8,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 9,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 10,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 11,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 12,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 13,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 14,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 15,
+      "screenshot_id": "mobile-hero",
+      "filename": "mobile-hero.png"
+    },
+    {
+      "page": 16,
+      "screenshot_id": "day-cycle-state-1",
+      "filename": "day-cycle-state-1.png"
+    },
+    {
+      "page": 17,
+      "screenshot_id": "day-cycle-state-2",
+      "filename": "day-cycle-state-2.png"
+    },
+    {
+      "page": 18,
+      "screenshot_id": "faq-open",
+      "filename": "faq-open.png"
+    }
+  ],
+  "review_pdf": {
+    "filename": "visual-review.pdf",
+    "sha256": "265f3afd7bc3c792b258ba0f2a87be1c16807b3a491aa0c9914be4b64044f2b6",
+    "page_count": 18
+  },
+  "notes": {
+    "png_canonical": true,
+    "pdf_is_review_transport": true,
+    "pdf_byte_identity": "Chrome embute CreationDate/ModDate/ID. Reruns com os mesmos PNGs são semanticamente equivalentes (páginas, mapping, SHA256 dos PNGs) mas o SHA256 do PDF pode mudar. Não falsificamos determinismo."
+  }
+}

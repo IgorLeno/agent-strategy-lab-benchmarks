@@ -1,0 +1,113 @@
+{
+  "kind": "ConnectorPreviewManifestV1",
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B03-R2",
+  "candidate_id": "candidate-x",
+  "capture_protocol": "visual-evidence-v1",
+  "generated_at": "2026-08-21T20:16:02.126Z",
+  "size_budget_bytes": 40960,
+  "algorithm": {
+    "preferred_width": 960,
+    "min_width": 800,
+    "width_step_px": 80,
+    "quality_steps": [
+      80,
+      72,
+      64,
+      56,
+      48,
+      40,
+      32
+    ],
+    "no_upscale": true,
+    "no_color_correction": true,
+    "notes": "Tenta quality_steps em cada largura da escada (960→800, ou source se menor). Se nenhuma combinação couber em 40960 bytes sem largura < min(800, source), falha. Full-page alta não deve ser preview primário."
+  },
+  "previews": [
+    {
+      "id": "desktop-hero",
+      "filename": "desktop-hero.jpg",
+      "sha256": "1a56ccc27c76db5d1039afd4c052749c2cfb17a3c3228e9218567380321bb793",
+      "byte_size": 37034,
+      "source_png": {
+        "filename": "desktop-hero.png",
+        "sha256": "02849798ed145a48c0367e56df6b8c3f05a87567c7af7a3f37bf49950107f289"
+      },
+      "width": 960,
+      "height": 544,
+      "encoding": "jpeg",
+      "jpeg_quality": 72,
+      "candidate_id": "candidate-x",
+      "requested_width": 960,
+      "requested_height": 544
+    },
+    {
+      "id": "mobile-hero",
+      "filename": "mobile-hero.jpg",
+      "sha256": "f3c807bfe5df8c0edbfc145a46ae611047f42e0f04ea64f98fab5bdec15f84ff",
+      "byte_size": 39610,
+      "source_png": {
+        "filename": "mobile-hero.png",
+        "sha256": "02a393049c38f4ae28455215b45f93eff1d0c998318a9572453dc259abb06e96"
+      },
+      "width": 390,
+      "height": 1098,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 390,
+      "requested_height": 1098
+    },
+    {
+      "id": "day-cycle-state-1",
+      "filename": "day-cycle-state-1.jpg",
+      "sha256": "f9e1d2f7730eeb37a149ce8ac4606b1a982e7e96c222b09891859a0e5377657a",
+      "byte_size": 9285,
+      "source_png": {
+        "filename": "day-cycle-state-1.png",
+        "sha256": "b9243cd1dec4123a123d2184abd7934b5aeb17c5d523b87bef7093d1fc999b7b"
+      },
+      "width": 960,
+      "height": 655,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 960,
+      "requested_height": 655
+    },
+    {
+      "id": "day-cycle-state-2",
+      "filename": "day-cycle-state-2.jpg",
+      "sha256": "f9e1d2f7730eeb37a149ce8ac4606b1a982e7e96c222b09891859a0e5377657a",
+      "byte_size": 9285,
+      "source_png": {
+        "filename": "day-cycle-state-2.png",
+        "sha256": "b9243cd1dec4123a123d2184abd7934b5aeb17c5d523b87bef7093d1fc999b7b"
+      },
+      "width": 960,
+      "height": 655,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 960,
+      "requested_height": 655
+    },
+    {
+      "id": "faq-open",
+      "filename": "faq-open.jpg",
+      "sha256": "98653094233a3c780e4965b3df338139941420b064516952e96e5288f1326e8e",
+      "byte_size": 5530,
+      "source_png": {
+        "filename": "faq-open.png",
+        "sha256": "226c51da4db252d1fa62527a9f8fd95461da49b866195d8457302d7af4b17927"
+      },
+      "width": 960,
+      "height": 844,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 960,
+      "requested_height": 844
+    }
+  ]
+}

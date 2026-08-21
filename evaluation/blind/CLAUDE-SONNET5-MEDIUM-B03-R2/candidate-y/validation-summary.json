@@ -1,0 +1,266 @@
+{
+  "candidate_id": "candidate-y",
+  "first_pass": true,
+  "repair_used": false,
+  "typecheck": {
+    "exit_code": 0
+  },
+  "build": {
+    "exit_code": 0
+  },
+  "test": {
+    "exit_code": 0,
+    "tests_passed": 1,
+    "tests_failed": 0
+  },
+  "check": {
+    "exit_code": 0
+  },
+  "structured_checks": [
+    {
+      "name": "desktop: apenas assets locais",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "desktop: sem erros de console",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "desktop: sem exce\u00e7\u00f5es",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "se\u00e7\u00e3o \"hero\": id + data-testid no mesmo elemento",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "se\u00e7\u00e3o \"hero\": tem altura renderizada",
+      "result": "PASS",
+      "detail": "644px"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"hero\": tem conte\u00fado real",
+      "result": "PASS",
+      "detail": "385 caracteres"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"day-cycle\": id + data-testid no mesmo elemento",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "se\u00e7\u00e3o \"day-cycle\": tem altura renderizada",
+      "result": "PASS",
+      "detail": "827px"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"day-cycle\": tem conte\u00fado real",
+      "result": "PASS",
+      "detail": "448 caracteres"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"features\": id + data-testid no mesmo elemento",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "se\u00e7\u00e3o \"features\": tem altura renderizada",
+      "result": "PASS",
+      "detail": "997px"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"features\": tem conte\u00fado real",
+      "result": "PASS",
+      "detail": "1188 caracteres"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"specs\": id + data-testid no mesmo elemento",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "se\u00e7\u00e3o \"specs\": tem altura renderizada",
+      "result": "PASS",
+      "detail": "778px"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"specs\": tem conte\u00fado real",
+      "result": "PASS",
+      "detail": "614 caracteres"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"social-proof\": id + data-testid no mesmo elemento",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "se\u00e7\u00e3o \"social-proof\": tem altura renderizada",
+      "result": "PASS",
+      "detail": "858px"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"social-proof\": tem conte\u00fado real",
+      "result": "PASS",
+      "detail": "782 caracteres"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"pricing\": id + data-testid no mesmo elemento",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "se\u00e7\u00e3o \"pricing\": tem altura renderizada",
+      "result": "PASS",
+      "detail": "855px"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"pricing\": tem conte\u00fado real",
+      "result": "PASS",
+      "detail": "776 caracteres"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"faq\": id + data-testid no mesmo elemento",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "se\u00e7\u00e3o \"faq\": tem altura renderizada",
+      "result": "PASS",
+      "detail": "906px"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"faq\": tem conte\u00fado real",
+      "result": "PASS",
+      "detail": "1727 caracteres"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"footer\": id + data-testid no mesmo elemento",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "se\u00e7\u00e3o \"footer\": tem altura renderizada",
+      "result": "PASS",
+      "detail": "333px"
+    },
+    {
+      "name": "se\u00e7\u00e3o \"footer\": tem conte\u00fado real",
+      "result": "PASS",
+      "detail": "332 caracteres"
+    },
+    {
+      "name": "sem texto de placeholder",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "a p\u00e1gina tem copy substancial",
+      "result": "PASS",
+      "detail": "6327 caracteres"
+    },
+    {
+      "name": "day-cycle: ao menos 3 op\u00e7\u00f5es",
+      "result": "PASS",
+      "detail": "4 op\u00e7\u00f5es"
+    },
+    {
+      "name": "day-cycle: stage presente",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "day-cycle: selecionar outro momento muda o stage",
+      "result": "PASS",
+      "detail": "o elemento data-testid=\"day-cycle-stage\" n\u00e3o mudou"
+    },
+    {
+      "name": "day-cycle: selecionar outro momento muda a copy",
+      "result": "PASS",
+      "detail": "o texto da se\u00e7\u00e3o n\u00e3o mudou"
+    },
+    {
+      "name": "faq: ao menos 6 perguntas",
+      "result": "PASS",
+      "detail": "7 itens"
+    },
+    {
+      "name": "faq: perguntas s\u00e3o bot\u00f5es com data-testid",
+      "result": "PASS",
+      "detail": "7 bot\u00f5es"
+    },
+    {
+      "name": "faq: a pergunta \u00e9 um <button>",
+      "result": "PASS",
+      "detail": "tag: button"
+    },
+    {
+      "name": "faq: aria-expanded alterna ao abrir",
+      "result": "PASS",
+      "detail": "antes=false depois=true"
+    },
+    {
+      "name": "faq: abrir revela a resposta",
+      "result": "PASS",
+      "detail": "altura 66px -> 165px"
+    },
+    {
+      "name": "pricing: ao menos 2 op\u00e7\u00f5es",
+      "result": "PASS",
+      "detail": "3 planos"
+    },
+    {
+      "name": "acessibilidade: exatamente um <h1>",
+      "result": "PASS",
+      "detail": "1 encontrados"
+    },
+    {
+      "name": "acessibilidade: landmark <main>",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "acessibilidade: landmark <footer>",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "acessibilidade: landmark <nav>",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "acessibilidade: todo controle tem nome acess\u00edvel",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "acessibilidade: hierarquia de headings sem saltos",
+      "result": "PASS",
+      "detail": "0 saltos"
+    },
+    {
+      "name": "desktop 1440x900: sem scroll horizontal da p\u00e1gina",
+      "result": "PASS",
+      "detail": "scrollWidth=1440 clientWidth=1440"
+    },
+    {
+      "name": "mobile 390x844: sem scroll horizontal da p\u00e1gina",
+      "result": "PASS",
+      "detail": "scrollWidth=390 clientWidth=390"
+    },
+    {
+      "name": "mobile: as oito se\u00e7\u00f5es continuam renderizadas",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "mobile: sem erros de console",
+      "result": "PASS",
+      "detail": null
+    }
+  ]
+}
