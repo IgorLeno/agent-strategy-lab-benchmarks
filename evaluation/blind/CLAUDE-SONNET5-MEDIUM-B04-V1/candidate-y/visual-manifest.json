@@ -1,0 +1,243 @@
+{
+  "kind": "VisualEvidenceManifestV1",
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B04-V1",
+  "candidate_id": "candidate-y",
+  "source_build_identity": "unpublished-arm-identity",
+  "capture_protocol": "b04-atlas-visual-v1",
+  "generated_at": "2026-08-21T02:01:40.286Z",
+  "screenshots": [
+    {
+      "id": "desktop-dashboard",
+      "filename": "desktop-dashboard.png",
+      "sha256": "9017871aa3f214c8c186c0caac90e532224f602b892d97eb44f5ef5ec8c6bf43",
+      "width": 1440,
+      "height": 900,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 1,
+      "pdf_page_span": 1,
+      "review_label": "desktop-dashboard"
+    },
+    {
+      "id": "kpi-filters",
+      "filename": "kpi-filters.png",
+      "sha256": "7c82d132c6598437857238c06ca66d0b52deabe5de342301051600ec8e1c3c4f",
+      "width": 1232,
+      "height": 283,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 2,
+      "pdf_page_span": 1,
+      "review_label": "kpi-filters"
+    },
+    {
+      "id": "chart-revenue-budget",
+      "filename": "chart-revenue-budget.png",
+      "sha256": "f23d0ef02b048492ba0fa7e6d41397b55f2ac4cb3ff894f67c037059abb6eeb7",
+      "width": 400,
+      "height": 360,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 3,
+      "pdf_page_span": 1,
+      "review_label": "chart-revenue-budget"
+    },
+    {
+      "id": "chart-cost-profitability",
+      "filename": "chart-cost-profitability.png",
+      "sha256": "e2e94d63cdbaf2b1366eda444ffead8f7bd8a7a021fd5e843635249627b3c502",
+      "width": 400,
+      "height": 360,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 4,
+      "pdf_page_span": 1,
+      "review_label": "chart-cost-profitability"
+    },
+    {
+      "id": "chart-segment-comparison",
+      "filename": "chart-segment-comparison.png",
+      "sha256": "75d90b46e716542e7b6f6c124bcbd4d7ad700770fe7716bc4c74c560247054b7",
+      "width": 400,
+      "height": 360,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 5,
+      "pdf_page_span": 1,
+      "review_label": "chart-segment-comparison"
+    },
+    {
+      "id": "segment-table",
+      "filename": "segment-table.png",
+      "sha256": "83760d206e6e01d5888c223d8997f3e8ee8341f81bd7e2fea4bbebdd917df7ce",
+      "width": 1230,
+      "height": 186,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 6,
+      "pdf_page_span": 1,
+      "review_label": "segment-table"
+    },
+    {
+      "id": "state-q1-all-viewport",
+      "filename": "state-q1-all-viewport.png",
+      "sha256": "1d0ddb1486c9f54ce613632efd040504a752e88ab60924a2288494bc850e5e79",
+      "width": 1440,
+      "height": 900,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 7,
+      "pdf_page_span": 1,
+      "review_label": "state-q1-all-viewport"
+    },
+    {
+      "id": "state-full-year-enterprise-viewport",
+      "filename": "state-full-year-enterprise-viewport.png",
+      "sha256": "81e411e9bbc1f2f3e1f0059ed8b372ed436a3553ce31f91bdae9032b13e86c92",
+      "width": 1440,
+      "height": 900,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 8,
+      "pdf_page_span": 1,
+      "review_label": "state-full-year-enterprise-viewport"
+    },
+    {
+      "id": "mobile-dashboard",
+      "filename": "mobile-dashboard.png",
+      "sha256": "b31dec004b91db0a7530153a553616eebfcf31529e0dd1ae2f5ddd67238154d9",
+      "width": 390,
+      "height": 844,
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 9,
+      "pdf_page_span": 1,
+      "review_label": "mobile-dashboard"
+    },
+    {
+      "id": "mobile-chart",
+      "filename": "mobile-chart.png",
+      "sha256": "0aec89e116ea70b78d06678169953d8fe08819efbd0ad54f879708a32bf6dff3",
+      "width": 366,
+      "height": 222,
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 10,
+      "pdf_page_span": 1,
+      "review_label": "mobile-chart"
+    },
+    {
+      "id": "mobile-table",
+      "filename": "mobile-table.png",
+      "sha256": "621f28c49cd64ad1d2b35ddfd521baa6643d4197f647586bddecb57560195f38",
+      "width": 501,
+      "height": 167,
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 11,
+      "pdf_page_span": 1,
+      "review_label": "mobile-table"
+    }
+  ],
+  "pdf_pages": [
+    {
+      "page": 1,
+      "screenshot_id": "desktop-dashboard",
+      "filename": "desktop-dashboard.png"
+    },
+    {
+      "page": 2,
+      "screenshot_id": "kpi-filters",
+      "filename": "kpi-filters.png"
+    },
+    {
+      "page": 3,
+      "screenshot_id": "chart-revenue-budget",
+      "filename": "chart-revenue-budget.png"
+    },
+    {
+      "page": 4,
+      "screenshot_id": "chart-cost-profitability",
+      "filename": "chart-cost-profitability.png"
+    },
+    {
+      "page": 5,
+      "screenshot_id": "chart-segment-comparison",
+      "filename": "chart-segment-comparison.png"
+    },
+    {
+      "page": 6,
+      "screenshot_id": "segment-table",
+      "filename": "segment-table.png"
+    },
+    {
+      "page": 7,
+      "screenshot_id": "state-q1-all-viewport",
+      "filename": "state-q1-all-viewport.png"
+    },
+    {
+      "page": 8,
+      "screenshot_id": "state-full-year-enterprise-viewport",
+      "filename": "state-full-year-enterprise-viewport.png"
+    },
+    {
+      "page": 9,
+      "screenshot_id": "mobile-dashboard",
+      "filename": "mobile-dashboard.png"
+    },
+    {
+      "page": 10,
+      "screenshot_id": "mobile-chart",
+      "filename": "mobile-chart.png"
+    },
+    {
+      "page": 11,
+      "screenshot_id": "mobile-table",
+      "filename": "mobile-table.png"
+    }
+  ],
+  "review_pdf": {
+    "filename": "visual-review.pdf",
+    "sha256": "25b85da8c574fe0fb344d073b5bfd90034932674ee7a24caf2bcb592854605ee",
+    "page_count": 11
+  },
+  "notes": {
+    "png_canonical": true,
+    "pdf_is_review_transport": true,
+    "pdf_byte_identity": "Chrome embute CreationDate/ModDate/ID. Reruns com os mesmos PNGs são semanticamente equivalentes (páginas, mapping, SHA256 dos PNGs) mas o SHA256 do PDF pode mudar. Não falsificamos determinismo."
+  }
+}

@@ -1,10 +1,18 @@
 # Transporte binário cego dos connector JPEGs já existentes.
 # Não recaptura, não comprime, não gera preview, não corre benchmark, não chama modelo.
-# Canonical: PNG no repositório. Lightweight: JPEG no repositório. Artifact: temporário.
+# Canonical: PNG no runtime privado. Lightweight: JPEG no repositório. Artifact: temporário.
 name: Visual evidence artifact
 
 on:
   workflow_dispatch:
+    inputs:
+      bundle:
+        description: Blind bundle to package. Arm names are never used.
+        type: choice
+        default: CLAUDE-SONNET5-MEDIUM-B04-V1
+        options:
+          - CLAUDE-SONNET5-MEDIUM-B04-V1
+          - visual-access-check
 
 permissions:
   contents: read
@@ -14,6 +22,9 @@ jobs:
     name: Package blind connector previews
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    env:
+      BUNDLE_ROOT: ${{ inputs.bundle == 'visual-access-check' && 'evaluation/visual-access-check' || format('evaluation/blind/{0}', inputs.bundle) }}
+      ARTIFACT_PREFIX: ${{ inputs.bundle == 'visual-access-check' && 'visual-access-check' || 'visual-b04' }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -25,27 +36,27 @@ jobs:
           set -euo pipefail
           for candidate in candidate-x candidate-y; do
             node scripts/visual-evidence/verify-connector-previews.mjs \
-              --bundle "evaluation/visual-access-check/${candidate}"
+              --bundle "${BUNDLE_ROOT}/${candidate}"
           done
 
       - name: Upload Candidate X
         uses: actions/upload-artifact@v7
         with:
-          name: visual-access-check-candidate-x
+          name: ${{ env.ARTIFACT_PREFIX }}-candidate-x
           if-no-files-found: error
           retention-days: 30
           path: |
-            evaluation/visual-access-check/candidate-x/connector-previews/*.jpg
-            evaluation/visual-access-check/candidate-x/connector-preview-manifest.json
-            evaluation/visual-access-check/candidate-x/visual-manifest.json
+            ${{ env.BUNDLE_ROOT }}/candidate-x/connector-previews/*.jpg
+            ${{ env.BUNDLE_ROOT }}/candidate-x/connector-preview-manifest.json
+            ${{ env.BUNDLE_ROOT }}/candidate-x/visual-manifest.json
 
       - name: Upload Candidate Y
         uses: actions/upload-artifact@v7
         with:
-          name: visual-access-check-candidate-y
+          name: ${{ env.ARTIFACT_PREFIX }}-candidate-y
           if-no-files-found: error
           retention-days: 30
           path: |
-            evaluation/visual-access-check/candidate-y/connector-previews/*.jpg
-            evaluation/visual-access-check/candidate-y/connector-preview-manifest.json
-            evaluation/visual-access-check/candidate-y/visual-manifest.json
+            ${{ env.BUNDLE_ROOT }}/candidate-y/connector-previews/*.jpg
+            ${{ env.BUNDLE_ROOT }}/candidate-y/connector-preview-manifest.json
+            ${{ env.BUNDLE_ROOT }}/candidate-y/visual-manifest.json

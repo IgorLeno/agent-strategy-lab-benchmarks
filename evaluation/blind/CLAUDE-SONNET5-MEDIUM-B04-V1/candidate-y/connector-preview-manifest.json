@@ -1,0 +1,215 @@
+{
+  "kind": "ConnectorPreviewManifestV1",
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B04-V1",
+  "candidate_id": "candidate-y",
+  "capture_protocol": "b04-atlas-visual-v1",
+  "generated_at": "2026-08-21T02:02:46.238Z",
+  "size_budget_bytes": 40960,
+  "algorithm": {
+    "preferred_width": 960,
+    "min_width": 800,
+    "width_step_px": 80,
+    "quality_steps": [
+      80,
+      72,
+      64,
+      56,
+      48,
+      40,
+      32
+    ],
+    "no_upscale": true,
+    "no_color_correction": true,
+    "notes": "Tenta quality_steps em cada largura da escada (960→800, ou source se menor). Se nenhuma combinação couber em 40960 bytes sem largura < min(800, source), falha. Full-page alta não deve ser preview primário."
+  },
+  "previews": [
+    {
+      "id": "01-dashboard",
+      "filename": "01-dashboard.jpg",
+      "sha256": "41ad1085d0decabf9082613254f1e532a6b1895c3eb785e61084b8adf5e364d6",
+      "byte_size": 36535,
+      "source_png": {
+        "filename": "01-dashboard.png",
+        "sha256": "9017871aa3f214c8c186c0caac90e532224f602b892d97eb44f5ef5ec8c6bf43"
+      },
+      "width": 960,
+      "height": 600,
+      "encoding": "jpeg",
+      "jpeg_quality": 72,
+      "candidate_id": "candidate-y",
+      "requested_width": 960,
+      "requested_height": 600
+    },
+    {
+      "id": "02-kpis-filters",
+      "filename": "02-kpis-filters.jpg",
+      "sha256": "2ac8b5d5b7d2365746b8e15aa883dd452bddb82295e9c451c8d18f130662e56e",
+      "byte_size": 20313,
+      "source_png": {
+        "filename": "02-kpis-filters.png",
+        "sha256": "7c82d132c6598437857238c06ca66d0b52deabe5de342301051600ec8e1c3c4f"
+      },
+      "width": 960,
+      "height": 221,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-y",
+      "requested_width": 960,
+      "requested_height": 221
+    },
+    {
+      "id": "03-revenue-budget",
+      "filename": "03-revenue-budget.jpg",
+      "sha256": "1817ab0187825719d2760a2e4a36e69831e7d1c94b223002659f30b99da452df",
+      "byte_size": 9124,
+      "source_png": {
+        "filename": "03-revenue-budget.png",
+        "sha256": "f23d0ef02b048492ba0fa7e6d41397b55f2ac4cb3ff894f67c037059abb6eeb7"
+      },
+      "width": 400,
+      "height": 360,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-y",
+      "requested_width": 400,
+      "requested_height": 360
+    },
+    {
+      "id": "04-cost-profitability",
+      "filename": "04-cost-profitability.jpg",
+      "sha256": "055190d98f35fc53a19228307309ab8e9f025e323cfda24ad9ce44b17f058767",
+      "byte_size": 9704,
+      "source_png": {
+        "filename": "04-cost-profitability.png",
+        "sha256": "e2e94d63cdbaf2b1366eda444ffead8f7bd8a7a021fd5e843635249627b3c502"
+      },
+      "width": 400,
+      "height": 360,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-y",
+      "requested_width": 400,
+      "requested_height": 360
+    },
+    {
+      "id": "05-segment-comparison",
+      "filename": "05-segment-comparison.jpg",
+      "sha256": "12895de9dcc3cfa863bc3b96ce7b5d635e4daebb28d05ed579f5e0088199870f",
+      "byte_size": 9409,
+      "source_png": {
+        "filename": "05-segment-comparison.png",
+        "sha256": "75d90b46e716542e7b6f6c124bcbd4d7ad700770fe7716bc4c74c560247054b7"
+      },
+      "width": 400,
+      "height": 360,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-y",
+      "requested_width": 400,
+      "requested_height": 360
+    },
+    {
+      "id": "06-segment-table",
+      "filename": "06-segment-table.jpg",
+      "sha256": "01da98fbc7439cc5ce3b2c2c462a665fa80ef588a440fe0640e1b2e849989c1f",
+      "byte_size": 6430,
+      "source_png": {
+        "filename": "06-segment-table.png",
+        "sha256": "83760d206e6e01d5888c223d8997f3e8ee8341f81bd7e2fea4bbebdd917df7ce"
+      },
+      "width": 960,
+      "height": 145,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-y",
+      "requested_width": 960,
+      "requested_height": 145
+    },
+    {
+      "id": "07-q1-all",
+      "filename": "07-q1-all.jpg",
+      "sha256": "e3732552166227f7d125746b6081103e605dca5d4eba2ddd926587dbce6ed7e4",
+      "byte_size": 35357,
+      "source_png": {
+        "filename": "07-q1-all.png",
+        "sha256": "1d0ddb1486c9f54ce613632efd040504a752e88ab60924a2288494bc850e5e79"
+      },
+      "width": 960,
+      "height": 600,
+      "encoding": "jpeg",
+      "jpeg_quality": 72,
+      "candidate_id": "candidate-y",
+      "requested_width": 960,
+      "requested_height": 600
+    },
+    {
+      "id": "08-full-year-enterprise",
+      "filename": "08-full-year-enterprise.jpg",
+      "sha256": "4cf0c512b0c3dc4505044d87de222b16d04d35d41aa1a85a469d6fd70e53cf81",
+      "byte_size": 35960,
+      "source_png": {
+        "filename": "08-full-year-enterprise.png",
+        "sha256": "81e411e9bbc1f2f3e1f0059ed8b372ed436a3553ce31f91bdae9032b13e86c92"
+      },
+      "width": 960,
+      "height": 600,
+      "encoding": "jpeg",
+      "jpeg_quality": 72,
+      "candidate_id": "candidate-y",
+      "requested_width": 960,
+      "requested_height": 600
+    },
+    {
+      "id": "09-mobile-dashboard",
+      "filename": "09-mobile-dashboard.jpg",
+      "sha256": "771f5ea9dbfbdf826af9fd18ba46db1f98312f435ab795e6381dd664509dfa7b",
+      "byte_size": 37283,
+      "source_png": {
+        "filename": "09-mobile-dashboard.png",
+        "sha256": "b31dec004b91db0a7530153a553616eebfcf31529e0dd1ae2f5ddd67238154d9"
+      },
+      "width": 390,
+      "height": 844,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-y",
+      "requested_width": 390,
+      "requested_height": 844
+    },
+    {
+      "id": "10-mobile-chart",
+      "filename": "10-mobile-chart.jpg",
+      "sha256": "152bf0ca44ef4814772c9efc729ebf194983f416b0d6f7d4f4e5cc74701dd7e5",
+      "byte_size": 4910,
+      "source_png": {
+        "filename": "10-mobile-chart.png",
+        "sha256": "0aec89e116ea70b78d06678169953d8fe08819efbd0ad54f879708a32bf6dff3"
+      },
+      "width": 366,
+      "height": 222,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-y",
+      "requested_width": 366,
+      "requested_height": 222
+    },
+    {
+      "id": "11-mobile-table",
+      "filename": "11-mobile-table.jpg",
+      "sha256": "d0582c23314fdc6e01aa70d26826a9a6196873a2437441ad6602ae48e4c24d6c",
+      "byte_size": 1288,
+      "source_png": {
+        "filename": "11-mobile-table.png",
+        "sha256": "621f28c49cd64ad1d2b35ddfd521baa6643d4197f647586bddecb57560195f38"
+      },
+      "width": 501,
+      "height": 167,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-y",
+      "requested_width": 501,
+      "requested_height": 167
+    }
+  ]
+}
