@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "description": "Submission schedules for cursor pagination. 'ticks' are clock offsets in seconds; equal values mean the jobs share created_at and must be separated by the id tiebreaker.",
+  "cases": [
+    { "id": "all-distinct", "ticks": [0, 1, 2, 3, 4, 5, 6], "limit": 3 },
+    { "id": "one-boundary-tie", "ticks": [0, 1, 1, 2, 3], "limit": 2 },
+    { "id": "tie-groups-of-two", "ticks": [0, 0, 1, 1, 2, 2, 3, 3], "limit": 2 },
+    { "id": "one-large-tie-group", "ticks": [0, 0, 0, 0, 0], "limit": 2 },
+    { "id": "mixed-density", "ticks": [0, 0, 1, 2, 2, 2, 3, 4, 4, 5], "limit": 4 },
+    { "id": "limit-equals-total", "ticks": [0, 0, 0], "limit": 3 },
+    { "id": "limit-one", "ticks": [0, 0, 1, 1], "limit": 1 }
+  ]
+}

@@ -1,0 +1,168 @@
+# B5 — RELAY regression debugging (Python)
+
+`RELAY` is an in-process job relay: callers submit jobs, workers lease them,
+acknowledge or fail them, jobs retry with backoff, and callers list and cancel
+them. The system is already built, already documented, and its test suite is
+green.
+
+It is also wrong in four places. Recent changes introduced regressions that the
+existing tests do not cover. Your job is to find them and fix them.
+
+---
+
+## 1. Environment
+
+- Python 3.12 or newer, standard library only.
+- **There is no network access.** Do not add a dependency, do not vendor one,
+  and do not import a networking module (`socket`, `http`, `urllib`, `asyncio`,
+  `requests`, …) anywhere under `src/`.
+- Work only inside this repository.
+- Layout:
+
+```
+src/relay/     the package under repair
+tests/         the existing test suite
+validation/    the external validator (do not modify)
+```
+
+Read `src/relay/__init__.py` first: it is the public surface.
+
+## 2. What you must do
+
+- **Diagnose** the four regressions from the behaviour described in section 3.
+- **Fix** them at the cause, not at the symptom.
+- **Preserve the public API** exactly as described in section 4.
+- **Preserve behaviour that is already correct.** Priority ordering, retry
+  backoff, dead-lettering, lease validation, payload copying and error types
+  are all working today and must keep working.
+- **Adjust the test suite** so the repaired behaviour is covered. Add tests
+  where they are missing; you may edit existing tests when a test encodes the
+  broken behaviour, but do not delete coverage to make a run green.
+- **Do not rewrite the system.** A repair that replaces a module wholesale, or
+  that reorganises the package, is not what this task asks for.
+- **Do not remove functionality to make a check pass.** Deleting a feature, a
+  parameter, or a state is a failure, not a fix.
+
+## 3. The four failures
+
+Each of these is deterministic. None of them depends on threads, wall-clock
+time, or randomness: the relay runs on an injected clock (`ManualClock`), and
+every scenario below is reproducible by advancing that clock yourself.
+
+### A. A job can be executed twice
+
+A job that fails once, is retried, and is then picked up by a second worker can
+be handed out to a **third** worker while the second one is still holding a
+valid lease. Two workers then run the same job at the same time, and the worker
+that was legitimately running it can no longer acknowledge its own attempt.
+
+Invariants to restore:
+
+- a job that is `RUNNING` under a lease that has not expired is never returned
+  to the ready queue and is never dispatched again;
+- reclaiming genuinely abandoned work still happens: a lease that expires while
+  its job is still `RUNNING` must return that job to the queue;
+- the attempt counter reflects executions that actually happened.
+
+### B. Cancelling twice corrupts the accounting
+
+`cancel` is documented as safe to call more than once: the first call performs
+the transition and reports `cancelled=True`; every later call reports
+`cancelled=False, already_terminal=True` and changes nothing.
+
+Today the later calls do change something. The counters exposed by
+`RelayService.counters()` drift, and cancelling a job that already reached a
+terminal state moves a counter that should not move.
+
+Invariant to restore: `counters()["pending"]` equals `stats().pending` at all
+times, and repeating a cancellation leaves both `counters()` and `stats()`
+byte-identical to what the first call produced.
+
+### C. Cursor pagination loses a job at a boundary
+
+`list_jobs` is ordered by `(created_at, id)`. `created_at` alone is not unique:
+jobs submitted in the same tick share a timestamp, and the id is the tiebreaker
+that makes the sequence a total order.
+
+Walking a listing page by page with a cursor does not return the same set of
+jobs as reading it in one page. Jobs are lost at a page boundary, in both
+ascending and descending order. The loss only appears for a particular
+relationship between the page boundary and the ordering key.
+
+Invariants to restore:
+
+- a full cursor scan returns **every** job exactly once, with no duplicate and
+  no omission, for any page size and either ordering;
+- the paged sequence is identical to the single-page sequence;
+- the scan always terminates;
+- cursors stay opaque and are still rejected when malformed or when reused
+  under the opposite ordering.
+
+### D. A mutation is not visible to the next read
+
+The store memoises aggregate queries because the scheduler reads them far more
+often than the job table changes. One legitimate mutation path forgets to drop
+the memo, so a read taken immediately after that mutation reports the state
+that existed before it.
+
+Invariant to restore: after **any** state transition — dispatch, acknowledge,
+fail, retry, cancel, dead-letter, reap — the next call to `stats()` and the
+next filtered listing describe the state that now exists.
+
+## 4. Public API contract (frozen)
+
+`relay/__init__.py` must keep exporting every name it exports today, and
+`RelayService` must keep these methods with these parameter names:
+
+| Method | Parameters |
+| --- | --- |
+| `submit` | `(payload, *, priority=0, max_attempts=3)` |
+| `dispatch` | `()` |
+| `ack` | `(lease)` |
+| `nack` | `(lease, *, error)` |
+| `cancel` | `(job_id)` |
+| `reap_expired` | `()` |
+| `get` | `(job_id)` |
+| `list_jobs` | `(*, state=None, limit=20, cursor=None, order="asc")` |
+| `stats` | `()` |
+| `counters` | `()` |
+
+`Job` keeps its fields, `Stats` keeps its fields, and `JobState` keeps its six
+values. Error types keep their names and stay in `relay.errors`.
+
+Returned objects stay detached: mutating a returned `Job` must never change
+stored state.
+
+## 5. Scope discipline
+
+The graded outcome is a *localised repair*. Concretely:
+
+- change the code that is wrong, not the code around it;
+- do not restructure modules, rename symbols, or introduce new abstractions
+  that the fix does not require;
+- do not leave dead code, commented-out code, or debugging output behind;
+- a smaller diff is not automatically better — a diff that touches only what
+  the four causes require is.
+
+## 6. Validation (this is exactly what will be run)
+
+```
+python3 -m compileall -q src tests
+python3 -m unittest discover -s tests -t tests
+python3 validation/check.py
+```
+
+`validation/check.py` is external: it drives the public API itself and does not
+read your test suite for its verdict. It also re-runs your suite, checks that
+no networking module is imported under `src/`, and verifies that
+`validation/` is unmodified.
+
+`validation/` is the validation contract: **do not modify it.**
+
+## 7. Definition of done
+
+- All three validation commands exit 0.
+- The four regressions are fixed at the cause.
+- The public API in section 4 is unchanged.
+- Behaviour that was already correct still works.
+- The test suite covers the repaired behaviour.

@@ -1,0 +1,6 @@
+# Frozen hashes of the B05 validation contract.
+# Regenerating this file does not make a modified validator legitimate:
+# the operator restores validation/ from the frozen benchmark before validating.
+2147e1f7059d37d38bdd4a92b8e8e1c4f79768eb25a5eba58b56affb402f3cae  validation/check.py
+822bacd78a3c88d49dca4a9fee9f7fa8b56ce59ae00b169d4cab98004cc79194  validation/fixtures/api_surface.json
+9c28815a2bd1fea145451a39688d0bcfc6b7a6f164d2518ec122dacdda1d28ae  validation/fixtures/pagination_cases.json

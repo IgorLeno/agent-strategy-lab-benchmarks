@@ -1,0 +1,125 @@
+{
+  "schema_version": 1,
+  "benchmark_id": "B05-relay",
+  "short_id": "B5",
+  "title": "RELAY job-relay regression debugging (Python)",
+  "status": "FROZEN",
+  "frozen_at": "2026-08-21",
+  "language": "python",
+  "language_requirement": "CPython >= 3.12, standard library only",
+  "task_type": "regression_debugging",
+  "visual": false,
+  "network_policy": "none",
+  "seed_sha": "e9964d2ca14db42adf8de079d926149178bceb1f",
+  "seed_tree_sha1": "0b724e4bdb597efd7f5c4dba8190d5bcd70761c4",
+  "seed_sha_note": "Recomputable: git init -b main on seed/, git add -A, commit as 'Agent Strategy Lab Benchmarks <benchmarks@agent-strategy-lab.invalid>' with author and committer date 2026-08-21T00:00:00+00:00 and message 'seed(B05-relay): frozen starting tree'. Nested .git directories are not stored in this corpus.",
+  "task_file": "TASK.md",
+  "task_sha256": "2f82d177ee12240de0d1cb94442eca16d8de061a6fe01ae45be5d66b3a64597c",
+  "task_sha256_in_seed": "2f82d177ee12240de0d1cb94442eca16d8de061a6fe01ae45be5d66b3a64597c",
+  "rubric_file": "rubric.md",
+  "rubric_sha256": "90215a57edb173c40b548bb22b0eaa98bcf22b579cd9864767b16fbef200bf99",
+  "plan_file": "plan.yaml",
+  "plan_file_sha256": "73a2414594fc3d64d8ab48eeb633a5758160a5bd8d1ab257699a2e042f802011",
+  "validator_seed_root": "validation",
+  "rubric_weights": {
+    "correctness_regression_safety": 70,
+    "public_api_preservation": 10,
+    "minimality_scope_discipline": 10,
+    "tests": 10
+  },
+  "seeded_regressions": [
+    {
+      "id": "A",
+      "class": "retry_duplication",
+      "task_section": "3.A"
+    },
+    {
+      "id": "B",
+      "class": "double_cancel_accounting",
+      "task_section": "3.B"
+    },
+    {
+      "id": "C",
+      "class": "pagination_boundary",
+      "task_section": "3.C"
+    },
+    {
+      "id": "D",
+      "class": "cache_invalidation",
+      "task_section": "3.D"
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "validation/fixtures/api_surface.json",
+      "sha256": "822bacd78a3c88d49dca4a9fee9f7fa8b56ce59ae00b169d4cab98004cc79194",
+      "also_at": "seed/validation/fixtures/api_surface.json"
+    },
+    {
+      "path": "validation/fixtures/pagination_cases.json",
+      "sha256": "9c28815a2bd1fea145451a39688d0bcfc6b7a6f164d2518ec122dacdda1d28ae",
+      "also_at": "seed/validation/fixtures/pagination_cases.json"
+    }
+  ],
+  "validators": [
+    {
+      "path": "validation/check.py",
+      "sha256": "2147e1f7059d37d38bdd4a92b8e8e1c4f79768eb25a5eba58b56affb402f3cae"
+    },
+    {
+      "path": "validation/PROTECTED.sha256",
+      "sha256": "43248711aa0987f4ff54e631d6e0a4364ced0d7e3683c7f522d9225d629f0552"
+    }
+  ],
+  "validation": [
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "compileall",
+        "-q",
+        "src",
+        "tests"
+      ],
+      "timeout_seconds": 60
+    },
+    {
+      "argv": [
+        "python3",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tests",
+        "-t",
+        "tests"
+      ],
+      "timeout_seconds": 180
+    },
+    {
+      "argv": [
+        "python3",
+        "validation/check.py"
+      ],
+      "timeout_seconds": 300
+    }
+  ],
+  "protected_files": [
+    "validation/**"
+  ],
+  "max_runtime_seconds": 600,
+  "integrity": {
+    "source_protocol_id": "sonnet5-medium-battery-v2",
+    "recomputed_and_matched": [
+      "seed_sha",
+      "seed_tree_sha1",
+      "task_sha256",
+      "task_sha256_in_seed",
+      "rubric_sha256",
+      "plan_file_sha256",
+      "fixture hashes",
+      "validator hashes"
+    ],
+    "hash_mismatch": false
+  }
+}

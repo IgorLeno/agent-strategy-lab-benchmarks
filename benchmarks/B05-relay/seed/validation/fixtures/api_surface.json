@@ -1,0 +1,34 @@
+{
+  "schema_version": 1,
+  "description": "Frozen public surface of relay.RelayService. Renaming, removing or reordering any of these breaks the contract in TASK.md section 4.",
+  "module": "relay",
+  "exports": [
+    "Attempt", "CancelResult", "Clock", "InvalidCursor", "InvalidLease",
+    "Job", "JobState", "Lease", "ManualClock", "Page", "QueueFull",
+    "RelayError", "RelayService", "RetryPolicy", "Stats", "SystemClock",
+    "TERMINAL_STATES", "UnknownJob", "decode_cursor", "encode_cursor"
+  ],
+  "service_methods": {
+    "submit": "(payload, *, priority=0, max_attempts=3)",
+    "dispatch": "()",
+    "ack": "(lease)",
+    "nack": "(lease, *, error)",
+    "cancel": "(job_id)",
+    "reap_expired": "()",
+    "get": "(job_id)",
+    "list_jobs": "(*, state=None, limit=20, cursor=None, order='asc')",
+    "stats": "()",
+    "counters": "()"
+  },
+  "job_fields": [
+    "id", "payload", "state", "priority", "max_attempts", "attempt_epoch",
+    "attempts", "created_at", "updated_at", "available_at", "last_error"
+  ],
+  "stats_fields": [
+    "pending", "running", "succeeded", "failed", "cancelled",
+    "dead_letter", "queued", "total"
+  ],
+  "job_states": [
+    "ready", "running", "succeeded", "failed", "cancelled", "dead_letter"
+  ]
+}
