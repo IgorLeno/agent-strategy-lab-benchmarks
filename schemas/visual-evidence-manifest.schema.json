@@ -1,0 +1,88 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "visual-evidence-manifest.schema.json",
+  "title": "VisualEvidenceManifestV1",
+  "type": "object",
+  "additionalProperties": true,
+  "required": [
+    "kind",
+    "schema_version",
+    "experiment_id",
+    "candidate_id",
+    "source_build_identity",
+    "capture_protocol",
+    "generated_at",
+    "screenshots",
+    "pdf_pages",
+    "review_pdf"
+  ],
+  "properties": {
+    "kind": { "const": "VisualEvidenceManifestV1" },
+    "schema_version": { "const": 1 },
+    "experiment_id": { "type": "string", "minLength": 1 },
+    "candidate_id": {
+      "type": "string",
+      "pattern": "^(candidate-x|candidate-y|Candidate [XY])$",
+      "description": "Must not contain direct or agentlab."
+    },
+    "source_build_identity": { "type": "string", "minLength": 1 },
+    "capture_protocol": { "type": "string", "minLength": 1 },
+    "generated_at": { "type": "string", "minLength": 1 },
+    "screenshots": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "filename",
+          "sha256",
+          "width",
+          "height",
+          "viewport_width",
+          "viewport_height",
+          "full_page",
+          "selector",
+          "state",
+          "pdf_page"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "filename": { "type": "string", "pattern": "^[^/\\\\]+\\.png$" },
+          "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "width": { "type": "integer", "minimum": 1 },
+          "height": { "type": "integer", "minimum": 1 },
+          "viewport_width": { "type": "integer", "minimum": 1 },
+          "viewport_height": { "type": "integer", "minimum": 1 },
+          "full_page": { "type": "boolean" },
+          "selector": { "type": ["string", "null"] },
+          "state": { "type": "string" },
+          "pdf_page": { "type": "integer", "minimum": 1 },
+          "pdf_page_span": { "type": "integer", "minimum": 1 }
+        }
+      }
+    },
+    "pdf_pages": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["page", "screenshot_id", "filename"],
+        "properties": {
+          "page": { "type": "integer", "minimum": 1 },
+          "screenshot_id": { "type": "string" },
+          "filename": { "type": "string" }
+        }
+      }
+    },
+    "review_pdf": {
+      "type": "object",
+      "required": ["filename", "sha256", "page_count"],
+      "properties": {
+        "filename": { "type": "string", "pattern": "^[^/\\\\]+\\.pdf$" },
+        "sha256": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "page_count": { "type": "integer", "minimum": 1 }
+      }
+    }
+  }
+}

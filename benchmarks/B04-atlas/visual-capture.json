@@ -1,0 +1,172 @@
+{
+  "kind": "VisualCaptureConfigV1",
+  "schema_version": 1,
+  "benchmark_id": "B04-atlas",
+  "capture_protocol": "b04-atlas-visual-v1",
+  "device_scale_factor": 1,
+  "viewports": {
+    "desktop": { "width": 1440, "height": 900 },
+    "mobile": { "width": 390, "height": 844 }
+  },
+  "notes": {
+    "frozen_task": "Hooks only from TASK.md markup contract. data-chart names are not frozen; charts are addressed by TASK order among [data-testid=chart].",
+    "review_pages": [
+      "p01 dashboard desktop default",
+      "p02 KPIs + filters",
+      "p03 revenue/budget chart",
+      "p04 cost/profitability chart",
+      "p05 segment comparison",
+      "p06 segment table",
+      "p07 Q1 / All",
+      "p08 Full Year / Enterprise",
+      "p09 mobile dashboard",
+      "p10 mobile chart",
+      "p11 mobile table"
+    ]
+  },
+  "screenshots": [
+    {
+      "id": "desktop-default",
+      "filename": "desktop-default.png",
+      "viewport": "desktop",
+      "full_page": true,
+      "target": { "kind": "page" },
+      "state": "default",
+      "review_label": "p01 dashboard desktop default",
+      "actions": []
+    },
+    {
+      "id": "kpi-filters",
+      "filename": "kpi-filters.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": {
+        "kind": "union",
+        "hooks": [
+          { "testid": "kpi", "all": true },
+          { "testid": "filter-period" },
+          { "testid": "filter-segment" }
+        ]
+      },
+      "state": "default",
+      "review_label": "p02 KPIs + filters",
+      "actions": []
+    },
+    {
+      "id": "chart-revenue-budget",
+      "filename": "chart-revenue-budget.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": {
+        "kind": "testid",
+        "testid": "chart",
+        "nth": 0,
+        "purpose": "TASK §3 chart 1: revenue vs budget over time"
+      },
+      "state": "default",
+      "review_label": "p03 revenue/budget chart",
+      "actions": []
+    },
+    {
+      "id": "chart-cost-profitability",
+      "filename": "chart-cost-profitability.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": {
+        "kind": "testid",
+        "testid": "chart",
+        "nth": 1,
+        "purpose": "TASK §3 chart 2: cost/profitability breakdown"
+      },
+      "state": "default",
+      "review_label": "p04 cost/profitability chart",
+      "actions": []
+    },
+    {
+      "id": "chart-segment-comparison",
+      "filename": "chart-segment-comparison.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": {
+        "kind": "testid",
+        "testid": "chart",
+        "nth": 2,
+        "purpose": "TASK §3 chart 3: segment comparison"
+      },
+      "state": "default",
+      "review_label": "p05 segment comparison",
+      "actions": []
+    },
+    {
+      "id": "segment-table",
+      "filename": "segment-table.png",
+      "viewport": "desktop",
+      "full_page": false,
+      "target": { "kind": "testid", "testid": "segment-table" },
+      "state": "default",
+      "review_label": "p06 segment table",
+      "actions": []
+    },
+    {
+      "id": "state-q1-all",
+      "filename": "state-q1-all.png",
+      "viewport": "desktop",
+      "full_page": true,
+      "target": { "kind": "page" },
+      "state": "period=q1,segment=all",
+      "review_label": "p07 Q1 / All",
+      "actions": [
+        { "type": "set-filter", "filter": "period", "value": "q1" },
+        { "type": "set-filter", "filter": "segment", "value": "all" }
+      ]
+    },
+    {
+      "id": "state-full-year-enterprise",
+      "filename": "state-full-year-enterprise.png",
+      "viewport": "desktop",
+      "full_page": true,
+      "target": { "kind": "page" },
+      "state": "period=full-year,segment=enterprise",
+      "review_label": "p08 Full Year / Enterprise",
+      "actions": [
+        { "type": "set-filter", "filter": "period", "value": "full-year" },
+        { "type": "set-filter", "filter": "segment", "value": "enterprise" }
+      ]
+    },
+    {
+      "id": "mobile-default",
+      "filename": "mobile-default.png",
+      "viewport": "mobile",
+      "full_page": true,
+      "target": { "kind": "page" },
+      "state": "default",
+      "review_label": "p09 mobile dashboard",
+      "actions": []
+    },
+    {
+      "id": "mobile-chart",
+      "filename": "mobile-chart.png",
+      "viewport": "mobile",
+      "full_page": false,
+      "target": {
+        "kind": "testid",
+        "testid": "chart",
+        "nth": 0,
+        "purpose": "TASK §3 chart 1 at 390x844"
+      },
+      "state": "default",
+      "review_label": "p10 mobile chart",
+      "actions": []
+    },
+    {
+      "id": "mobile-table",
+      "filename": "mobile-table.png",
+      "viewport": "mobile",
+      "full_page": false,
+      "target": { "kind": "testid", "testid": "segment-table" },
+      "state": "default",
+      "review_label": "p11 mobile table",
+      "actions": []
+    }
+  ]
+}

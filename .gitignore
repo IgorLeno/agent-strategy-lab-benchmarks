@@ -19,3 +19,6 @@ auth-status.json
 *.pem
 *.key
 credentials.json
+
+.runs/
+**/blind-map.json

@@ -46,8 +46,12 @@ docs/
   methodology.md
   terminology.md
   result-schema.md
+  visual-evidence.md
 schemas/
   experiment-result.schema.json
+  visual-evidence-manifest.schema.json
+scripts/visual-evidence/
+evaluation/visual-access-check/
 ```
 
 ## Frozen benchmarks

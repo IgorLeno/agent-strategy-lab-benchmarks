@@ -55,7 +55,26 @@ Missing values stay `UNKNOWN` / `null` with provenance. They are never stored as
 
 Quality is scored separately from cost.
 
-Visual/UX scoring, when performed, is **blind**: candidates are labelled A/B (left/right) before arms are revealed. Functionality may be taken from the deterministic validator. Code-quality scores that were not assigned remain `NOT_EVALUATED`.
+Visual/UX scoring, when performed, is **blind**: candidates are labelled Candidate X / Candidate Y before arms are revealed. Functionality may be taken from the deterministic validator. Code-quality scores that were not assigned remain `NOT_EVALUATED`.
+
+## Visual evidence
+
+Canonical pixels are **PNG**. A **PDF** is a review/transport layer so an evaluator can read the captures as a document when the review surface cannot render Git binaries. A **manifest** (`VisualEvidenceManifestV1`) records SHA256, dimensions, and which source PNG produced each PDF page.
+
+The PDF never replaces the PNG, never color-corrects it, and never crops it destructively. Tall full-page captures paginate at readable width.
+
+Blind sequence:
+
+1. workers complete;
+2. captures (canonical PNGs);
+3. random X/Y mapping written only to `.runs/<experiment>/blind-map.json` (gitignored);
+4. blind PDFs + manifests published;
+5. evaluator scores;
+6. scores sealed;
+7. mapping revealed;
+8. source / metrics published or identified.
+
+Infrastructure: [`scripts/visual-evidence/README.md`](../scripts/visual-evidence/README.md). Full protocol: [`docs/visual-evidence.md`](visual-evidence.md).
 
 ## Purity warnings
 

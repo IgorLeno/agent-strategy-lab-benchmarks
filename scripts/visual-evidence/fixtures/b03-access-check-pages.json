@@ -1,0 +1,11 @@
+{
+  "pages": [
+    "desktop-hero",
+    "desktop-full",
+    "mobile-hero",
+    "mobile-full",
+    "day-cycle-state-1",
+    "day-cycle-state-2",
+    "faq-open"
+  ]
+}

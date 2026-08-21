@@ -13,3 +13,5 @@ Frozen benchmark definition. Do not edit `TASK.md`, `rubric.md`, or `validation/
 Work statement: [`TASK.md`](TASK.md). Scoring: [`rubric.md`](rubric.md). Hashes: [`manifest.json`](manifest.json).
 
 `seed/` is the starting tree. `validation/` is a byte-identical copy of `seed/scripts/`. `data/` is duplicated at the benchmark root for discovery; it is the same file as `seed/data/`.
+
+Visual evidence configuration (not part of the frozen TASK/validator hashes): [`visual-capture.json`](visual-capture.json). See [`docs/visual-evidence.md`](../../docs/visual-evidence.md).
