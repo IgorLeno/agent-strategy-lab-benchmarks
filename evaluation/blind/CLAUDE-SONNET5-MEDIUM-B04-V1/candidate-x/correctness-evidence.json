@@ -1,0 +1,530 @@
+{
+  "candidate_id": "candidate-x",
+  "origin": "observed frozen validator check stdout (no rerun)",
+  "kpis": [
+    {
+      "period": "full-year",
+      "segment": "all",
+      "kpi": "revenue",
+      "expected": "37017857.63",
+      "observed": "37017857.63",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "all",
+      "kpi": "budget",
+      "expected": "36619742.96999999",
+      "observed": "36619742.96999999",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "all",
+      "kpi": "budget_variance",
+      "expected": "398114.6600000113",
+      "observed": "398114.6600000113",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "all",
+      "kpi": "cogs",
+      "expected": "11210300.25",
+      "observed": "11210300.25",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "all",
+      "kpi": "opex",
+      "expected": "14629502.109999998",
+      "observed": "14629502.109999998",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "all",
+      "kpi": "ebitda",
+      "expected": "11178055.270000005",
+      "observed": "11178055.270000005",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "all",
+      "kpi": "cash",
+      "expected": "17589206.82",
+      "observed": "17589206.82",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "all",
+      "kpi": "new_customers",
+      "expected": "2590",
+      "observed": "2590",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "all",
+      "kpi": "churn_rate",
+      "expected": "0.0291534488634874",
+      "observed": "0.0291534488634874",
+      "result": "PASS"
+    },
+    {
+      "period": "q2",
+      "segment": "all",
+      "kpi": "revenue",
+      "expected": "9088380.23",
+      "observed": "9088380.23",
+      "result": "PASS"
+    },
+    {
+      "period": "q2",
+      "segment": "all",
+      "kpi": "budget",
+      "expected": "9004353.959999999",
+      "observed": "9004353.959999999",
+      "result": "PASS"
+    },
+    {
+      "period": "q2",
+      "segment": "all",
+      "kpi": "budget_variance",
+      "expected": "84026.27000000142",
+      "observed": "84026.27000000142",
+      "result": "PASS"
+    },
+    {
+      "period": "q2",
+      "segment": "all",
+      "kpi": "cogs",
+      "expected": "2776580.06",
+      "observed": "2776580.06",
+      "result": "PASS"
+    },
+    {
+      "period": "q2",
+      "segment": "all",
+      "kpi": "opex",
+      "expected": "3572580.93",
+      "observed": "3572580.93",
+      "result": "PASS"
+    },
+    {
+      "period": "q2",
+      "segment": "all",
+      "kpi": "ebitda",
+      "expected": "2739219.2399999998",
+      "observed": "2739219.2399999998",
+      "result": "PASS"
+    },
+    {
+      "period": "q2",
+      "segment": "all",
+      "kpi": "cash",
+      "expected": "12705452.94",
+      "observed": "12705452.94",
+      "result": "PASS"
+    },
+    {
+      "period": "q2",
+      "segment": "all",
+      "kpi": "new_customers",
+      "expected": "617",
+      "observed": "617",
+      "result": "PASS"
+    },
+    {
+      "period": "q2",
+      "segment": "all",
+      "kpi": "churn_rate",
+      "expected": "0.028663125276671093",
+      "observed": "0.028663125276671093",
+      "result": "PASS"
+    },
+    {
+      "period": "q4",
+      "segment": "all",
+      "kpi": "revenue",
+      "expected": "10431700.8",
+      "observed": "10431700.8",
+      "result": "PASS"
+    },
+    {
+      "period": "q4",
+      "segment": "all",
+      "kpi": "budget",
+      "expected": "10351028.430000002",
+      "observed": "10351028.430000002",
+      "result": "PASS"
+    },
+    {
+      "period": "q4",
+      "segment": "all",
+      "kpi": "budget_variance",
+      "expected": "80672.36999999918",
+      "observed": "80672.36999999918",
+      "result": "PASS"
+    },
+    {
+      "period": "q4",
+      "segment": "all",
+      "kpi": "cogs",
+      "expected": "3134223.9399999995",
+      "observed": "3134223.9399999995",
+      "result": "PASS"
+    },
+    {
+      "period": "q4",
+      "segment": "all",
+      "kpi": "opex",
+      "expected": "4131689.6200000006",
+      "observed": "4131689.6200000006",
+      "result": "PASS"
+    },
+    {
+      "period": "q4",
+      "segment": "all",
+      "kpi": "ebitda",
+      "expected": "3165787.2400000007",
+      "observed": "3165787.2400000007",
+      "result": "PASS"
+    },
+    {
+      "period": "q4",
+      "segment": "all",
+      "kpi": "cash",
+      "expected": "17589206.82",
+      "observed": "17589206.82",
+      "result": "PASS"
+    },
+    {
+      "period": "q4",
+      "segment": "all",
+      "kpi": "new_customers",
+      "expected": "695",
+      "observed": "695",
+      "result": "PASS"
+    },
+    {
+      "period": "q4",
+      "segment": "all",
+      "kpi": "churn_rate",
+      "expected": "0.030335570469798658",
+      "observed": "0.030335570469798658",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "enterprise",
+      "kpi": "revenue",
+      "expected": "19796379.46",
+      "observed": "19796379.46",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "enterprise",
+      "kpi": "budget",
+      "expected": "19667982.880000003",
+      "observed": "19667982.880000003",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "enterprise",
+      "kpi": "budget_variance",
+      "expected": "128396.57999999821",
+      "observed": "128396.57999999821",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "enterprise",
+      "kpi": "cogs",
+      "expected": "5370051.380000001",
+      "observed": "5370051.380000001",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "enterprise",
+      "kpi": "opex",
+      "expected": "7722746.709999999",
+      "observed": "7722746.709999999",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "enterprise",
+      "kpi": "ebitda",
+      "expected": "6703581.370000001",
+      "observed": "6703581.370000001",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "enterprise",
+      "kpi": "cash",
+      "expected": "17589206.82",
+      "observed": "17589206.82",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "enterprise",
+      "kpi": "new_customers",
+      "expected": "36",
+      "observed": "36",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "enterprise",
+      "kpi": "churn_rate",
+      "expected": "0.0012903225806451613",
+      "observed": "0.0012903225806451613",
+      "result": "PASS"
+    },
+    {
+      "period": "q1",
+      "segment": "smb",
+      "kpi": "revenue",
+      "expected": "1249710.05",
+      "observed": "1249710.05",
+      "result": "PASS"
+    },
+    {
+      "period": "q1",
+      "segment": "smb",
+      "kpi": "budget",
+      "expected": "1227655.51",
+      "observed": "1227655.51",
+      "result": "PASS"
+    },
+    {
+      "period": "q1",
+      "segment": "smb",
+      "kpi": "budget_variance",
+      "expected": "22054.540000000037",
+      "observed": "22054.540000000037",
+      "result": "PASS"
+    },
+    {
+      "period": "q1",
+      "segment": "smb",
+      "kpi": "cogs",
+      "expected": "474395.56",
+      "observed": "474395.56",
+      "result": "PASS"
+    },
+    {
+      "period": "q1",
+      "segment": "smb",
+      "kpi": "opex",
+      "expected": "540584.34",
+      "observed": "540584.34",
+      "result": "PASS"
+    },
+    {
+      "period": "q1",
+      "segment": "smb",
+      "kpi": "ebitda",
+      "expected": "234730.15000000002",
+      "observed": "234730.15000000002",
+      "result": "PASS"
+    },
+    {
+      "period": "q1",
+      "segment": "smb",
+      "kpi": "cash",
+      "expected": "10391140.96",
+      "observed": "10391140.96",
+      "result": "PASS"
+    },
+    {
+      "period": "q1",
+      "segment": "smb",
+      "kpi": "new_customers",
+      "expected": "556",
+      "observed": "556",
+      "result": "PASS"
+    },
+    {
+      "period": "q1",
+      "segment": "smb",
+      "kpi": "churn_rate",
+      "expected": "0.033521210323346186",
+      "observed": "0.033521210323346186",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "mid-market",
+      "kpi": "revenue",
+      "expected": "11712853.010000002",
+      "observed": "11712853.010000002",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "mid-market",
+      "kpi": "budget",
+      "expected": "11531180.35",
+      "observed": "11531180.35",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "mid-market",
+      "kpi": "budget_variance",
+      "expected": "181672.660000002",
+      "observed": "181672.660000002",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "mid-market",
+      "kpi": "cogs",
+      "expected": "3747654.09",
+      "observed": "3747654.09",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "mid-market",
+      "kpi": "opex",
+      "expected": "4539214.949999999",
+      "observed": "4539214.949999999",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "mid-market",
+      "kpi": "ebitda",
+      "expected": "3425983.9700000025",
+      "observed": "3425983.9700000025",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "mid-market",
+      "kpi": "cash",
+      "expected": "17589206.82",
+      "observed": "17589206.82",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "mid-market",
+      "kpi": "new_customers",
+      "expected": "272",
+      "observed": "272",
+      "result": "PASS"
+    },
+    {
+      "period": "full-year",
+      "segment": "mid-market",
+      "kpi": "churn_rate",
+      "expected": "0.014857614527445316",
+      "observed": "0.014857614527445316",
+      "result": "PASS"
+    }
+  ],
+  "other_checks": [
+    {
+      "name": "desktop: apenas assets locais",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "desktop: sem erros de console",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "desktop: sem exceções",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "todos os 9 KPIs expostos no DOM",
+      "result": "PASS",
+      "detail": "faltando:"
+    },
+    {
+      "name": "ao menos 3 gráficos",
+      "result": "PASS",
+      "detail": "3 gráficos"
+    },
+    {
+      "name": "todo gráfico tem data-chart",
+      "result": "PASS",
+      "detail": "[\"revenue-vs-budget\",\"cost-profitability\",\"segment-comparison\"]"
+    },
+    {
+      "name": "todo gráfico renderiza conteúdo gráfico",
+      "result": "PASS",
+      "detail": "[{\"name\":\"revenue-vs-budget\",\"graphics\":1,\"height\":375},{\"name\":\"cost-profitability\",\"graphics\":1,\"height\":375},{\"name\":\"segment-comparison\",\"graphics\":1,\"height\":375}]"
+    },
+    {
+      "name": "tabela de segmentos com as três linhas",
+      "result": "PASS",
+      "detail": "[\"enterprise\",\"mid-market\",\"smb\"]"
+    },
+    {
+      "name": "caixa é grandeza da empresa: não muda com o filtro de segmento",
+      "result": "PASS",
+      "detail": "all=17589206.82 enterprise=17589206.82"
+    },
+    {
+      "name": "a tabela de segmentos recomputa com o filtro de período",
+      "result": "PASS",
+      "detail": "conteúdo idêntico (ou ausente) entre Full Year e Q1"
+    },
+    {
+      "name": "os gráficos recomputam com o filtro de período",
+      "result": "PASS",
+      "detail": "o primeiro gráfico não mudou (ou está ausente) entre Full Year e Q1"
+    },
+    {
+      "name": "acessibilidade: exatamente um <h1>",
+      "result": "PASS",
+      "detail": "1 encontrados"
+    },
+    {
+      "name": "acessibilidade: landmark <main>",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "acessibilidade: todo controle tem nome acessível",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "desktop 1440x900: sem scroll horizontal da página",
+      "result": "PASS",
+      "detail": "scrollWidth=1440 clientWidth=1440"
+    },
+    {
+      "name": "mobile 390x844: sem scroll horizontal da página",
+      "result": "PASS",
+      "detail": "scrollWidth=390 clientWidth=390"
+    },
+    {
+      "name": "mobile: os 9 KPIs continuam presentes",
+      "result": "PASS",
+      "detail": "faltando:"
+    },
+    {
+      "name": "mobile: sem erros de console",
+      "result": "PASS",
+      "detail": null
+    }
+  ]
+}

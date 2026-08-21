@@ -1,0 +1,338 @@
+{
+  "candidate_id": "candidate-y",
+  "typecheck": {
+    "exit_code": 0
+  },
+  "build": {
+    "exit_code": 0
+  },
+  "test": {
+    "exit_code": 0,
+    "tests_passed": 8,
+    "tests_failed": 0
+  },
+  "check": {
+    "exit_code": 0
+  },
+  "repair_used": false,
+  "filter_combinations": {
+    "full-year/all": {
+      "period": "full-year",
+      "segment": "all",
+      "filter_applied": true,
+      "kpis": {
+        "revenue": {
+          "expected": "37017857.63",
+          "observed": "37017857.63",
+          "result": "PASS"
+        },
+        "budget": {
+          "expected": "36619742.96999999",
+          "observed": "36619742.96999999",
+          "result": "PASS"
+        },
+        "budget_variance": {
+          "expected": "398114.6600000113",
+          "observed": "398114.6600000113",
+          "result": "PASS"
+        },
+        "cogs": {
+          "expected": "11210300.25",
+          "observed": "11210300.25",
+          "result": "PASS"
+        },
+        "opex": {
+          "expected": "14629502.109999998",
+          "observed": "14629502.109999998",
+          "result": "PASS"
+        },
+        "ebitda": {
+          "expected": "11178055.270000005",
+          "observed": "11178055.270000005",
+          "result": "PASS"
+        },
+        "cash": {
+          "expected": "17589206.82",
+          "observed": "17589206.82",
+          "result": "PASS"
+        },
+        "new_customers": {
+          "expected": "2590",
+          "observed": "2590",
+          "result": "PASS"
+        },
+        "churn_rate": {
+          "expected": "0.0291534488634874",
+          "observed": "0.0291534488634874",
+          "result": "PASS"
+        }
+      },
+      "filter_applied_result": "PASS"
+    },
+    "q2/all": {
+      "period": "q2",
+      "segment": "all",
+      "filter_applied": true,
+      "kpis": {
+        "revenue": {
+          "expected": "9088380.23",
+          "observed": "9088380.23",
+          "result": "PASS"
+        },
+        "budget": {
+          "expected": "9004353.959999999",
+          "observed": "9004353.959999999",
+          "result": "PASS"
+        },
+        "budget_variance": {
+          "expected": "84026.27000000142",
+          "observed": "84026.27000000142",
+          "result": "PASS"
+        },
+        "cogs": {
+          "expected": "2776580.06",
+          "observed": "2776580.06",
+          "result": "PASS"
+        },
+        "opex": {
+          "expected": "3572580.93",
+          "observed": "3572580.93",
+          "result": "PASS"
+        },
+        "ebitda": {
+          "expected": "2739219.2399999998",
+          "observed": "2739219.2399999998",
+          "result": "PASS"
+        },
+        "cash": {
+          "expected": "12705452.94",
+          "observed": "12705452.94",
+          "result": "PASS"
+        },
+        "new_customers": {
+          "expected": "617",
+          "observed": "617",
+          "result": "PASS"
+        },
+        "churn_rate": {
+          "expected": "0.028663125276671093",
+          "observed": "0.028663125276671093",
+          "result": "PASS"
+        }
+      },
+      "filter_applied_result": "PASS"
+    },
+    "q4/all": {
+      "period": "q4",
+      "segment": "all",
+      "filter_applied": true,
+      "kpis": {
+        "revenue": {
+          "expected": "10431700.8",
+          "observed": "10431700.8",
+          "result": "PASS"
+        },
+        "budget": {
+          "expected": "10351028.430000002",
+          "observed": "10351028.430000002",
+          "result": "PASS"
+        },
+        "budget_variance": {
+          "expected": "80672.36999999918",
+          "observed": "80672.36999999918",
+          "result": "PASS"
+        },
+        "cogs": {
+          "expected": "3134223.9399999995",
+          "observed": "3134223.9399999995",
+          "result": "PASS"
+        },
+        "opex": {
+          "expected": "4131689.6200000006",
+          "observed": "4131689.6200000006",
+          "result": "PASS"
+        },
+        "ebitda": {
+          "expected": "3165787.2400000007",
+          "observed": "3165787.2400000007",
+          "result": "PASS"
+        },
+        "cash": {
+          "expected": "17589206.82",
+          "observed": "17589206.82",
+          "result": "PASS"
+        },
+        "new_customers": {
+          "expected": "695",
+          "observed": "695",
+          "result": "PASS"
+        },
+        "churn_rate": {
+          "expected": "0.030335570469798658",
+          "observed": "0.030335570469798658",
+          "result": "PASS"
+        }
+      },
+      "filter_applied_result": "PASS"
+    },
+    "full-year/enterprise": {
+      "period": "full-year",
+      "segment": "enterprise",
+      "filter_applied": true,
+      "kpis": {
+        "revenue": {
+          "expected": "19796379.46",
+          "observed": "19796379.46",
+          "result": "PASS"
+        },
+        "budget": {
+          "expected": "19667982.880000003",
+          "observed": "19667982.880000003",
+          "result": "PASS"
+        },
+        "budget_variance": {
+          "expected": "128396.57999999821",
+          "observed": "128396.57999999821",
+          "result": "PASS"
+        },
+        "cogs": {
+          "expected": "5370051.380000001",
+          "observed": "5370051.380000001",
+          "result": "PASS"
+        },
+        "opex": {
+          "expected": "7722746.709999999",
+          "observed": "7722746.709999999",
+          "result": "PASS"
+        },
+        "ebitda": {
+          "expected": "6703581.370000001",
+          "observed": "6703581.370000001",
+          "result": "PASS"
+        },
+        "cash": {
+          "expected": "17589206.82",
+          "observed": "17589206.82",
+          "result": "PASS"
+        },
+        "new_customers": {
+          "expected": "36",
+          "observed": "36",
+          "result": "PASS"
+        },
+        "churn_rate": {
+          "expected": "0.0012903225806451613",
+          "observed": "0.0012903225806451613",
+          "result": "PASS"
+        }
+      },
+      "filter_applied_result": "PASS"
+    },
+    "q1/smb": {
+      "period": "q1",
+      "segment": "smb",
+      "filter_applied": true,
+      "kpis": {
+        "revenue": {
+          "expected": "1249710.05",
+          "observed": "1249710.05",
+          "result": "PASS"
+        },
+        "budget": {
+          "expected": "1227655.51",
+          "observed": "1227655.51",
+          "result": "PASS"
+        },
+        "budget_variance": {
+          "expected": "22054.540000000037",
+          "observed": "22054.540000000037",
+          "result": "PASS"
+        },
+        "cogs": {
+          "expected": "474395.56",
+          "observed": "474395.56",
+          "result": "PASS"
+        },
+        "opex": {
+          "expected": "540584.34",
+          "observed": "540584.34",
+          "result": "PASS"
+        },
+        "ebitda": {
+          "expected": "234730.15000000002",
+          "observed": "234730.15000000002",
+          "result": "PASS"
+        },
+        "cash": {
+          "expected": "10391140.96",
+          "observed": "10391140.96",
+          "result": "PASS"
+        },
+        "new_customers": {
+          "expected": "556",
+          "observed": "556",
+          "result": "PASS"
+        },
+        "churn_rate": {
+          "expected": "0.033521210323346186",
+          "observed": "0.033521210323346186",
+          "result": "PASS"
+        }
+      },
+      "filter_applied_result": "PASS"
+    },
+    "full-year/mid-market": {
+      "period": "full-year",
+      "segment": "mid-market",
+      "filter_applied": true,
+      "kpis": {
+        "revenue": {
+          "expected": "11712853.010000002",
+          "observed": "11712853.010000002",
+          "result": "PASS"
+        },
+        "budget": {
+          "expected": "11531180.35",
+          "observed": "11531180.35",
+          "result": "PASS"
+        },
+        "budget_variance": {
+          "expected": "181672.660000002",
+          "observed": "181672.660000002",
+          "result": "PASS"
+        },
+        "cogs": {
+          "expected": "3747654.09",
+          "observed": "3747654.09",
+          "result": "PASS"
+        },
+        "opex": {
+          "expected": "4539214.949999999",
+          "observed": "4539214.949999999",
+          "result": "PASS"
+        },
+        "ebitda": {
+          "expected": "3425983.9700000025",
+          "observed": "3425983.9700000025",
+          "result": "PASS"
+        },
+        "cash": {
+          "expected": "17589206.82",
+          "observed": "17589206.82",
+          "result": "PASS"
+        },
+        "new_customers": {
+          "expected": "272",
+          "observed": "272",
+          "result": "PASS"
+        },
+        "churn_rate": {
+          "expected": "0.014857614527445316",
+          "observed": "0.014857614527445316",
+          "result": "PASS"
+        }
+      },
+      "filter_applied_result": "PASS"
+    }
+  }
+}

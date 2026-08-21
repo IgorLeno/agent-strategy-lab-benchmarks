@@ -1,0 +1,342 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --color-bg: #f4f6f9;
+  --color-surface: #ffffff;
+  --color-border: #dde3ea;
+  --color-text: #1a2433;
+  --color-text-muted: #5b6b7f;
+  --color-revenue: #2563eb;
+  --color-budget: #94a3b8;
+  --color-cogs: #f59e0b;
+  --color-opex: #8b5cf6;
+  --color-ebitda: #0f9d68;
+  --color-enterprise: #2563eb;
+  --color-mid-market: #0f9d68;
+  --color-smb: #f59e0b;
+  --color-positive: #0f9d68;
+  --color-negative: #dc2626;
+}
+
+html,
+body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.app {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 24px 24px 48px;
+}
+
+.app__header h1 {
+  margin: 0 0 4px;
+  font-size: 1.6rem;
+  letter-spacing: -0.01em;
+}
+
+.app__subtitle {
+  margin: 0 0 20px;
+  color: var(--color-text-muted);
+  font-size: 0.95rem;
+}
+
+.filter-bar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 24px;
+  margin-bottom: 20px;
+}
+
+.filter-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 10px;
+  padding: 4px;
+}
+
+.filter-btn {
+  border: none;
+  background: transparent;
+  color: var(--color-text-muted);
+  padding: 6px 12px;
+  border-radius: 7px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.filter-btn:hover {
+  background: #eef1f5;
+}
+
+.filter-btn--active {
+  background: var(--color-revenue);
+  color: #fff;
+}
+
+.kpi-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.kpi-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpi-card__label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--color-text-muted);
+}
+
+.kpi-card__value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi-card__hint {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+}
+
+.kpi-card--positive .kpi-card__value {
+  color: var(--color-positive);
+}
+
+.kpi-card--negative .kpi-card__value {
+  color: var(--color-negative);
+}
+
+.chart-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.chart {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 0;
+}
+
+.chart__title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  margin-bottom: 8px;
+}
+
+.chart svg {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.chart__gridline {
+  stroke: var(--color-border);
+  stroke-width: 1;
+}
+
+.chart__axis-label {
+  font-size: 9px;
+  fill: var(--color-text-muted);
+}
+
+.chart__value-label {
+  font-size: 9px;
+  fill: var(--color-text);
+  font-weight: 600;
+}
+
+.chart__line {
+  stroke-width: 2.5;
+}
+
+.chart__line--revenue {
+  stroke: var(--color-revenue);
+}
+
+.chart__line--budget {
+  stroke: var(--color-budget);
+  stroke-dasharray: 5 4;
+}
+
+.chart__dot--revenue {
+  fill: var(--color-revenue);
+}
+
+.chart__bar--cogs {
+  fill: var(--color-cogs);
+}
+
+.chart__bar--opex {
+  fill: var(--color-opex);
+}
+
+.chart__bar--ebitda {
+  fill: var(--color-ebitda);
+}
+
+.chart__bar--enterprise {
+  fill: var(--color-enterprise);
+}
+
+.chart__bar--mid-market {
+  fill: var(--color-mid-market);
+}
+
+.chart__bar--smb {
+  fill: var(--color-smb);
+}
+
+.chart__legend {
+  display: flex;
+  gap: 16px;
+  margin-top: 8px;
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.chart__legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chart__swatch {
+  width: 12px;
+  height: 3px;
+  display: inline-block;
+  border-radius: 2px;
+}
+
+.chart__swatch--revenue {
+  background: var(--color-revenue);
+}
+
+.chart__swatch--budget {
+  background: var(--color-budget);
+}
+
+.chart__sr-summary {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.segment-table-wrap {
+  overflow-x: auto;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 12px;
+}
+
+.segment-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+}
+
+.segment-table caption {
+  text-align: left;
+  padding: 12px 16px 0;
+  color: var(--color-text-muted);
+  font-size: 0.78rem;
+}
+
+.segment-table th,
+.segment-table td {
+  padding: 10px 16px;
+  text-align: right;
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.segment-table th[scope='row'] {
+  text-align: left;
+  font-weight: 600;
+}
+
+.segment-table thead th {
+  text-align: right;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.segment-table thead th:first-child {
+  text-align: left;
+}
+
+.segment-table tbody tr + tr {
+  border-top: 1px solid var(--color-border);
+}
+
+.value-positive {
+  color: var(--color-positive);
+}
+
+.value-negative {
+  color: var(--color-negative);
+}
+
+h2 {
+  font-size: 1.05rem;
+  margin: 0 0 12px;
+}
+
+@media (max-width: 480px) {
+  .app {
+    padding: 16px 12px 32px;
+  }
+
+  .app__header h1 {
+    font-size: 1.3rem;
+  }
+
+  .kpi-row {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .chart-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .segment-table th,
+  .segment-table td {
+    padding: 8px 10px;
+    font-size: 0.8rem;
+  }
+}
