@@ -1,0 +1,181 @@
+{
+  "kind": "ConnectorPreviewManifestV1",
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B01-V1",
+  "candidate_id": "candidate-x",
+  "capture_protocol": "visual-evidence-v1",
+  "generated_at": "2026-08-21T05:41:40.146Z",
+  "size_budget_bytes": 40960,
+  "algorithm": {
+    "preferred_width": 960,
+    "min_width": 800,
+    "width_step_px": 80,
+    "quality_steps": [
+      80,
+      72,
+      64,
+      56,
+      48,
+      40,
+      32
+    ],
+    "no_upscale": true,
+    "no_color_correction": true,
+    "notes": "Tenta quality_steps em cada largura da escada (960→800, ou source se menor). Se nenhuma combinação couber em 40960 bytes sem largura < min(800, source), falha. Full-page alta não deve ser preview primário."
+  },
+  "previews": [
+    {
+      "id": "01-desktop-shell",
+      "filename": "01-desktop-shell.jpg",
+      "sha256": "fb0160b23dbaba1e25e3f2e2b9e0383523cef202294b6190217c02d7d2073236",
+      "byte_size": 40687,
+      "source_png": {
+        "filename": "01-desktop-shell.png",
+        "sha256": "9467c0a20bf145dbbb3d31676bbafc58140f77e94d931f03c960f3ad67e6c2db"
+      },
+      "width": 960,
+      "height": 600,
+      "encoding": "jpeg",
+      "jpeg_quality": 72,
+      "candidate_id": "candidate-x",
+      "requested_width": 960,
+      "requested_height": 600
+    },
+    {
+      "id": "02-sidebar",
+      "filename": "02-sidebar.jpg",
+      "sha256": "321ffad36015830cd83fab235e9516a8c271ecfde90466a3cd29272545ce18ad",
+      "byte_size": 12357,
+      "source_png": {
+        "filename": "02-sidebar.png",
+        "sha256": "440f1f778c3b2d317ca00da85c17e58faf0d856b3b055e44573c20955de8e5e8"
+      },
+      "width": 236,
+      "height": 982,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 236,
+      "requested_height": 982
+    },
+    {
+      "id": "03-stat-cards",
+      "filename": "03-stat-cards.jpg",
+      "sha256": "7791c856561908539a52f5e39e70a58e0c11f45fd9a153a93cf2e1c2b6f051da",
+      "byte_size": 9346,
+      "source_png": {
+        "filename": "03-stat-cards.png",
+        "sha256": "c9ce4f287e9493bb4a3f71c6def75dba70f24014cc8e58872fc799b6bac84989"
+      },
+      "width": 960,
+      "height": 98,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 960,
+      "requested_height": 98
+    },
+    {
+      "id": "04-chart",
+      "filename": "04-chart.jpg",
+      "sha256": "58255e341c2b149e3c4fd71159d7cc9402402bce9480c4e188d7376dffb61da0",
+      "byte_size": 13866,
+      "source_png": {
+        "filename": "04-chart.png",
+        "sha256": "f524328e5336d9aad696f20bef1204ce714524a08a91928498877e5185e1560b"
+      },
+      "width": 800,
+      "height": 294,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 800,
+      "requested_height": 294
+    },
+    {
+      "id": "05-projects-table",
+      "filename": "05-projects-table.jpg",
+      "sha256": "69eb3ba488302bc8f0ace45d15f5534d36d6182424751f8eae09f102d624186e",
+      "byte_size": 20627,
+      "source_png": {
+        "filename": "05-projects-table.png",
+        "sha256": "027bef72b2604fa089f2ab67c77034eb94c1dd0fe7216715f95f6ecbcdb943b6"
+      },
+      "width": 758,
+      "height": 309,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 758,
+      "requested_height": 309
+    },
+    {
+      "id": "06-activity-quota",
+      "filename": "06-activity-quota.jpg",
+      "sha256": "8500be26973d73c49a5725241b5c0e059e65e201dbf0845556256d778fbf9750",
+      "byte_size": 20907,
+      "source_png": {
+        "filename": "06-activity-quota.png",
+        "sha256": "9525c862aae85e80cbbf980c535352b3de9c0f28930daae820dc525ef32d1ddc"
+      },
+      "width": 320,
+      "height": 518,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 320,
+      "requested_height": 518
+    },
+    {
+      "id": "07-mobile-shell",
+      "filename": "07-mobile-shell.jpg",
+      "sha256": "b82c283a232cac2f0508ce055207584db4fa28de993f6f8a6673813f830e4b7a",
+      "byte_size": 27463,
+      "source_png": {
+        "filename": "07-mobile-shell.png",
+        "sha256": "ad1ad3e5eb3315a34ccd706752c007f3175bfd2489081fd8cc8736a9c37f9331"
+      },
+      "width": 390,
+      "height": 844,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 390,
+      "requested_height": 844
+    },
+    {
+      "id": "08-mobile-stat-cards",
+      "filename": "08-mobile-stat-cards.jpg",
+      "sha256": "12681253e2d8ea8de72bdd86daa8c5e4ed9168ae4aad6e7caf63561b42440181",
+      "byte_size": 14393,
+      "source_png": {
+        "filename": "08-mobile-stat-cards.png",
+        "sha256": "ea0d2dcc2b2e61068e6278145f1541e16228df54c72efbfe08c6dfe69eabec80"
+      },
+      "width": 358,
+      "height": 512,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 358,
+      "requested_height": 512
+    },
+    {
+      "id": "09-mobile-projects-table",
+      "filename": "09-mobile-projects-table.jpg",
+      "sha256": "51178fceaac76024c7383cff3b478d0b744e3b3313d03715a424fae4887a82e5",
+      "byte_size": 1659,
+      "source_png": {
+        "filename": "09-mobile-projects-table.png",
+        "sha256": "b88f886298a81b52efdaf73c8c4807d2a6a6c315e9ffd311c7a8f3fae9837113"
+      },
+      "width": 468,
+      "height": 309,
+      "encoding": "jpeg",
+      "jpeg_quality": 80,
+      "candidate_id": "candidate-x",
+      "requested_width": 468,
+      "requested_height": 309
+    }
+  ]
+}

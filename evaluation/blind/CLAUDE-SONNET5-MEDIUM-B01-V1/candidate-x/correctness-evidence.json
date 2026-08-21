@@ -1,0 +1,134 @@
+{
+  "candidate_id": "candidate-x",
+  "origin": "observed frozen validator check stdout (no rerun)",
+  "checks": [
+    {
+      "name": "desktop: sem erros de console",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "desktop: sem exce\u00e7\u00f5es",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "desktop: apenas assets locais",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "a refer\u00eancia n\u00e3o \u00e9 servida como asset",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "#root renderiza conte\u00fado",
+      "result": "PASS",
+      "detail": "1086 caracteres vis\u00edveis"
+    },
+    {
+      "name": "marca\u00e7\u00e3o: data-testid=\"app-shell\" (1)",
+      "result": "PASS",
+      "detail": "encontrados 1"
+    },
+    {
+      "name": "marca\u00e7\u00e3o: data-testid=\"sidebar\" (1)",
+      "result": "PASS",
+      "detail": "encontrados 1"
+    },
+    {
+      "name": "marca\u00e7\u00e3o: data-testid=\"chart\" (1)",
+      "result": "PASS",
+      "detail": "encontrados 1"
+    },
+    {
+      "name": "marca\u00e7\u00e3o: data-testid=\"projects-table\" (1)",
+      "result": "PASS",
+      "detail": "encontrados 1"
+    },
+    {
+      "name": "marca\u00e7\u00e3o: data-testid=\"activity\" (1)",
+      "result": "PASS",
+      "detail": "encontrados 1"
+    },
+    {
+      "name": "marca\u00e7\u00e3o: data-testid=\"quota\" (1)",
+      "result": "PASS",
+      "detail": "encontrados 1"
+    },
+    {
+      "name": "marca\u00e7\u00e3o: 4 data-testid=\"stat-card\"",
+      "result": "PASS",
+      "detail": "encontrados 4"
+    },
+    {
+      "name": "tabela de projetos com 5 linhas",
+      "result": "PASS",
+      "detail": "encontradas 5"
+    },
+    {
+      "name": "acessibilidade: exatamente um <h1>",
+      "result": "PASS",
+      "detail": "1 encontrados"
+    },
+    {
+      "name": "acessibilidade: landmark <main>",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "acessibilidade: landmark <nav>",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "acessibilidade: controles reais presentes",
+      "result": "PASS",
+      "detail": "14 controles"
+    },
+    {
+      "name": "acessibilidade: todo controle tem nome acess\u00edvel",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "acessibilidade: sem <div> clic\u00e1vel",
+      "result": "PASS",
+      "detail": "0 encontrados"
+    },
+    {
+      "name": "desktop 1440x900: sem scroll horizontal da p\u00e1gina",
+      "result": "PASS",
+      "detail": "scrollWidth=1440 clientWidth=1440"
+    },
+    {
+      "name": "mobile: sem erros de console",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "mobile: sem exce\u00e7\u00f5es",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "mobile 390x844: sem scroll horizontal da p\u00e1gina",
+      "result": "PASS",
+      "detail": "scrollWidth=390 clientWidth=390"
+    },
+    {
+      "name": "mobile 390x844: nenhum elemento vaza do viewport",
+      "result": "PASS",
+      "detail": null
+    },
+    {
+      "name": "mobile: a mesma tela \u00e9 renderizada",
+      "result": "PASS",
+      "detail": "app-shell=1"
+    }
+  ],
+  "totals": {
+    "passed": 25
+  }
+}

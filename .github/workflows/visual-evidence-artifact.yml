@@ -9,8 +9,9 @@ on:
       bundle:
         description: Blind bundle to package. Arm names are never used.
         type: choice
-        default: CLAUDE-SONNET5-MEDIUM-B04-V1
+        default: CLAUDE-SONNET5-MEDIUM-B01-V1
         options:
+          - CLAUDE-SONNET5-MEDIUM-B01-V1
           - CLAUDE-SONNET5-MEDIUM-B04-V1
           - visual-access-check
 
@@ -24,7 +25,7 @@ jobs:
     timeout-minutes: 10
     env:
       BUNDLE_ROOT: ${{ inputs.bundle == 'visual-access-check' && 'evaluation/visual-access-check' || format('evaluation/blind/{0}', inputs.bundle) }}
-      ARTIFACT_PREFIX: ${{ inputs.bundle == 'visual-access-check' && 'visual-access-check' || 'visual-b04' }}
+      ARTIFACT_PREFIX: ${{ inputs.bundle == 'visual-access-check' && 'visual-access-check' || (inputs.bundle == 'CLAUDE-SONNET5-MEDIUM-B01-V1' && 'visual-b01' || 'visual-b04') }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7

@@ -1,0 +1,253 @@
+{
+  "kind": "VisualEvidenceManifestV1",
+  "schema_version": 1,
+  "experiment_id": "CLAUDE-SONNET5-MEDIUM-B01-V1",
+  "candidate_id": "candidate-x",
+  "source_build_identity": "unpublished-arm-identity",
+  "capture_protocol": "b01-screenshot-visual-v1",
+  "generated_at": "2026-08-21T05:39:27.608Z",
+  "screenshots": [
+    {
+      "id": "desktop-full",
+      "filename": "desktop-full.png",
+      "sha256": "1d346352d6a1d835bb93847197d9654dbadd127e6766de767bcc4719d69e09df",
+      "width": 1440,
+      "height": 982,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": true,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 1,
+      "pdf_page_span": 1,
+      "review_label": "p01 desktop full page"
+    },
+    {
+      "id": "desktop-shell",
+      "filename": "desktop-shell.png",
+      "sha256": "9467c0a20bf145dbbb3d31676bbafc58140f77e94d931f03c960f3ad67e6c2db",
+      "width": 1440,
+      "height": 900,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 2,
+      "pdf_page_span": 1,
+      "review_label": "p02 desktop viewport"
+    },
+    {
+      "id": "sidebar",
+      "filename": "sidebar.png",
+      "sha256": "440f1f778c3b2d317ca00da85c17e58faf0d856b3b055e44573c20955de8e5e8",
+      "width": 236,
+      "height": 982,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 3,
+      "pdf_page_span": 1,
+      "review_label": "p03 sidebar"
+    },
+    {
+      "id": "stat-cards",
+      "filename": "stat-cards.png",
+      "sha256": "c9ce4f287e9493bb4a3f71c6def75dba70f24014cc8e58872fc799b6bac84989",
+      "width": 1140,
+      "height": 116,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 4,
+      "pdf_page_span": 1,
+      "review_label": "p04 stat cards"
+    },
+    {
+      "id": "chart",
+      "filename": "chart.png",
+      "sha256": "f524328e5336d9aad696f20bef1204ce714524a08a91928498877e5185e1560b",
+      "width": 800,
+      "height": 294,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 5,
+      "pdf_page_span": 1,
+      "review_label": "p05 chart"
+    },
+    {
+      "id": "projects-table",
+      "filename": "projects-table.png",
+      "sha256": "027bef72b2604fa089f2ab67c77034eb94c1dd0fe7216715f95f6ecbcdb943b6",
+      "width": 758,
+      "height": 309,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 6,
+      "pdf_page_span": 1,
+      "review_label": "p06 projects table"
+    },
+    {
+      "id": "activity-quota",
+      "filename": "activity-quota.png",
+      "sha256": "9525c862aae85e80cbbf980c535352b3de9c0f28930daae820dc525ef32d1ddc",
+      "width": 320,
+      "height": 518,
+      "viewport_width": 1440,
+      "viewport_height": 900,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 7,
+      "pdf_page_span": 1,
+      "review_label": "p07 activity and quota"
+    },
+    {
+      "id": "mobile-full",
+      "filename": "mobile-full.png",
+      "sha256": "2c22363bb7eb55a17e29deb2af0a4513c5e839cdba628499dd30465c9a3743bd",
+      "width": 390,
+      "height": 2102,
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "full_page": true,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 8,
+      "pdf_page_span": 3,
+      "review_label": "p08 mobile full page"
+    },
+    {
+      "id": "mobile-shell",
+      "filename": "mobile-shell.png",
+      "sha256": "ad1ad3e5eb3315a34ccd706752c007f3175bfd2489081fd8cc8736a9c37f9331",
+      "width": 390,
+      "height": 844,
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 11,
+      "pdf_page_span": 1,
+      "review_label": "p09 mobile viewport"
+    },
+    {
+      "id": "mobile-stat-cards",
+      "filename": "mobile-stat-cards.png",
+      "sha256": "ea0d2dcc2b2e61068e6278145f1541e16228df54c72efbfe08c6dfe69eabec80",
+      "width": 358,
+      "height": 512,
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 12,
+      "pdf_page_span": 1,
+      "review_label": "p10 mobile stat cards"
+    },
+    {
+      "id": "mobile-projects-table",
+      "filename": "mobile-projects-table.png",
+      "sha256": "b88f886298a81b52efdaf73c8c4807d2a6a6c315e9ffd311c7a8f3fae9837113",
+      "width": 468,
+      "height": 309,
+      "viewport_width": 390,
+      "viewport_height": 844,
+      "full_page": false,
+      "selector": "[data-testid=\"[object Object]\"]",
+      "state": "[object Object]",
+      "pdf_page": 13,
+      "pdf_page_span": 1,
+      "review_label": "p11 mobile projects table"
+    }
+  ],
+  "pdf_pages": [
+    {
+      "page": 1,
+      "screenshot_id": "desktop-full",
+      "filename": "desktop-full.png"
+    },
+    {
+      "page": 2,
+      "screenshot_id": "desktop-shell",
+      "filename": "desktop-shell.png"
+    },
+    {
+      "page": 3,
+      "screenshot_id": "sidebar",
+      "filename": "sidebar.png"
+    },
+    {
+      "page": 4,
+      "screenshot_id": "stat-cards",
+      "filename": "stat-cards.png"
+    },
+    {
+      "page": 5,
+      "screenshot_id": "chart",
+      "filename": "chart.png"
+    },
+    {
+      "page": 6,
+      "screenshot_id": "projects-table",
+      "filename": "projects-table.png"
+    },
+    {
+      "page": 7,
+      "screenshot_id": "activity-quota",
+      "filename": "activity-quota.png"
+    },
+    {
+      "page": 8,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 9,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 10,
+      "screenshot_id": "mobile-full",
+      "filename": "mobile-full.png"
+    },
+    {
+      "page": 11,
+      "screenshot_id": "mobile-shell",
+      "filename": "mobile-shell.png"
+    },
+    {
+      "page": 12,
+      "screenshot_id": "mobile-stat-cards",
+      "filename": "mobile-stat-cards.png"
+    },
+    {
+      "page": 13,
+      "screenshot_id": "mobile-projects-table",
+      "filename": "mobile-projects-table.png"
+    }
+  ],
+  "review_pdf": {
+    "filename": "visual-review.pdf",
+    "sha256": "d2d66fb25320c225e212bc321edd111b9216dfd3d5c352cf064f9ca931f1fd99",
+    "page_count": 13
+  },
+  "notes": {
+    "png_canonical": true,
+    "pdf_is_review_transport": true,
+    "pdf_byte_identity": "Chrome embute CreationDate/ModDate/ID. Reruns com os mesmos PNGs são semanticamente equivalentes (páginas, mapping, SHA256 dos PNGs) mas o SHA256 do PDF pode mudar. Não falsificamos determinismo."
+  }
+}
