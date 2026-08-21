@@ -1,0 +1,51 @@
+# Transporte binário cego dos connector JPEGs já existentes.
+# Não recaptura, não comprime, não gera preview, não corre benchmark, não chama modelo.
+# Canonical: PNG no repositório. Lightweight: JPEG no repositório. Artifact: temporário.
+name: Visual evidence artifact
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package-blind-previews:
+    name: Package blind connector previews
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - name: Verify existing connector previews
+        run: |
+          set -euo pipefail
+          for candidate in candidate-x candidate-y; do
+            node scripts/visual-evidence/verify-connector-previews.mjs \
+              --bundle "evaluation/visual-access-check/${candidate}"
+          done
+
+      - name: Upload Candidate X
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-access-check-candidate-x
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            evaluation/visual-access-check/candidate-x/connector-previews/*.jpg
+            evaluation/visual-access-check/candidate-x/connector-preview-manifest.json
+            evaluation/visual-access-check/candidate-x/visual-manifest.json
+
+      - name: Upload Candidate Y
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-access-check-candidate-y
+          if-no-files-found: error
+          retention-days: 30
+          path: |
+            evaluation/visual-access-check/candidate-y/connector-previews/*.jpg
+            evaluation/visual-access-check/candidate-y/connector-preview-manifest.json
+            evaluation/visual-access-check/candidate-y/visual-manifest.json
